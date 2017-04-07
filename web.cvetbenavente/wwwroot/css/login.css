@@ -1,0 +1,42 @@
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+  width: 100%;
+  min-height: 100%;
+
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: Roboto, sans-serif;
+}
+form {
+  width: 400px;
+  height: 500px;
+}
+
+#header {
+  margin-bottom: 30px;
+}
+
+#logo {
+  max-width: 100%;
+}
+
+#submit {
+  border-color: #000;
+  color: #000;
+
+  width: 100%;
+}
+
+#submit:hover,
+#submit:focus,
+#submit:active {
+  background: #000;
+  color: #fff
+}

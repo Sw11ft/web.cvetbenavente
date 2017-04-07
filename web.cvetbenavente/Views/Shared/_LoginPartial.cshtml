@@ -6,21 +6,23 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="javascript:;" class="ripple" data-toggle="dropdown">
+            @*<img src="images/avatar.jpg" class="header-avatar img-circle" alt="user" title="user">*@
+            <span>@UserManager.GetUserName(User)</span>
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
             <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Definições">Definições</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+                <a href="javascript:;">Suporte</a>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
+
             </li>
         </ul>
-    </form>
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
+    </li>
 }

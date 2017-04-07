@@ -1,50 +1,50 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
+﻿/*ajusta a imagem à sidebar*/
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
+.brand-logo img {
+    width: 70%;
 
-/* Set widths on the form inputs since otherwise they're 100% wide */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
+    /*grayscale*/
+    /*filter: url("data:image/svg+xml;utf8,<svg><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+    filter: gray;
+    -webkit-filter: grayscale(100%);
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
+    transition: all 0.6s ease;
+    -webkit-transition: all .6s ease;*/
 
-/* buttons and links extension to use brackets: [ click me ] */
-.btn-bracketed::before {
-    display: inline-block;
-    content: "[";
-    padding-right: 0.5em;
+    margin: 0 auto;
+    display: block;
 }
-
-.btn-bracketed::after {
-    display: inline-block;
-    content: "]";
-    padding-left: 0.5em;
+/*.brand-logo img:hover {
+    filter: none;
+    -webkit-filter: grayscale(0%);
+}*/
+.brand-logo.small-menu-visible {
+    padding: 0 0.5rem;
 }
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+.brand-logo.small-menu-visible img {
+    filter: none;
+    -webkit-filter: grayscale(0%);
 }
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+.sidebar-panel .nav {
+    padding-top: 20px;
+}
+@media (min-width: 768px) {
+    .brand-logo:not(.small-menu-visible) {
+        width: 100%;
+        margin-top: 0.7rem !important;
+    }
+}
+@media (max-width: 767px) {
+    .sidebar-panel .brand-logo:not(.small-menu-visible) {
+        width: 100%;
+        padding: 0 1.563rem;
+        margin-top: 0;
+    }
+    .sidebar-panel .brand-logo img {
+        filter: none;
+        -webkit-filter: grayscale(0%);
+    }
+    .sidebar-panel > nav > ul > li > a:hover {
+        background-color: transparent;
     }
 }
