@@ -10,7 +10,14 @@ namespace web.cvetbenavente.Models
         public enum Genero
         {
             M,
-            F,
+            F
+        }
+
+        public enum TipoAtivo
+        {
+            Ambos,
+            Ativo,
+            Inativo
         }
     }
 }
