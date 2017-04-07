@@ -18,7 +18,9 @@ namespace web.cvetbenavente.Services
         }
 
         //Retorna uma lista de clientes
-        public List<Cliente> GetClientes(TipoAtivo? TipoAtivo = TipoAtivo.Ambos)
+        public List<Cliente> GetClientes(TipoAtivo? TipoAtivo = TipoAtivo.Ambos,
+                                         OrderClientes? OrderBy = OrderClientes.NoOrder,
+                                         OrderDirection? OrderDir = OrderDirection.Asc)
         {
             var query = db.Clientes.AsQueryable();
 
@@ -26,14 +28,45 @@ namespace web.cvetbenavente.Services
             //Caso TipoAtivo? seja nulo, o valor atribuido
             //é o valor default (ou seja, no caso dos enums, o primeiro valor)
             var xTipoAtivo = TipoAtivo ?? default(TipoAtivo);
+            var xOrderBy = OrderBy ?? default(OrderClientes);
+            var xOrderDir = OrderDir ?? default(OrderDirection);
 
-            if (xTipoAtivo == Enums.TipoAtivo.Ativo)
+            switch (xTipoAtivo)
             {
-                query = query.Where(x => x.Active == true);
+                case Enums.TipoAtivo.Ambos:
+                    break;
+                case Enums.TipoAtivo.Ativo:
+                    query = query.Where(x => x.Active == true);
+                    break;
+                case Enums.TipoAtivo.Inativo:
+                    query = query.Where(x => x.Active == false);
+                    break;
+                default:
+                    break;
             }
-            else if (xTipoAtivo == Enums.TipoAtivo.Inativo)
+
+            switch (xOrderBy)
             {
-                query = query.Where(x => x.Active == false);
+                case OrderClientes.NoOrder:
+                    break;
+                case OrderClientes.Nome:
+                    query = (xOrderDir == OrderDirection.Asc) ? query.OrderBy(x => x.Nome)
+                                                              : query.OrderByDescending(x => x.Nome);
+                    break;
+                case OrderClientes.Contacto:
+                    query = (xOrderDir == OrderDirection.Asc) ? query.OrderBy(x => x.Contacto)
+                                                              : query.OrderByDescending(x => x.Contacto);
+                    break;
+                case OrderClientes.Morada:
+                    query = (xOrderDir == OrderDirection.Asc) ? query.OrderBy(x => x.Morada)
+                                                              : query.OrderByDescending(x => x.Morada);
+                    break;
+                case OrderClientes.Active:
+                    query = (xOrderDir == OrderDirection.Asc) ? query.OrderBy(x => x.Active)
+                                                              : query.OrderByDescending(x => x.Active);
+                    break;
+                default:
+                    break;
             }
 
             return query.ToList();

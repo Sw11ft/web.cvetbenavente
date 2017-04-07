@@ -19,5 +19,20 @@ namespace web.cvetbenavente.Models
             Ativo,
             Inativo
         }
+
+        public enum OrderClientes
+        {
+            NoOrder,
+            Nome,
+            Contacto,
+            Morada,
+            Active
+        }
+
+        public enum OrderDirection
+        {
+            Asc,
+            Desc
+        }
     }
 }
