@@ -42,7 +42,41 @@ namespace web.cvetbenavente.Services
         //Retorna um cliente com base no Id
         public Cliente GetClienteById(Guid Guid)
         {
-            return db.Clientes.Where(x => x.Id == Guid).FirstOrDefault();
+            return db.Clientes.Find(Guid);
+        }
+
+        //Adiciona um cliente
+        public void CreateCliente(Cliente cliente)
+        {
+            db.Clientes.Add(cliente);
+            db.SaveChanges();
+        }
+
+        //Edita um cliente
+        public void EditCliente(Cliente cliente)
+        {
+            Cliente clienteOriginal = db.Clientes.Find(cliente.Id);
+            db.Entry(clienteOriginal).CurrentValues.SetValues(cliente);
+
+            db.SaveChanges();
+        }
+
+        //"Remove" (desativa) um cliente
+        public void DisableCliente(Guid id)
+        {
+            Cliente cliente = db.Clientes.Find(id);
+            cliente.Active = false;
+
+            db.SaveChanges();
+        }
+
+        //"Ativa" um cliente
+        public void EnableCliente(Guid id)
+        {
+            Cliente cliente = db.Clientes.Find(id);
+            cliente.Active = false;
+
+            db.SaveChanges();
         }
     }
 }
