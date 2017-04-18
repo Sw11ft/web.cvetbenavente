@@ -1,0 +1,21 @@
+@model List<Cliente>
+
+@{
+    if (Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Nome</td>
+                <td>@item.Morada, @item.CodPostal @item.Localidade</td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr colspan="3">
+            <td>Não existem clientes a mostrar.</td>
+        </tr>
+
+    }
+}

@@ -1,0 +1,69 @@
+﻿@model web.cvetbenavente.Models.ClientesViewModels.CriarViewModel
+
+@{
+    ViewData["Title"] = "Novo Cliente";
+}
+<div class="card bg-white">
+    <div class="card-header">
+        Dados Pessoais
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <form class="form-horizontal" role="form" asp-action="Criar">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nome</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" asp-for="Cliente.Nome" required>
+                            <span class="error" asp-validation-for="Cliente.Nome"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Contacto</label>
+                        <div class="col-sm-8">
+                            <input type="tel" class="form-control" asp-for="Cliente.Contacto" required>
+                            <span class="error" asp-validation-for="Cliente.Contacto"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Morada</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" asp-for="Cliente.Morada" required>
+                            <span class="error" asp-validation-for="Cliente.Morada"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-2">
+                            <input type="text" class="form-control" placeholder="Código Postal" asp-for="Cliente.CodPostal" required>
+                            <span class="error" asp-validation-for="Cliente.CodPostal"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="Localidade" asp-for="Cliente.Localidade" required>
+                            <span class="error" asp-validation-for="Cliente.Localidade"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Observações</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" rows="4" asp-for="Cliente.Observacoes"></textarea>
+                            <span class="error" asp-validation-for="Cliente.Nome"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <button type="submit" name="Submeter" class="btn btn-primary m-r">Submeter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12">
+    <a asp-action="Index"><i class="icon-arrow-left"></i></a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

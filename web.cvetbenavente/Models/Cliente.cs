@@ -15,9 +15,16 @@ namespace web.cvetbenavente.Models
 
         public string Nome { get; set; }
         public string Contacto { get; set; }
+
         public string Morada { get; set; }
+        public string CodPostal { get; set; }
+        public string Localidade { get; set; }
+
         public string Observacoes { get; set; }
 
         public bool Active { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+        public DateTime? DataEdicao { get; set; }
     }
 }

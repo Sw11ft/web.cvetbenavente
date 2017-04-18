@@ -8,15 +8,11 @@ namespace web.cvetbenavente.Models.AccountViewModels
 {
     public class LoginViewModel
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "O nome de utilizador é obrigatório")]
+        public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A password é obrigatória")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
     }
 }

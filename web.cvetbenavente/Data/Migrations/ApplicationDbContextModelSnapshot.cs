@@ -203,7 +203,15 @@ namespace web.cvetbenavente.Data.Migrations
 
                     b.Property<bool>("Active");
 
+                    b.Property<string>("CodPostal");
+
                     b.Property<string>("Contacto");
+
+                    b.Property<DateTime>("DataCriacao");
+
+                    b.Property<DateTime?>("DataEdicao");
+
+                    b.Property<string>("Localidade");
 
                     b.Property<string>("Morada");
 

@@ -1,59 +1,74 @@
 @model IEnumerable<web.cvetbenavente.Models.Cliente>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Todos os Clientes";
 }
-
-<h2>Index</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nome)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Contacto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Morada)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Observacoes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Active)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Contacto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Morada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Observacoes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<!--Filtros-->
+<div class="card bg-white">
+    <div class="card-header">
+        Filtros
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-sm-2 control-label p-a-0">Pesquisa</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" id="ClientesIndexSearch">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Tabela de Clientes-->
+<div class="table-responsive">
+    <table class="table table-bordered m-b-0" id="ClientesIndexTable">
+        <thead class="card-header b-a-0 m-a-0">
+
+            <tr>
+                <th class="ClienteColumn sortable" data-order="asc">Cliente <i class="fa fa-caret-down pull-right"></i></th>
+                <th>Morada</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>@item.Morada, @item.CodPostal @item.Localidade</td>
+                        </tr>
+                    }
+                } else
+                {
+                    <tr colspan="3">
+                        <td>Não existem clientes a mostrar.</td>
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/noty/lib/noty.css" />
 }
-    </tbody>
-</table>
+@section Scripts {
+    <script type="text/javascript" src="~/lib/noty/lib/noty.min.js"></script>
+    <script type="text/javascript" src="~/js/site.min.js"></script>
+}

@@ -16,7 +16,7 @@ namespace web.cvetbenavente.Models
 
         public Guid IdCliente { get; set; }
         public string Nome { get; set; }
-        public Genero Genero { get; set; } 
+        public Genero Genero { get; set; }
         public Guid IdEspecie { get; set; }
 
         [ForeignKey("IdCliente")]

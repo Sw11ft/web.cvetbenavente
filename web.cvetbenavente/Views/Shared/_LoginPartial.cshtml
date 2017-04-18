@@ -12,17 +12,18 @@
             <span>@UserManager.GetUserName(User)</span>
             <span class="caret"></span>
         </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Definições">Definições</a>
-            </li>
-            <li role="separator" class="divider"></li>
-            <li>
-                <a href="javascript:;">Suporte</a>
-            </li>
-            <li>
-
-            </li>
-        </ul>
+        @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <ul class="dropdown-menu">
+                <li>
+                    <a asp-area="" asp-controller="Manage" asp-action="Index" title="Definições">Definições</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a onclick="$('#logoutForm').submit()">Sair</a>
+                </li>
+            </ul>
+        }
     </li>
 }

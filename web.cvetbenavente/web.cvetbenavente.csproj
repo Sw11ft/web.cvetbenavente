@@ -13,7 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\sass\reactor_v12.zip" />
+    <Compile Remove="wwwroot\css\sass\**" />
+    <Content Remove="wwwroot\css\sass\**" />
+    <EmbeddedResource Remove="wwwroot\css\sass\**" />
+    <None Remove="wwwroot\css\sass\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\site.scss" />
     <Content Include="wwwroot\js\helpers\modernizr.js" />
     <Content Include="wwwroot\js\helpers\smartresize.js" />
   </ItemGroup>
@@ -21,9 +28,19 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.Host" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
