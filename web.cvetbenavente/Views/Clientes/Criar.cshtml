@@ -47,7 +47,6 @@
                         <label class="col-sm-2 control-label">Observações</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="4" asp-for="Cliente.Observacoes"></textarea>
-                            <span class="error" asp-validation-for="Cliente.Nome"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -61,7 +60,10 @@
     </div>
 </div>
 <div class="col-xs-12">
-    <a asp-action="Index"><i class="icon-arrow-left"></i></a>
+    <a asp-action="Index" id="ClientesCriarVoltar">
+        <i class="icon-arrow-left"></i>
+        <span style="display: none" class="text">Voltar</span>
+    </a>
 </div>
 
 @section Scripts {

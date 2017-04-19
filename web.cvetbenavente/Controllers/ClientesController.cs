@@ -24,12 +24,17 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: IndexTableData
-        public IActionResult IndexTableData(string field, string order = "asc")
+        public IActionResult IndexTableData(string field, string order = "asc", string query = null)
         {
             ClienteServices service = new ClienteServices(_context);
 
             field = field.ToLower();
             order = order.ToLower();
+
+            if (query != null)
+                if (query.Trim() == "")
+                    query = null;
+
 
             //Campo
             Enums.OrderClientes enumField = Enums.OrderClientes.Nome;
@@ -60,7 +65,7 @@ namespace web.cvetbenavente.Controllers
                     break;
             }
 
-            var clientes = service.GetClientes(Enums.TipoAtivo.Ativo, enumField, enumOrder);
+            var clientes = service.GetClientes(Enums.TipoAtivo.Ativo, enumField, enumOrder, query);
 
             return PartialView("_IndexTablePartial", clientes);
         }

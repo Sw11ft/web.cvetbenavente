@@ -32,5 +32,41 @@
     "inputFiles": [
       "wwwroot/js/helpers/smartresize.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/app.min.css",
+    "inputFiles": [
+      "wwwroot/css/app.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/animate.min.css",
+    "inputFiles": [
+      "wwwroot/css/animate.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/sli.min.css",
+    "inputFiles": [
+      "wwwroot/css/sli.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/webfont.min.css",
+    "inputFiles": [
+      "wwwroot/css/webfont.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/card.min.css",
+    "inputFiles": [
+      "wwwroot/css/card.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/climacons-font.min.css",
+    "inputFiles": [
+      "wwwroot/css/climacons-font.css"
+    ]
   }
 ]

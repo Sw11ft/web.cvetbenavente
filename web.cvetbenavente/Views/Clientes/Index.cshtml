@@ -4,18 +4,19 @@
     ViewData["Title"] = "Todos os Clientes";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <!--Filtros-->
 <div class="card bg-white">
     <div class="card-header">
         Filtros
+        <a class="pull-right" asp-action="Criar" id="ClientesIndexCriar">
+            <span style="display: none" class="text">Novo Cliente</span>
+            <i class="icon-user-follow"></i>
+        </a>
     </div>
     <div class="card-block">
         <div class="row m-a-0">
             <div class="col-sm-4">
-                <div class="form-group">
+                <div class="form-group" id="ClientesIndexSearchFormGroup">
                     <div class="row">
                         <div class="col-xs-12">
                             <label class="col-sm-2 control-label p-a-0">Pesquisa</label>
@@ -24,6 +25,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <input type="text" class="form-control" id="ClientesIndexSearch">
+                            <a class="clear"><i class="icon-close"></i></a>
                         </div>
                     </div>
                 </div>
@@ -70,5 +72,4 @@
 }
 @section Scripts {
     <script type="text/javascript" src="~/lib/noty/lib/noty.min.js"></script>
-    <script type="text/javascript" src="~/js/site.min.js"></script>
 }

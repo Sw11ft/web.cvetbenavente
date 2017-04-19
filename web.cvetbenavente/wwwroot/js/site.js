@@ -1,9 +1,21 @@
-﻿$(function () { //document.ready
+﻿/*
+    TOC:
+    $DOCUMENT.READY
+        $NOTY
+        $DADOS DE TABELAS
+        $ANIMAÇÕES
+        $LIMPEZA DE FORMS/INPUTS
+    $FUNCTIONS
+        getParameterByName(name, url)
+*/
+
+//$DOCUMENT.READY
+$(function () {
     'use scrict';
 
     /*****************************************************************/
 
-    //NOTY
+    //$NOTY
 
     //Sucesso ao criar um cliente
     if (getParameterByName("clSuccess") == "True") {
@@ -18,15 +30,15 @@
 
     /*****************************************************************/
 
-    //DADOS DE TABELAS
+    //$DADOS DE TABELAS
 
     //Clientes/Index Ordering
     $("#ClientesIndexTable .ClienteColumn").click(function () {
         if (!$(this).hasClass("disabled")) {
             let order = $(this).attr("data-order");
+            let text = $("#ClientesIndexSearch").val().trim();
 
             let queryOrder;
-
             if (order != "asc") {
                 queryOrder = "asc";
             } else {
@@ -34,7 +46,7 @@
             }
 
             $.ajax({
-                url: "/Clientes/IndexTableData?field=nome&order=" + queryOrder,
+                url: "/Clientes/IndexTableData?field=nome&order=" + queryOrder + "&query=" + text,
                 type: "get",
                 beforeSend: function () {
                     $("#ClientesIndexTable tbody").addClass("loading");
@@ -65,30 +77,71 @@
     });
 
     //Clientes/Index Procura
-    $("#ClientesIndexSearch").keypress(function () {
-        let text = $(this).val().trim();
+    let searchTimeout;
+    $("#ClientesIndexSearch").on("input", function () {
+        //mostra o botão para limpar
+        if ($("#ClientesIndexSearch").val().trim() != "") {
+            $("#ClientesIndexSearchFormGroup .clear").fadeIn(100);
+        } else {
+            $("#ClientesIndexSearchFormGroup .clear").fadeOut(100);
+        }
 
-        let order = $("#ClientesIndexTable .ClienteColumn").attr("data-order");
+        window.clearTimeout(searchTimeout);
+        searchTimeout = window.setTimeout(function () {
+            let text = $("#ClientesIndexSearch").val().trim();
 
-        $.ajax({
-            url: "/Clientes/IndexTableData?field=nome&order=" + queryOrder + "&q=" + text,
-            type: "get",
-            beforeSend: function () {
-                $("#ClientesIndexTable tbody").addClass("loading");
-                $("#ClientesIndexTable .ClienteColumn").addClass("disabled");
-            },
-            success: function (data) {
-                $("#ClientesIndexTable tbody").html(data);
+            let order = $("#ClientesIndexTable .ClienteColumn").attr("data-order");
 
-                $("#ClientesIndexTable tbody").removeClass("loading");
-                $("#ClientesIndexTable .ClienteColumn").removeClass("disabled");
-            }
+            $.ajax({
+                url: "/Clientes/IndexTableData?field=nome&order=" + order + "&query=" + text,
+                type: "get",
+                beforeSend: function () {
+                    $("#ClientesIndexTable tbody").addClass("loading");
+                    $("#ClientesIndexTable .ClienteColumn").addClass("disabled");
+                },
+                success: function (data) {
+                    $("#ClientesIndexTable tbody").html(data);
+
+                    $("#ClientesIndexTable tbody").removeClass("loading");
+                    $("#ClientesIndexTable .ClienteColumn").removeClass("disabled");
+                }
+            });
+        }, 400);
+    });
+
+    /*****************************************************************/
+
+    //$ANIMAÇÕES
+
+    //Clientes/Index Novo Cliente Link
+    $("#ClientesIndexCriar").hover(function () { //handler in
+        $(this).find(".text").stop().fadeIn(200);
+    }, function () { //handler out
+        $(this).find(".text").stop().fadeOut(200);
         });
+
+    //Clientes/Criar Voltar Atrás Link
+    $("#ClientesCriarVoltar").hover(function () { //handler in
+        $(this).find(".text").stop().fadeIn(200);
+    }, function () { //handler out
+        $(this).find(".text").stop().fadeOut(200);
+    });
+
+    /*****************************************************************/
+
+    //$LIMPEZA DE FORMS/INPUTS
+
+    //Clientes/Index Procura
+    $("#ClientesIndexSearchFormGroup .clear").click(function (event) {
+        $("#ClientesIndexSearch").val("").trigger("keydown");
+        $(this).fadeOut(100);
     });
 
     /*****************************************************************/
 }) //document.ready
 
+
+//$FUNCTIONS
 function getParameterByName(name, url) {
     /*
      * Esta função retorna o valor do

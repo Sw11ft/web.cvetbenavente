@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using web.cvetbenavente.Data;
 using web.cvetbenavente.Models;
 using static web.cvetbenavente.Models.Enums;
+using static web.cvetbenavente.Services.Helpers;
 
 namespace web.cvetbenavente.Services
 {
@@ -20,7 +21,8 @@ namespace web.cvetbenavente.Services
         //Retorna uma lista de clientes
         public List<Cliente> GetClientes(TipoAtivo? TipoAtivo = TipoAtivo.Ambos,
                                          OrderClientes? OrderBy = OrderClientes.NoOrder,
-                                         OrderDirection? OrderDir = OrderDirection.Asc)
+                                         OrderDirection? OrderDir = OrderDirection.Asc,
+                                         string searchText = null)
         {
             var query = db.Clientes.AsQueryable();
 
@@ -67,6 +69,17 @@ namespace web.cvetbenavente.Services
                     break;
                 default:
                     break;
+            }
+
+            if (searchText != null)
+            {
+                searchText = NormalizeString(searchText).ToLower();
+
+                query = query.Where(x => (NormalizeString(x.Nome).ToLower()).Contains(searchText)
+                                      || (NormalizeString(x.Morada).ToLower()).Contains(searchText)
+                                      || (NormalizeString(x.CodPostal).ToLower()).Contains(searchText)
+                                      || (NormalizeString(x.Localidade).ToLower()).Contains(searchText)
+                                    );
             }
 
             return query.ToList();

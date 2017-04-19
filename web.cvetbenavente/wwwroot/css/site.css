@@ -95,4 +95,22 @@ table thead.disabled {
 
 /************************/
 /*#endregion */
+/*#region /Clientes/Index */
+#ClientesIndexSearchFormGroup .clear {
+  position: absolute;
+  background: none;
+  border: none;
+  top: 1px;
+  right: 15px;
+  height: 34px;
+  line-height: 34px;
+  display: none; }
+
+#ClientesIndexSearchFormGroup .clear:focus {
+  outline: none; }
+
+#ClientesIndexSearch {
+  padding-right: 30px; }
+
+/*#endregion */
 
