@@ -24,50 +24,134 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: IndexTableData
-        public IActionResult IndexTableData(string field, string order = "asc", string query = null)
+        public IActionResult IndexTableData(string field = "nome", string order = "asc", string query = null)
+        {
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                ClienteServices service = new ClienteServices(_context);
+
+                field = field.ToLower();
+                order = order.ToLower();
+
+                if (query != null)
+                    if (query.Trim() == "")
+                        query = null;
+
+
+                //Campo
+                Enums.OrderClientes enumField = Enums.OrderClientes.Nome;
+                switch (field)
+                {
+                    case "nome":
+                        enumField = Enums.OrderClientes.Nome;
+                        break;
+                    case "morada":
+                        enumField = Enums.OrderClientes.Morada;
+                        break;
+                    default:
+                        enumField = Enums.OrderClientes.Nome;
+                        break;
+                }
+
+                //Ordem
+                Enums.OrderDirection enumOrder = Enums.OrderDirection.Asc;
+                switch (order)
+                {
+                    case "asc":
+                        enumOrder = Enums.OrderDirection.Asc;
+                        break;
+                    case "desc":
+                        enumOrder = Enums.OrderDirection.Desc;
+                        break;
+                    default:
+                        enumOrder = Enums.OrderDirection.Asc;
+                        break;
+                }
+
+                var clientes = service.GetClientes(Enums.TipoAtivo.Ativo, enumField, enumOrder, query);
+
+                return PartialView("_IndexTablePartial", clientes);
+            }
+            else
+            {
+                return StatusCode(403);
+            }
+        }
+
+        // POST: Desativar Cliente
+        [HttpPost]
+        public bool DisableCliente(string Id)
         {
             ClienteServices service = new ClienteServices(_context);
 
-            field = field.ToLower();
-            order = order.ToLower();
+            bool validGuid = true;
+            Guid Guid;
 
-            if (query != null)
-                if (query.Trim() == "")
-                    query = null;
-
-
-            //Campo
-            Enums.OrderClientes enumField = Enums.OrderClientes.Nome;
-            switch (field)
+            try
             {
-                case "nome":
-                    enumField = Enums.OrderClientes.Nome;
-                    break;
-                case "morada":
-                    enumField = Enums.OrderClientes.Morada;
-                    break;
-                default:
-                    enumField = Enums.OrderClientes.Nome;
-                    break;
+                Guid = new Guid(Id);
+            }
+            catch
+            {
+                validGuid = false;
             }
 
-            //Ordem
-            Enums.OrderDirection enumOrder = Enums.OrderDirection.Asc;
-            switch (order) {
-                case "asc":
-                    enumOrder = Enums.OrderDirection.Asc;
-                    break;
-                case "desc":
-                    enumOrder = Enums.OrderDirection.Desc;
-                    break;
-                default:
-                    enumOrder = Enums.OrderDirection.Asc;
-                    break;
+            if (validGuid)
+            {
+                Cliente cliente = service.GetClienteById(Guid);
+
+                if (cliente == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    service.DisableCliente(Guid);
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // POST: Ativar Cliente
+        [HttpPost]
+        public bool EnableCliente(string Id)
+        {
+            ClienteServices service = new ClienteServices(_context);
+
+            bool validGuid = true;
+            Guid Guid;
+
+            try
+            {
+                Guid = new Guid(Id);
+            }
+            catch
+            {
+                validGuid = false;
             }
 
-            var clientes = service.GetClientes(Enums.TipoAtivo.Ativo, enumField, enumOrder, query);
+            if (validGuid)
+            {
+                Cliente cliente = service.GetClienteById(Guid);
 
-            return PartialView("_IndexTablePartial", clientes);
+                if (cliente == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    service.EnableCliente(Guid);
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
         // GET: Clientes
@@ -79,15 +163,19 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: Clientes/Details/5
-        public async Task<IActionResult> Detalhes(Guid? id)
+        public IActionResult Detalhes(Guid? id)
         {
+            ClienteServices service = new ClienteServices(_context);
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes
-                .SingleOrDefaultAsync(m => m.Id == id);
+            Guid xId = id ?? default(Guid);
+
+            Cliente cliente = service.GetClienteById(xId);
+
             if (cliente == null)
             {
                 return NotFound();
@@ -133,7 +221,7 @@ namespace web.cvetbenavente.Controllers
 
                 service.CreateCliente(cliente);
 
-                return RedirectToAction("Index", "Clientes", new { clSuccess = true });
+                return RedirectToAction("Index", "Clientes", new { nid = 1, nt = "s"});
             }
             else
             {
@@ -158,36 +246,30 @@ namespace web.cvetbenavente.Controllers
         }
 
         // POST: Clientes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Nome,Contacto,Morada,Observacoes,Active")] Cliente cliente)
+        public IActionResult Editar(Cliente cliente)
         {
-            if (id != cliente.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                ClienteServices service = new ClienteServices(_context);
+                if (service.Exists(cliente.Id))
                 {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
+                    if (service.IsActive(cliente.Id))
                     {
-                        return NotFound();
+                        cliente.Active = true;
+                        service.EditCliente(cliente);
+                        return RedirectToAction("Detalhes", "Clientes", new { id = cliente.Id, nid = 10, nt = "s" });
                     }
                     else
                     {
-                        throw;
+                        return RedirectToAction("Detalhes", "Clientes", new { id = cliente.Id, nid = 12, nt = "e" });
                     }
                 }
-                return RedirectToAction("Index");
+                else
+                {
+                    return RedirectToAction("Index", "Clientes", new { nid = 11, nt = "e" });
+                }
             }
             return View(cliente);
         }

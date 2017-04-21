@@ -6,14 +6,19 @@
         foreach (var item in Model)
         {
             <tr>
-                <td>@item.Nome</td>
+                <td>
+                    <a asp-action="Detalhes" asp-route-id="@item.Id">
+                        @item.Nome
+                        <span class="pull-right size-10 text-muted lh-19"><i class="icon-arrow-right"></i></span>
+                    </a>
+                </td>
                 <td>@item.Morada, @item.CodPostal @item.Localidade</td>
             </tr>
         }
     }
     else
     {
-        <tr colspan="3">
+        <tr>
             <td>Não existem clientes a mostrar.</td>
         </tr>
 

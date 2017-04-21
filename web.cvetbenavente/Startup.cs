@@ -47,6 +47,16 @@ namespace web.cvetbenavente
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //Restrições da Password
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            });
+
             services.AddMvc();
 
             // Add application services.
@@ -75,6 +85,8 @@ namespace web.cvetbenavente
 
             app.UseIdentity();
 
+            app.UseStatusCodePagesWithReExecute("/Errors/{0}");
+
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
@@ -82,6 +94,31 @@ namespace web.cvetbenavente
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "login",
+                    template: "Login",
+                    defaults: new { controller = "Account", action = "Login" });
+
+                routes.MapRoute(
+                    name: "errors",
+                    template: "Errors/{StatusCode}",
+                    defaults: new { controller = "Errors", action = "Index" });
+
+                routes.MapRoute(
+                    name: "changepassword",
+                    template: "AlterarPassword",
+                    defaults: new { controller = "Manage", action = "ChangePassword" });
+
+                routes.MapRoute(
+                    name: "clientedetails",
+                    template: "Clientes/{id}",
+                    defaults: new { controller = "Clientes", action = "Detalhes" });
+
+                routes.MapRoute(
+                    name: "clienteedit",
+                    template: "Clientes/{id}/Editar",
+                    defaults: new { controller = "Clientes", action = "Editar" });
             });
         }
     }

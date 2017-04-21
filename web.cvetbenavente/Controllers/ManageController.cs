@@ -233,13 +233,14 @@ namespace web.cvetbenavente.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User changed their password successfully.");
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
+                    _logger.LogInformation(3, "Password alterada com sucesso.");
+
+                    return RedirectToAction("Index", "Home", new { nid = 2, nt = "s" });
                 }
                 AddErrors(result);
                 return View(model);
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            return RedirectToAction("Index", "Home", new { nid = 3, nt = "e" });
         }
 
         //

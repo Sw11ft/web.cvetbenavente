@@ -17,11 +17,14 @@
             @Html.AntiForgeryToken()
             <ul class="dropdown-menu">
                 <li>
-                    <a asp-area="" asp-controller="Manage" asp-action="Index" title="Definições">Definições</a>
+                    <a asp-area="" asp-controller="Manage" asp-action="ChangePassword" title="Alterar Password">Alterar Password</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="$('#logoutForm').submit()">Sair</a>
+                    <a onclick="$('#logoutForm').submit()" class="hidden-text-link">
+                        Sair
+                        <i class="icon-logout text pull-right" style="display: none; line-height: 15px;"></i>
+                    </a>
                 </li>
             </ul>
         }

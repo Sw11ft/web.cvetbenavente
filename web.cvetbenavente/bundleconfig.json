@@ -68,5 +68,11 @@
     "inputFiles": [
       "wwwroot/css/climacons-font.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/noty/lib/noty.min.css",
+    "inputFiles": [
+      "wwwroot/lib/noty/lib/noty.css"
+    ]
   }
 ]

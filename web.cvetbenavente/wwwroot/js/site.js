@@ -1,31 +1,92 @@
-﻿/*
+﻿'use scrict';
+/*
     TOC:
     $DOCUMENT.READY
         $NOTY
         $DADOS DE TABELAS
         $ANIMAÇÕES
         $LIMPEZA DE FORMS/INPUTS
+        $AJAX
     $FUNCTIONS
         getParameterByName(name, url)
 */
 
 //$DOCUMENT.READY
 $(function () {
-    'use scrict';
+
+    //BOOTSTRAP POPOVER
+    $('[data-toggle="popover"]').popover();
 
     /*****************************************************************/
 
     //$NOTY
 
-    //Sucesso ao criar um cliente
-    if (getParameterByName("clSuccess") == "True") {
-        new Noty({
-            text: 'Cliente criado com sucesso!',
-            type: 'success',
-            layout: 'topRight',
-            timeout: 2500,
-            progressBar: false,
-        }).show();
+    //nid: notification id
+    //nt: notification type
+    if (getParameterByName("nid") != "" && getParameterByName("nid") != null) {
+        let id = getParameterByName("nid");
+        let type = getParameterByName("nt");
+
+        window.history.replaceState(null, null, window.location.pathname);
+
+        let msg;
+
+        let invalid = "$$$INVALID$$$";
+
+        switch (id) {
+            case "1":
+                msg = "Cliente criado com sucesso.";
+                break;
+            case "10":
+                msg = "Cliente editado com sucesso.";
+                break;
+            case "11":
+                msg = "O cliente não foi encontrado.";
+                break;
+            case "12":
+                msg = "O cliente encontra-se inativo.";
+                break;
+            case "2":
+                msg = "Password alterada com sucesso.";
+                break;
+            case "3":
+                msg = "Ocorreu um erro ao alterar a password.";
+                break;
+            default:
+                msg = invalid;
+                break;
+        }
+
+        switch (type) {
+            case "a":
+                type = "alert";
+                break;
+            case "s":
+                type = "success";
+                break;
+            case "w":
+                type = "warning";
+                break;
+            case "e":
+                type = "error";
+                break;
+            case "i":
+                type = "information";
+                break;
+            default:
+                type = "information";
+                break;
+        }
+
+        if (id != invalid) {
+            new Noty({
+                text: msg,
+                type: type,
+                layout: 'topRight',
+                timeout: 2500,
+                progressBar: false,
+            }).show();
+        }
     }
 
     /*****************************************************************/
@@ -113,15 +174,8 @@ $(function () {
 
     //$ANIMAÇÕES
 
-    //Clientes/Index Novo Cliente Link
-    $("#ClientesIndexCriar").hover(function () { //handler in
-        $(this).find(".text").stop().fadeIn(200);
-    }, function () { //handler out
-        $(this).find(".text").stop().fadeOut(200);
-        });
-
-    //Clientes/Criar Voltar Atrás Link
-    $("#ClientesCriarVoltar").hover(function () { //handler in
+    //Texto Escondido
+    $(".hidden-text-link").hover(function () { //handler in
         $(this).find(".text").stop().fadeIn(200);
     }, function () { //handler out
         $(this).find(".text").stop().fadeOut(200);
@@ -133,9 +187,107 @@ $(function () {
 
     //Clientes/Index Procura
     $("#ClientesIndexSearchFormGroup .clear").click(function (event) {
-        $("#ClientesIndexSearch").val("").trigger("keydown");
+        $("#ClientesIndexSearch").val("").trigger("input");
         $(this).fadeOut(100);
     });
+
+    /*****************************************************************/
+
+    //$AJAX
+
+    //Desativar utilizador
+    $(".disable-user").click(function () {
+        let id = $(this).data("id");
+
+        if (id != null && id != "") {
+            swal({
+                title: "Desativar Cliente",
+                text: "Está prestes a desativar este cliente. <br/>" +
+                      "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
+                      "não receberá notificações de eventos e quaisquer animais que lhe estejam" +
+                      "associados estão igualmente inativos. É possivel reativar um cliente.",
+                type: "warning",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                confirmButtonText: "Desativar",
+                confirmButtonColor: "#dd6777",
+                cancelButtonText: "Cancelar",
+                cancelButtonColor: "#e2e2e2"
+            }, function () { //on confirm
+                $.ajax({
+                    url: "/Clientes/DisableCliente",
+                    type: "post",
+                    data: { Id: id },
+                    success: function (data) {
+                        if (data == true) {
+                            swal({
+                                title: "Cliente desativado com sucesso.",
+                                type: "success"
+                            }, function () {
+                                window.location.reload(true);
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ocorreu um erro",
+                                type: "error"
+                            });
+                        }
+                    }
+                })
+            });
+        }
+    })
+
+    //Desativar utilizador
+    $(".disable-user").click(function () {
+        let id = $(this).data("id");
+
+        if (id != null && id != "") {
+            swal({
+                title: "Ativar Cliente",
+                text: "Está prestes a ativar este cliente. <br/>" +
+                "Ao ser reativado, este cliente pode ser associado a eventos e receberá as suas notificações. <br/>" +
+
+                "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
+                "não receberá notificações de eventos e quaisquer animais que lhe estejam" +
+                "associados estão igualmente inativos. É possivel reativar um cliente.",
+                type: "warning",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                confirmButtonText: "Desativar",
+                confirmButtonColor: "#dd6777",
+                cancelButtonText: "Cancelar",
+                cancelButtonColor: "#e2e2e2"
+            }, function () { //on confirm
+                $.ajax({
+                    url: "/Clientes/DisableCliente",
+                    type: "post",
+                    data: { Id: id },
+                    success: function (data) {
+                        if (data == true) {
+                            swal({
+                                title: "Cliente desativado com sucesso.",
+                                type: "success"
+                            }, function () {
+                                window.location.reload(true);
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ocorreu um erro",
+                                type: "error"
+                            });
+                        }
+                    }
+                })
+            });
+        }
+    })
 
     /*****************************************************************/
 }) //document.ready
@@ -162,4 +314,24 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
 
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+function removeParameterByName(name, url) {
+
+    if (!url) url = window.location.href;
+
+    var rtn = url.split("?")[0],
+        param,
+        params_arr = [],
+        queryString = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
+    if (queryString !== "") {
+        params_arr = queryString.split("&");
+        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+            param = params_arr[i].split("=")[0];
+            if (param === name) {
+                params_arr.splice(i, 1);
+            }
+        }
+        rtn = rtn + "?" + params_arr.join("&");
+    }
+    return rtn;
 }

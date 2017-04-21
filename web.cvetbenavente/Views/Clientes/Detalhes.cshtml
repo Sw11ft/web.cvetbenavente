@@ -1,48 +1,118 @@
-@model web.cvetbenavente.Models.Cliente
+﻿@model web.cvetbenavente.Models.Cliente
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Nome;
 }
+@if (!Model.Active)
+{
+    @section TitleAfter {
+        <a class="size-14" data-toggle="popover" data-placement="bottom"
+           data-content="Um cliente inativo não pode ser alterado, não pode ser associado a eventos, não receberá notificações de eventos e quaisquer animais que lhe estejam associados estão igualmente inativos. É possivel reativar um cliente."
+           data-original-title="Cliente Inativo">
+            <span class="label bg-red size-10 va-m">
+                Inativo&nbsp;
+                <i class="icon-info va-tb"></i>
+            </span>
+        </a>
+    }
+}
+<div class="row">
+    @if (Model.Active)
+    {
+        <div class="col-sm-4 col-md-3">
+            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary btn-icon m-b block">
+                <i class="icon-pencil mr5"></i>
+                <span>Editar</span>
+            </a>
+        </div>
+        <div class="col-sm-4 col-md-3">
+            <a href="#" class="btn btn-success btn-icon m-b block">
+                <i class="fa fa-paw mr5"></i>
+                <span>Adicionar Animal</span>
+            </a>
+        </div>
+        <div class="col-sm-4 col-md-3 col-md-offset-3">
+            <a href="javascript:;" data-id="@Model.Id" class="btn btn-danger btn-icon m-b block disable-user">
+                <i class="icon-user-unfollow mr5"></i>
+                <span>Desativar</span>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="col-sm-4 col-md-3">
+            <a href="#" class="btn btn-warning btn-icon m-b block enable-user">
+                <i class="icon-user-following mr5"></i>
+                <span>Ativar</span>
+            </a>
+        </div>
+    }
 
-<h2>Details</h2>
+</div> @{/*--row*/}
+<div class="block">
+    <span class="text-muted">
+        Criado a <b>@Model.DataCriacao.ToString("d/MM/yyyy")</b><!--
+        -->@if (Model.DataEdicao != null)
+        {<!--
+            --><span>,</span> <span>Editado a <b>@Model.DataEdicao.Value.ToString("d/MM/yyyy")</b></span>
+        }
 
-<div>
-    <h4>Cliente</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Contacto)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Contacto)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Morada)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Morada)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Observacoes)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Observacoes)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-    </dl>
+    </span>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="card bg-white">
+    <div class="card-header">
+        Dados Pessoais
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nome</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Contacto</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.Contacto, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Morada</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.Morada, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-2">
+                            @Html.TextBoxFor(model => model.CodPostal, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.Localidade, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Observações</label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(model => model.Observacoes, new { @class = "form-control", @readonly = "readonly", @rows = "3" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<a asp-action="Index" id="VoltarLink">
+    <i class="icon-arrow-left"></i>
+    <span style="display: none" class="text">Voltar</span>
+</a>
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+}
+@section Scripts {
+    <script type="text/javascript" src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+}

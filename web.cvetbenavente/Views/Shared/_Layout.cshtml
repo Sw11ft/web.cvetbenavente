@@ -10,7 +10,8 @@
         <link rel="stylesheet" href="~/css/webfont.min.css" />
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
-
+        <link rel="stylesheet" href="~/lib/noty/lib/noty.min.css" />
+        @RenderSection("VendorStyles", required: false)
         <!----------------scripts do template---------------->
         <link rel="stylesheet" href="~/css/card.min.css" />
         <link rel="stylesheet" href="~/css/sli.min.css" />
@@ -227,7 +228,20 @@
                     @if (ViewData["ShowTitle"] == null || ViewData["ShowTitle"].ToString() != "false")
                     {
                         <div class="page-title">
-                            <div class="title">@ViewData["Title"]</div>
+                            <div class="title">
+                                @RenderSection("TitleBefore", required: false)
+
+                                @if (ViewData["CustomTitle"] == null || ViewData["CustomTitle"].ToString() == "")
+                                {
+                                    @ViewData["Title"]
+                                }
+                                else
+                                {
+                                    @ViewData["CustomTitle"]
+                                }
+
+                                @RenderSection("TitleAfter", required: false)
+                            </div>
                         </div>
                     }
 
@@ -265,6 +279,7 @@
         <script type="text/javascript" src="~/lib/fastclick/lib/fastclick.js"></script>
         <script type="text/javascript" src="~/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js"></script>
         <script type="text/javascript" src="~/js/helpers/smartresize.min.js"></script>
+        <script type="text/javascript" src="~/lib/noty/lib/noty.min.js"></script>
         <script type="text/javascript" src="~/js/constants.min.js"></script>
         <script type="text/javascript" src="~/js/main.min.js"></script>
         @RenderSection("Scripts", required: false)

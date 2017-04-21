@@ -1,0 +1,14 @@
+@{
+    ViewData["ShowTitle"] = "false";
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="page-height row-equal align-middle text-center">
+    <div class="column">
+        <div class="error-number">
+            <span>@ViewBag.StatusCode</span>
+        </div>
+        <div class="m-b h4 text-uppercase"></div>
+        <p>@ViewBag.Message</p>
+    </div>
+</div>

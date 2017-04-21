@@ -102,6 +102,10 @@ namespace web.cvetbenavente.Services
         public void EditCliente(Cliente cliente)
         {
             Cliente clienteOriginal = db.Clientes.Find(cliente.Id);
+
+            cliente.DataEdicao = DateTime.UtcNow;
+            cliente.DataCriacao = clienteOriginal.DataCriacao;
+
             db.Entry(clienteOriginal).CurrentValues.SetValues(cliente);
 
             db.SaveChanges();
@@ -123,6 +127,28 @@ namespace web.cvetbenavente.Services
             cliente.Active = false;
 
             db.SaveChanges();
+        }
+
+        //Verifica se o cliente está ativo
+        public bool IsActive(Guid Guid)
+        {
+            var cl = db.Clientes.Find(Guid);
+
+            if (cl == null)
+            {
+                return false;
+            }
+            else
+            {
+                return (cl.Active ? true : false);
+            }
+        }
+
+        //Verifica se o cliente existe
+        public bool Exists(Guid Guid)
+        {
+            var cl = db.Clientes.Find(Guid);
+            return (cl == null ? false : true);
         }
     }
 }
