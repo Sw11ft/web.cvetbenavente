@@ -7,7 +7,10 @@
 {
     @section TitleAfter {
         <a class="size-14" data-toggle="popover" data-placement="bottom"
-           data-content="Um cliente inativo não pode ser alterado, não pode ser associado a eventos, não receberá notificações de eventos e quaisquer animais que lhe estejam associados estão igualmente inativos. É possivel reativar um cliente."
+           data-content="Um cliente inativo não pode ser alterado,
+           não pode ser associado a eventos, não receberá notificações
+           de eventos e quaisquer animais que lhe estejam associados estão
+           igualmente inativos. É possivel reativar um cliente."
            data-original-title="Cliente Inativo">
             <span class="label bg-red size-10 va-m">
                 Inativo&nbsp;
@@ -41,7 +44,7 @@
     else
     {
         <div class="col-sm-4 col-md-3">
-            <a href="#" class="btn btn-warning btn-icon m-b block enable-user">
+            <a href="javascript:;" class="btn btn-warning btn-icon m-b block enable-user" data-id="@Model.Id">
                 <i class="icon-user-following mr5"></i>
                 <span>Ativar</span>
             </a>
@@ -54,7 +57,11 @@
         Criado a <b>@Model.DataCriacao.ToString("d/MM/yyyy")</b><!--
         -->@if (Model.DataEdicao != null)
         {<!--
-            --><span>,</span> <span>Editado a <b>@Model.DataEdicao.Value.ToString("d/MM/yyyy")</b></span>
+            --><span>,</span> <span>Editado a <b>@Model.DataEdicao.Value.ToString("d/MM/yyyy")</b>.</span>
+        }<!--
+        -->@if (Model.DataDesativacao != null)
+        {<!--
+            --><span> Inativo desde <b>@Model.DataDesativacao.Value.ToString("d/MM/yyyy")</b></span>
         }
 
     </span>

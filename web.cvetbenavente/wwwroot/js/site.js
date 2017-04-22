@@ -204,7 +204,7 @@ $(function () {
                 title: "Desativar Cliente",
                 text: "Está prestes a desativar este cliente. <br/>" +
                       "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
-                      "não receberá notificações de eventos e quaisquer animais que lhe estejam" +
+                      "não receberá notificações de eventos e quaisquer animais que lhe estejam " +
                       "associados estão igualmente inativos. É possivel reativar um cliente.",
                 type: "warning",
                 html: true,
@@ -241,31 +241,28 @@ $(function () {
         }
     })
 
-    //Desativar utilizador
-    $(".disable-user").click(function () {
+    //Ativar utilizador
+    $(".enable-user").click(function () {
         let id = $(this).data("id");
 
         if (id != null && id != "") {
             swal({
                 title: "Ativar Cliente",
                 text: "Está prestes a ativar este cliente. <br/>" +
-                "Ao ser reativado, este cliente pode ser associado a eventos e receberá as suas notificações. <br/>" +
-
-                "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
-                "não receberá notificações de eventos e quaisquer animais que lhe estejam" +
-                "associados estão igualmente inativos. É possivel reativar um cliente.",
+                      "Ao ser reativado, este cliente pode ser associado a eventos e receberá as suas notificações. <br/>" +
+                      "Qualquer animal associado a este cliente que não tenha sido desativado individualmente será reativado.",
                 type: "warning",
                 html: true,
                 showCancelButton: true,
                 closeOnConfirm: false,
                 showLoaderOnConfirm: true,
-                confirmButtonText: "Desativar",
-                confirmButtonColor: "#dd6777",
+                confirmButtonText: "Ativar",
+                confirmButtonColor: "#6fc080",
                 cancelButtonText: "Cancelar",
                 cancelButtonColor: "#e2e2e2"
             }, function () { //on confirm
                 $.ajax({
-                    url: "/Clientes/DisableCliente",
+                    url: "/Clientes/EnableCliente",
                     type: "post",
                     data: { Id: id },
                     success: function (data) {

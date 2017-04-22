@@ -116,6 +116,7 @@ namespace web.cvetbenavente.Services
         {
             Cliente cliente = db.Clientes.Find(id);
             cliente.Active = false;
+            cliente.DataDesativacao = DateTime.UtcNow;
 
             db.SaveChanges();
         }

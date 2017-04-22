@@ -13,6 +13,7 @@ namespace web.cvetbenavente.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [Required(ErrorMessage = "O nome é obrigatório")]
         public string Nome { get; set; }
         public string Contacto { get; set; }
 
@@ -26,5 +27,6 @@ namespace web.cvetbenavente.Models
 
         public DateTime DataCriacao { get; set; }
         public DateTime? DataEdicao { get; set; }
+        public DateTime? DataDesativacao { get; set; }
     }
 }
