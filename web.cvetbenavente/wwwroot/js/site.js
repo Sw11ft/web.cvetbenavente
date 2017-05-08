@@ -203,9 +203,9 @@ $(function () {
             swal({
                 title: "Desativar Cliente",
                 text: "Está prestes a desativar este cliente. <br/>" +
-                      "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
-                      "não receberá notificações de eventos e quaisquer animais que lhe estejam " +
-                      "associados estão igualmente inativos. É possivel reativar um cliente.",
+                "Um cliente inativo não pode ser alterado, não pode ser associado a eventos," +
+                "não receberá notificações de eventos e quaisquer animais que lhe estejam " +
+                "associados estão igualmente inativos. É possivel reativar um cliente.",
                 type: "warning",
                 html: true,
                 showCancelButton: true,
@@ -236,10 +236,10 @@ $(function () {
                             });
                         }
                     }
-                })
+                });
             });
         }
-    })
+    });
 
     //Ativar utilizador
     $(".enable-user").click(function () {
@@ -249,8 +249,8 @@ $(function () {
             swal({
                 title: "Ativar Cliente",
                 text: "Está prestes a ativar este cliente. <br/>" +
-                      "Ao ser reativado, este cliente pode ser associado a eventos e receberá as suas notificações. <br/>" +
-                      "Qualquer animal associado a este cliente que não tenha sido desativado individualmente será reativado.",
+                "Ao ser reativado, este cliente pode ser associado a eventos e receberá as suas notificações. <br/>" +
+                "Qualquer animal associado a este cliente que não tenha sido desativado individualmente será reativado.",
                 type: "warning",
                 html: true,
                 showCancelButton: true,
@@ -281,13 +281,13 @@ $(function () {
                             });
                         }
                     }
-                })
+                });
             });
         }
-    })
+    });
 
     /*****************************************************************/
-}) //document.ready
+}); //document.ready
 
 
 //$FUNCTIONS
