@@ -125,7 +125,7 @@ namespace web.cvetbenavente.Services
         public void EnableCliente(Guid id)
         {
             Cliente cliente = db.Clientes.Find(id);
-            cliente.Active = false;
+            cliente.Active = true;
 
             db.SaveChanges();
         }

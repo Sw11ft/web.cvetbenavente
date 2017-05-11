@@ -7,12 +7,14 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Detalhes" asp-route-id="@item.Id">
                         @item.Nome
-                        <span class="pull-right size-10 text-muted lh-19"><i class="icon-arrow-right"></i></span>
+                </td>
+                <td>
+                    @item.Morada, @item.CodPostal @item.Localidade
+                    <a asp-action="Detalhes" asp-route-id="@item.Id">
+                        <span class="pull-right size-14 lh-19"><i class="icon-eye"></i></span>
                     </a>
                 </td>
-                <td>@item.Morada, @item.CodPostal @item.Localidade</td>
             </tr>
         }
     }
@@ -21,6 +23,5 @@
         <tr>
             <td>Não existem clientes a mostrar.</td>
         </tr>
-
     }
 }

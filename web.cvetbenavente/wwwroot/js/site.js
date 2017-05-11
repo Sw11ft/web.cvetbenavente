@@ -9,6 +9,7 @@
         $AJAX
     $FUNCTIONS
         getParameterByName(name, url)
+        removeParameterByName(name, url)
 */
 
 //$DOCUMENT.READY
@@ -147,15 +148,25 @@ $(function () {
             $("#ClientesIndexSearchFormGroup .clear").fadeOut(100);
         }
 
+        IndexSearch();
+    });
+
+    $("#ClientesIndexEstado").change(function () {
+        IndexSearch();
+    });
+
+    var IndexSearch = function () {
         window.clearTimeout(searchTimeout);
         searchTimeout = window.setTimeout(function () {
             let text = $("#ClientesIndexSearch").val().trim();
 
             let order = $("#ClientesIndexTable .ClienteColumn").attr("data-order");
+            let estado = $("#ClientesIndexEstado").val();
 
             $.ajax({
-                url: "/Clientes/IndexTableData?field=nome&order=" + order + "&query=" + text,
+                url: "/Clientes/IndexTableData",
                 type: "get",
+                data: { field: "nome", order: order, query: text, estado: estado },
                 beforeSend: function () {
                     $("#ClientesIndexTable tbody").addClass("loading");
                     $("#ClientesIndexTable .ClienteColumn").addClass("disabled");
@@ -168,8 +179,7 @@ $(function () {
                 }
             });
         }, 400);
-    });
-
+    }
     /*****************************************************************/
 
     //$ANIMAÇÕES
@@ -231,7 +241,7 @@ $(function () {
                         }
                         else {
                             swal({
-                                title: "Ocorreu um erro",
+                                title: "Ocorreu um erro. Se isto persistir, contacte a administração."  ,
                                 type: "error"
                             });
                         }
@@ -268,7 +278,7 @@ $(function () {
                     success: function (data) {
                         if (data == true) {
                             swal({
-                                title: "Cliente desativado com sucesso.",
+                                title: "Cliente ativado com sucesso.",
                                 type: "success"
                             }, function () {
                                 window.location.reload(true);
@@ -276,7 +286,7 @@ $(function () {
                         }
                         else {
                             swal({
-                                title: "Ocorreu um erro",
+                                title: "Ocorreu um erro. Se isto persistir, contacte a administração.",
                                 type: "error"
                             });
                         }
@@ -288,7 +298,6 @@ $(function () {
 
     /*****************************************************************/
 }); //document.ready
-
 
 //$FUNCTIONS
 function getParameterByName(name, url) {

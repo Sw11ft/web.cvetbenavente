@@ -110,6 +110,9 @@ span.error {
 *[id^="noty_layout"] {
   top: 60px !important; }
 
+.icon-info {
+  cursor: help; }
+
 /************************/
 /*tables*/
 table {
@@ -128,6 +131,12 @@ table thead .sortable {
 table thead.disabled {
   cursor: not-allowed;
   color: #727274; }
+
+table.table-hover tbody tr a i[class^=icon-] {
+  display: none; }
+
+table.table-hover tbody tr:hover a i[class^=icon-] {
+  display: inline; }
 
 /************************/
 .switch {

@@ -1,4 +1,4 @@
-@model IEnumerable<web.cvetbenavente.Models.Cliente>
+﻿@model IEnumerable<web.cvetbenavente.Models.Cliente>
 
 @{
     ViewData["Title"] = "Todos os Clientes";
@@ -54,9 +54,8 @@
 
 <!--Tabela de Clientes-->
 <div class="table-responsive">
-    <table class="table table-bordered m-b-0" id="ClientesIndexTable">
+    <table class="table table-bordered table-hover m-b-0" id="ClientesIndexTable">
         <thead class="card-header b-a-0 m-a-0">
-
             <tr>
                 <th class="ClienteColumn sortable" data-order="asc">Cliente <i class="fa fa-caret-down pull-right"></i></th>
                 <th>Morada</th>

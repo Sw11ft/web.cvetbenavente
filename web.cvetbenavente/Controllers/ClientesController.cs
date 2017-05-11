@@ -24,7 +24,7 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: IndexTableData
-        public IActionResult IndexTableData(string field = "nome", string order = "asc", string query = null)
+        public IActionResult IndexTableData(string field = "nome", string order = "asc", string query = null, int estado = 1)
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -68,7 +68,24 @@ namespace web.cvetbenavente.Controllers
                         break;
                 }
 
-                var clientes = service.GetClientes(Enums.TipoAtivo.Ativo, enumField, enumOrder, query);
+                //Estado
+                Enums.TipoAtivo tipoAtivo = Enums.TipoAtivo.Ativo;
+                switch (estado)
+                {
+                    case 0:
+                        tipoAtivo = Enums.TipoAtivo.Ambos;
+                        break;
+                    case 1:
+                        tipoAtivo = Enums.TipoAtivo.Ativo;
+                        break;
+                    case 2:
+                        tipoAtivo = Enums.TipoAtivo.Inativo;
+                        break;
+                    default:
+                        tipoAtivo = Enums.TipoAtivo.Ativo;
+                        break;
+                }
+                var clientes = service.GetClientes(tipoAtivo, enumField, enumOrder, query);
 
                 return PartialView("_IndexTablePartial", clientes);
             }
