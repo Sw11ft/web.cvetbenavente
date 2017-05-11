@@ -119,6 +119,11 @@ namespace web.cvetbenavente
                     name: "clienteedit",
                     template: "Clientes/{id}/Editar",
                     defaults: new { controller = "Clientes", action = "Editar" });
+
+                routes.MapRoute(
+                    name: "animaisespecie",
+                    template: "Animais/Especies/{action=Index}/{id?}",
+                    defaults: new { controller = "Especies" });
             });
         }
     }
