@@ -17,5 +17,7 @@ namespace web.cvetbenavente.Models
         public string Nome { get; set; }
 
         public bool Active { get; set; }
+
+        public DateTime DataCriacao { get; set; }
     }
 }

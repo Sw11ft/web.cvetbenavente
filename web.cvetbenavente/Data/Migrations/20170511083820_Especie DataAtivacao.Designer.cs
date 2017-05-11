@@ -9,9 +9,10 @@ using web.cvetbenavente.Models;
 namespace web.cvetbenavente.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170511083820_Especie DataAtivacao")]
+    partial class EspecieDataAtivacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -234,7 +235,7 @@ namespace web.cvetbenavente.Data.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<DateTime>("DataCriacao");
+                    b.Property<DateTime>("DataAtivacao");
 
                     b.Property<string>("Nome")
                         .IsRequired();
