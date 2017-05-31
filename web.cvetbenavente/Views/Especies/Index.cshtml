@@ -1,49 +1,48 @@
-@model IEnumerable<web.cvetbenavente.Models.Especie>
-
+﻿@model web.cvetbenavente.Models.EspeciesViewModels.IndexViewModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Espécies";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nome)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Active)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-</body>
-</html>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover m-b-0" id="EspeciesIndexTable">
+        <thead class="card-header b-a-0 m-a-0">
+            <tr>
+                <th>Espécie</th>
+                <th>Animais Associados</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Especies.Any())
+            {
+                @foreach (var item in Model.Especies)
+                {
+                    <tr>
+                        <td class="lh-25">
+                            <img src="~/images/paw.jpg" id="teste" height="25"/>
+                            @item.Nome
+                        </td>
+                        <td class="lh-25">
+                            @item.NrAnimais
+                            <a asp-action="Detalhes" asp-route-id="@item.Id" class="hidden-print">
+                                <span class="pull-right size-14 lh-25" data-toggle="tooltip" data-placement="top" title="Detalhes">
+                                    <i class="icon-eye"></i>
+                                </span>
+                            </a>
+                            &nbsp;
+                            <a asp-action="Index" asp-controller="Animais" asp-route-especie="@item.Id" class="hidden-print">
+                                <span class="pull-right size-14 lh-25" style="margin-right: 5px" data-toggle="tooltip" data-placement="top" title="Animais desta espécie">
+                                    <i class="fa fa-paw"></i>
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr colspan="2">
+                    <td>Não existem espécies a mostrar</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -19,7 +19,7 @@
         </a>
     }
 }
-<div class="row">
+<div class="row hidden-print">
     @if (Model.Active)
     {
         <div class="col-sm-4 col-md-3">
@@ -112,9 +112,9 @@
     </div>
 </div>
 
-<a asp-action="Index" id="VoltarLink">
+<a asp-action="Index" id="VoltarLink" class="hidden-print">
     <i class="icon-arrow-left"></i>
-    <span style="display: none" class="text">Voltar</span>
+    <span class="text">Voltar</span>
 </a>
 
 @section VendorStyles {

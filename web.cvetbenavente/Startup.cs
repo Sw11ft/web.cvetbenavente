@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using web.cvetbenavente.Data;
 using web.cvetbenavente.Models;
 using web.cvetbenavente.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace web.cvetbenavente
 {
@@ -62,6 +64,12 @@ namespace web.cvetbenavente
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            //Requer HTTPS
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    options.Filters.Add(new RequireHttpsAttribute());
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +77,11 @@ namespace web.cvetbenavente
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            /*
+            var options = new RewriteOptions()
+                .AddRedirectToHttps();
+            */
 
             if (env.IsDevelopment())
             {

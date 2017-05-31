@@ -1,0 +1,61 @@
+@model web.cvetbenavente.Models.EspeciesViewModels.DetalhesViewModel
+
+@{
+    ViewData["Title"] = Model.Nome;
+}
+
+<div class="row hidden-print">
+    <div class="col-sm-4 col-md-3">
+        <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary btn-icon m-b block">
+            <i class="icon-pencil mr5"></i>
+            <span>Editar</span>
+        </a>
+    </div>
+    <div class="col-sm-4 col-md-3">
+        <a href="#" class="btn btn-success btn-icon m-b block">
+            <i class="fa fa-paw mr5"></i>
+            <span>Animais</span>
+        </a>
+    </div>
+    @if (Model.NrAnimais == 0)
+    {
+        <div class="col-sm-4 col-md-3 col-md-offset-3">
+            <a href="javascript:;" data-id="@Model.Id" class="btn btn-danger btn-icon m-b block disable-user">
+                <i class="icon-trash mr5"></i>
+                <span>Apagar</span>
+            </a>
+        </div>
+    }
+
+</div> @{/*--row*/}
+
+<div class="card bg-white">
+    <div class="card-header">
+        Dados
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nome</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Data de Criação</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" readonly="readonly" value="@Model.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy hh:mm")"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Index" id="VoltarLink" class="hidden-print">
+    <i class="icon-arrow-left"></i>
+    <span class="text">Voltar</span>
+</a>

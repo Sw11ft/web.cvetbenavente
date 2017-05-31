@@ -8,10 +8,16 @@
             <tr>
                 <td>
                         @item.Nome
+                        @{
+                            if (item.Active == false)
+                            {
+                                <span class="label bg-red size-10 va-m">Inativo</span>
+                            }
+                        }
                 </td>
                 <td>
                     @item.Morada, @item.CodPostal @item.Localidade
-                    <a asp-action="Detalhes" asp-route-id="@item.Id">
+                    <a asp-action="Detalhes" asp-route-id="@item.Id" class="hidden-print">
                         <span class="pull-right size-14 lh-19"><i class="icon-eye"></i></span>
                     </a>
                 </td>

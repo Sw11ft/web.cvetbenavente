@@ -17,6 +17,8 @@ $(function () {
 
     //BOOTSTRAP POPOVER
     $('[data-toggle="popover"]').popover();
+    //BOOTSTRAP TOOLTIP
+    $('[data-toggle="tooltip"]').tooltip();
 
     /*****************************************************************/
 
@@ -24,7 +26,7 @@ $(function () {
 
     //nid: notification id
     //nt: notification type
-    if (getParameterByName("nid") != "" && getParameterByName("nid") != null) {
+    if (getParameterByName("nid") !== "" && getParameterByName("nid") !== null) {
         let id = getParameterByName("nid");
         let type = getParameterByName("nt");
 
@@ -35,6 +37,7 @@ $(function () {
         let invalid = "$$$INVALID$$$";
 
         switch (id) {
+            //CLIENTE
             case "1":
                 msg = "Cliente criado com sucesso.";
                 break;
@@ -47,46 +50,69 @@ $(function () {
             case "12":
                 msg = "O cliente encontra-se inativo.";
                 break;
+            //--
+            //PASSWORD
             case "2":
                 msg = "Password alterada com sucesso.";
                 break;
             case "3":
                 msg = "Ocorreu um erro ao alterar a password.";
                 break;
+            //--
+            //ESPÉCIES
+            case "4":
+                msg = "Espécie criada com sucesso.";
+                break;
+            case "40":
+                msg = "Espécie editada com sucesso.";
+                break;
+            case "41":
+                msg = "A espécie não foi encontrada.";
+                break;
+            case "42":
+                msg = "A espécie encontra-se inativa";
+                break;
+            case "43":
+                msg = "Já existe um espécie com o nome introduzido";
+                break;
+            //--
+            //DEFAULT
             default:
                 msg = invalid;
                 break;
         }
 
         switch (type) {
-            case "a":
+            case "a":                   //ALERT
                 type = "alert";
                 break;
-            case "s":
+            case "s":                   //SUCCESS
                 type = "success";
                 break;
-            case "w":
+            case "w":                   //WARNING
                 type = "warning";
                 break;
-            case "e":
+            case "e":                   //ERROR
                 type = "error";
                 break;
-            case "i":
+            case "i":                   //INFORMATION
                 type = "information";
                 break;
-            default:
+            default:                    //DEFAULT
                 type = "information";
                 break;
         }
 
-        if (id != invalid) {
+        if (msg !== invalid) {
             new Noty({
                 text: msg,
                 type: type,
                 layout: 'topRight',
                 timeout: 2500,
-                progressBar: false,
+                progressBar: false
             }).show();
+        } else {
+            console.error("ID noty não reconhecido (" & id & ")");
         }
     }
 
@@ -101,7 +127,7 @@ $(function () {
             let text = $("#ClientesIndexSearch").val().trim();
 
             let queryOrder;
-            if (order != "asc") {
+            if (order !== "asc") {
                 queryOrder = "asc";
             } else {
                 queryOrder = "desc";
@@ -117,7 +143,7 @@ $(function () {
                 success: function (data) {
                     $("#ClientesIndexTable tbody").html(data);
 
-                    if (order == "asc") {
+                    if (order === "asc") {
                         $("#ClientesIndexTable .ClienteColumn").attr("data-order", "desc");
                     } else {
                         $("#ClientesIndexTable .ClienteColumn").attr("data-order", "asc");
@@ -142,7 +168,7 @@ $(function () {
     let searchTimeout;
     $("#ClientesIndexSearch").on("input", function () {
         //mostra o botão para limpar
-        if ($("#ClientesIndexSearch").val().trim() != "") {
+        if ($("#ClientesIndexSearch").val().trim() !== "") {
             $("#ClientesIndexSearchFormGroup .clear").fadeIn(100);
         } else {
             $("#ClientesIndexSearchFormGroup .clear").fadeOut(100);
@@ -179,7 +205,7 @@ $(function () {
                 }
             });
         }, 400);
-    }
+    };
     /*****************************************************************/
 
     //$ANIMAÇÕES
@@ -209,7 +235,7 @@ $(function () {
     $(".disable-user").click(function () {
         let id = $(this).data("id");
 
-        if (id != null && id != "") {
+        if (id !== null && id !== "") {
             swal({
                 title: "Desativar Cliente",
                 text: "Está prestes a desativar este cliente. <br/>" +
@@ -231,7 +257,7 @@ $(function () {
                     type: "post",
                     data: { Id: id },
                     success: function (data) {
-                        if (data == true) {
+                        if (data === true) {
                             swal({
                                 title: "Cliente desativado com sucesso.",
                                 type: "success"
@@ -255,7 +281,7 @@ $(function () {
     $(".enable-user").click(function () {
         let id = $(this).data("id");
 
-        if (id != null && id != "") {
+        if (id !== null && id !== "") {
             swal({
                 title: "Ativar Cliente",
                 text: "Está prestes a ativar este cliente. <br/>" +
@@ -276,7 +302,7 @@ $(function () {
                     type: "post",
                     data: { Id: id },
                     success: function (data) {
-                        if (data == true) {
+                        if (data === true) {
                             swal({
                                 title: "Cliente ativado com sucesso.",
                                 type: "success"
@@ -328,7 +354,7 @@ function removeParameterByName(name, url) {
     var rtn = url.split("?")[0],
         param,
         params_arr = [],
-        queryString = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
+        queryString = url.indexOf("?") !== -1 ? url.split("?")[1] : "";
     if (queryString !== "") {
         params_arr = queryString.split("&");
         for (var i = params_arr.length - 1; i >= 0; i -= 1) {

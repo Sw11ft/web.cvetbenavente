@@ -291,35 +291,6 @@ namespace web.cvetbenavente.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
-
-        // POST: Clientes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var cliente = await _context.Clientes.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Clientes.Remove(cliente);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
         private bool ClienteExists(Guid id)
         {
             return _context.Clientes.Any(e => e.Id == id);
