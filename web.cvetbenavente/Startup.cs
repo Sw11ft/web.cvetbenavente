@@ -98,6 +98,7 @@ namespace web.cvetbenavente
 
             app.UseIdentity();
 
+
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
@@ -132,6 +133,16 @@ namespace web.cvetbenavente
                     name: "clienteedit",
                     template: "Clientes/{id}/Editar",
                     defaults: new { controller = "Clientes", action = "Editar" });
+
+                routes.MapRoute(
+                    name: "animaisdetails",
+                    template: "Animais/{id}",
+                    defaults: new { controller = "Animais", action = "Detalhes" });
+
+                routes.MapRoute(
+                    name: "animaisedit",
+                    template: "Animais/{id}/Editar",
+                    defaults: new { controller = "Animais", action = "Editar" });
 
                 routes.MapRoute(
                     name: "animaisespecie",

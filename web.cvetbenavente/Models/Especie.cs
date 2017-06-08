@@ -23,5 +23,7 @@ namespace web.cvetbenavente.Models
         public string Imagem { get; set; }
 
         public DateTime DataCriacao { get; set; }
+
+        public DateTime? DataEdicao { get; set; }
     }
 }

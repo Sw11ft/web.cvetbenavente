@@ -5,7 +5,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
     Layout = null;
 }
 <!doctype html>
@@ -29,9 +29,15 @@
         <link rel="stylesheet" href="~/css/app.css" />
         <!---------------/scripts do template---------------->
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/no-js.min.css" />
 
     </head>
     <body class="page-loading">
+        <div class="no-js-container">
+            <img src="~/images/logo_circles_md.png" class="logo" />
+            <img src="~/images/js-outline.png" class="js-outline" />
+            <h4>Esta plataforma requer JavaScript. Para continuar, ative a utilização de scripts.</h4>
+        </div>
         <!-- page loading spinner -->
         <div class="pageload">
             <div class="pageload-inner">

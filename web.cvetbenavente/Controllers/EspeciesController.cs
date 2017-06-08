@@ -29,7 +29,7 @@ namespace web.cvetbenavente.Controllers
         {
             IndexViewModel model = new IndexViewModel();
 
-            List<Especie> Especies = db.Especies.Where(x => x.Active == true).ToList();
+            List<Especie> Especies = db.Especies.Where(x => x.Active == true).OrderBy(x => x.Nome).ToList();
 
             foreach (var item in Especies)
             {
@@ -120,7 +120,10 @@ namespace web.cvetbenavente.Controllers
             {
                 return NotFound();
             }
-            return View(especie);
+            EditarViewModel model = new EditarViewModel();
+
+            model.Especie = especie;
+            return View(model);
         }
 
         // POST: Especies/Edit/5
@@ -128,34 +131,55 @@ namespace web.cvetbenavente.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Guid id, [Bind("Id,Nome,Active")] Especie especie)
+        public async Task<IActionResult> Editar(Guid? id, EditarViewModel model)
         {
-            if (id != especie.Id)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                try
+                Guid xid = id ?? default(Guid);
+
+                if (db.Especies.SingleOrDefaultAsync(x => x.Id == xid) == null)
                 {
-                    db.Update(especie);
-                    await db.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+
+                if (ModelState.IsValid)
                 {
-                    if (!EspecieExists(especie.Id))
+                    try
                     {
-                        return NotFound();
+                        Especie especieOriginal = db.Especies.Find(id);
+
+                        Especie especieAlterada = model.Especie;
+
+
+                        especieAlterada.DataEdicao = DateTime.UtcNow;
+                        especieAlterada.DataCriacao = especieOriginal.DataCriacao;
+                        especieAlterada.Active = true;
+                        especieAlterada.Id = xid;
+
+                        db.Entry(especieOriginal).CurrentValues.SetValues(especieAlterada);
+
+
+                        await db.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!EspecieExists(model.Especie.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
+                return View(model);
             }
-            return View(especie);
         }
 
         // GET: Especies/Delete/5
@@ -195,11 +219,111 @@ namespace web.cvetbenavente.Controllers
         {
             return db.Especies.Any(x => x.Nome.ToLowerInvariant() == nome.ToLowerInvariant());
         }
+        public bool EspecieExistsByStringId(string IdEspecie)
+        {
+            try
+            {
+                Guid xIdEspecie = Guid.Parse(IdEspecie);
+                return db.Especies.Any(x => x.Id == xIdEspecie);
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         [HttpGet]
         public ActionResult EspecieNameValid([Bind(Prefix = "Especie.Nome")] string Nome)
         {
                 return EspecieExists(Nome) ? Json(false) : Json(true);
+        }
+
+        [HttpPost]
+        public bool ApagarEspecie (string Id)
+        {
+            bool validGuid = true;
+            Guid Guid;
+
+            try
+            {
+                Guid = new Guid(Id);
+    }
+            catch
+            {
+                validGuid = false;
+            }
+
+            if (validGuid)
+            {
+                Especie especie = db.Especies.Find(Guid);
+
+                if (especie == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    db.Especies.Remove(especie);
+                    db.SaveChanges();
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetEspecies(string q /*query*/, int mr = 10 /*maxresults*/)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                var esp =
+                        (
+                            from Especies in db.Especies
+                            orderby (
+                                from Animais in db.Animais
+                                where Animais.IdEspecie == Especies.Id
+                                select new { Animais }
+                            ).Count() descending, Especies.Nome
+                            select new
+                            {
+                                id = Especies.Id,
+                                text = Especies.Nome,
+                                nrAnimais = (
+                                    from Animais in db.Animais
+                                    where Animais.IdEspecie == Especies.Id
+                                    select new { Animais }
+                                ).Count()
+                            }
+                        ).Take(mr).ToList();
+
+                return Json(esp);
+            } else
+            {
+                var esp =
+                        (
+                            from Especies in db.Especies
+                            where Especies.Nome.Contains(q)
+                            orderby (
+                                from Animais in db.Animais
+                                where Animais.IdEspecie == Especies.Id
+                                select new { Animais }
+                            ).Count() descending, Especies.Nome
+                            select new {
+                                id = Especies.Id,
+                                text = Especies.Nome,
+                                nrAnimais = (
+                                    from Animais in db.Animais
+                                    where Animais.IdEspecie == Especies.Id
+                                    select new { Animais }
+                                ).Count()
+                            }
+                        ).Take(mr).ToList();
+
+                return Json(esp);
+            }
         }
     }
 }

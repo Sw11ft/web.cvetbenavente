@@ -1,50 +1,50 @@
-@model web.cvetbenavente.Models.Especie
+@model web.cvetbenavente.Models.EspeciesViewModels.EditarViewModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "A editar " + Model.Especie.Nome;
+    ViewData["CustomTitle"] = Model.Especie.Nome;
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4>Especie</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-        <div class="form-group">
-            <label asp-for="Nome" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <div class="checkbox">
-                    <input asp-for="Active" />
-                    <label asp-for="Active"></label>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+<div class="card bg-white">
+    <div class="card-header">
+        Dados
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <form class="form-horizontal" role="form" asp-action="Editar">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nome</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" asp-for="Especie.Nome" value="@Model.Especie.Nome" required>
+                            <span class="error" asp-validation-for="Especie.Nome"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nova Imagem</label>
+                        <div class="col-sm-8">
+                            <input type="file" accept="image/png, image/jpeg, image/jpg" asp-for="Imagem">
+                            <p class="help-block">Apenas ficheiros <b>PNG</b> e <b>JPEG</b></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <button type="submit" name="Submeter" class="btn btn-primary m-r">Submeter</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+</div>
+<div class="col-xs-12">
+    <a asp-action="Index" class="hidden-text-link" id="VoltarLink">
+        <i class="icon-arrow-left"></i>
+        <span style="display: none" class="text">Voltar</span>
+    </a>
 </div>
 
-</body>
-</html>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

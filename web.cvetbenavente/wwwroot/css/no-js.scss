@@ -1,0 +1,55 @@
+﻿/*#region NO-JS */
+.no-js-container {
+    display: none;
+}
+
+.no-js {
+    .no-js-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-height: 100%;
+        z-index: 100000;
+        padding: 15px;
+        background-color: #fff;
+        background-color: rgba(255,255,255,.99);
+        overflow: auto !important;
+
+        * {
+            display: block;
+        }
+
+        .logo {
+            position: absolute;
+            height: 30px;
+            bottom: 15px;
+            right: 15px;
+            filter: grayscale(100%);
+        }
+
+        .js-outline {
+            max-width: 200px;
+            width: 50%;
+            margin-bottom: 30px;
+        }
+
+        h4 {
+            text-align: center;
+            line-height: 23px;
+            margin-bottom: 30px;
+        }
+    }
+}
+
+@media (max-height: 340px) {
+    .no-js .no-js-container .js-outline {
+        display: none;
+    }
+}
+/*#endregion */

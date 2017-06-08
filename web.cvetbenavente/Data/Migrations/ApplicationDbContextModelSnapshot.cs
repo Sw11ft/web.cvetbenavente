@@ -129,6 +129,10 @@ namespace web.cvetbenavente.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DataCriacao");
+
+                    b.Property<DateTime?>("DataEdicao");
+
                     b.Property<int>("Genero");
 
                     b.Property<Guid>("IdCliente");
@@ -136,6 +140,10 @@ namespace web.cvetbenavente.Data.Migrations
                     b.Property<Guid>("IdEspecie");
 
                     b.Property<string>("Nome");
+
+                    b.Property<string>("Observacoes");
+
+                    b.Property<bool>("Removido");
 
                     b.HasKey("Id");
 
@@ -235,6 +243,8 @@ namespace web.cvetbenavente.Data.Migrations
                     b.Property<bool>("Active");
 
                     b.Property<DateTime>("DataCriacao");
+
+                    b.Property<DateTime?>("DataEdicao");
 
                     b.Property<string>("Imagem");
 

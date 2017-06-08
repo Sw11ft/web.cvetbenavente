@@ -7,6 +7,7 @@
         $ANIMAÇÕES
         $LIMPEZA DE FORMS/INPUTS
         $AJAX
+        $SELECT2
     $FUNCTIONS
         getParameterByName(name, url)
         removeParameterByName(name, url)
@@ -74,6 +75,17 @@ $(function () {
                 break;
             case "43":
                 msg = "Já existe um espécie com o nome introduzido";
+                break;
+            //--
+            //ESPÉCIES
+            case "5":
+                msg = "Animal criado com sucesso.";
+                break;
+            case "50":
+                msg = "Animal editado com sucesso.";
+                break;
+            case "51":
+                msg = "O animal não foi encontrado.";
                 break;
             //--
             //DEFAULT
@@ -166,6 +178,10 @@ $(function () {
 
     //Clientes/Index Procura
     let searchTimeout;
+    let pageTitle = $("#PageTitle").html();
+    if (typeof pageTitle !== "undefined") {
+        pageTitle = pageTitle.trim();
+    }
     $("#ClientesIndexSearch").on("input", function () {
         //mostra o botão para limpar
         if ($("#ClientesIndexSearch").val().trim() !== "") {
@@ -204,6 +220,11 @@ $(function () {
                     $("#ClientesIndexTable .ClienteColumn").removeClass("disabled");
                 }
             });
+            if (text === "") {
+                $("#PageTitle").html(pageTitle);
+            } else {
+                $("#PageTitle").html(pageTitle + " - Pesquisa por \x22" + "<i>" + text + "</i>" + "\x22");
+            }
         }, 400);
     };
     /*****************************************************************/
@@ -322,6 +343,185 @@ $(function () {
         }
     });
 
+    //Ativar utilizador
+    $(".delete-especie").click(function () {
+        let id = $(this).data("id");
+
+        if (id !== null && id !== "") {
+            swal({
+                title: "Apagar Espécie",
+                text: "Está prestes a apagar esta espécie. <br/>" +
+                "Ao apagar a espécie, não lhe poderá associar nenhum animal. <br/>" +
+                "Esta ação não pode ser revertida.",
+                type: "warning",
+                html: true,
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true,
+                confirmButtonText: "Apagar",
+                confirmButtonColor: "#dd6777",
+                cancelButtonText: "Cancelar",
+                cancelButtonColor: "#e2e2e2"
+            }, function () { //on confirm
+                $.ajax({
+                    url: "/Especies/ApagarEspecie",
+                    type: "post",
+                    data: { Id: id },
+                    success: function (data) {
+                        if (data === true) {
+                            swal({
+                                title: "Espécie apagada com sucesso.",
+                                type: "success"
+                            }, function () {
+                                window.location.href = "/Especies";
+                            });
+                        }
+                        else {
+                            swal({
+                                title: "Ocorreu um erro. Se isto persistir, contacte a administração.",
+                                type: "error"
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    });
+
+    //MENU NÚMERO DE REGISTOS
+    $.ajax({
+        type: "get",
+        url: "/XHR/Registos",
+        data: { clientes: true, animais: true, especies: false },
+        error: function () {
+            console.error("Ocorreu um erro ao enviar o pedido AJAX (/XHR/Registos)");
+            $(".menu-loader").fadeOut("fast");
+        },
+        success: function (data) {
+            $(".menu-loader").fadeOut("fast", function () {
+                if (data["clientes"] !== null) {
+                    $("#ClientesBadge").html(data["clientes"]).fadeIn(750);
+                }
+                if (data["animais"] !== null) {
+                    $("#AnimaisBadge").html(data["animais"]).fadeIn(750);
+                }
+                if (data["especies"] !== null) {
+                    $("#EspeciesBadge").html(data["especies"]).fadeIn(750);
+                }
+
+                if (typeof data["error"] !== "undefined") {
+                    console.error(data["message"]);
+                }
+            });
+        }
+    });
+
+    /*****************************************************************/
+
+    //$SELECT2
+
+    $EspecieSelect = $("#EspeciesSelect").select2({
+        placeholder: "Selecione uma espécie...",
+        ajax: {
+            language: "pt",
+            delay: 250,
+            url: "/Especies/GetEspecies",
+            dataType: "json",
+            type: "GET",
+            data: function (params) {
+                var query = {
+                    q: params.term, /*query*/
+                    mr: 10 /*max results*/
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                    //results: $.map(data, function (item) {
+                    //    return {
+                    //        text: item.text + " <b>" + item.nrAnimais + "</b>",
+                    //        id: item.id,
+                    //    }
+                    //})
+                };
+            }
+        },
+        templateResult: function (data) {
+            markup = "<span class='title'>" + data.text + "</span> ";
+            markup += "<span class='sub'>";
+            if (typeof (data.nrAnimais) !== "undefined" && data.nrAnimais !== 0) {
+                markup += data.nrAnimais;
+                if (data.nrAnimais === 1) {
+                    markup += " Animal";
+                } else {
+                    markup += " Animais";
+                }
+            }
+            markup += "</span>";
+
+            return $(markup);
+        }
+    });
+
+    $("#GeneroSelect").select2({
+        minimumResultsForSearch: -1,
+        language: "pt",
+        placeholder: "Selecione um género...",
+        data: [
+            { id: 0, text: "Macho" },
+            { id: 1, text: "Fêmea" }
+        ]
+    });
+
+    $ClienteSelect = $("#ClienteSelect").select2({
+        placeholder: "Selecione um cliente...",
+        ajax: {
+            language: "pt",
+            delay: 250,
+            url: "/Clientes/GetClientes",
+            dataType: "json",
+            type: "GET",
+            data: function (params) {
+                var query = {
+                    q: params.term, /*query*/
+                    mr: 15, /*max results*/
+                    page: params.page /*página*/
+                }
+                return query;
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.items, /*$.map(data, function (item) {
+                        return {
+                            text: item.nome,
+                            id: item.id,
+                        }
+                    })*/
+                    pagination: {
+                        more: (params.page * 15) < data.total_items
+                    }
+                };
+            },
+            cache: true
+        },
+        templateResult: function (data) {
+            markup = "<span class='title'>" + data.text + "</span> ";
+
+            if (typeof data.contacto !== "undefined") {
+                markup += "<span class='sub'>" + data.contacto + "</span>";
+            }
+            if (typeof data.morada !== "undefined" && typeof data.codPostal !== "undefined" && typeof data.localidade !== "undefined") {
+                markup += "<br />";
+                markup += "<span class='morada'>" + data.morada + ", " + data.codPostal + " " + data.localidade + "</span>";
+            }
+            return $(markup);
+        },
+    });
+    if (getParameterByName("cl")) {
+        $ClienteSelect.val(getParameterByName("cl")).trigger("change");
+    }
     /*****************************************************************/
 }); //document.ready
 

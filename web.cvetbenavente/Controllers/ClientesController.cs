@@ -16,11 +16,11 @@ namespace web.cvetbenavente.Controllers
     [Authorize]
     public class ClientesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext db;
 
         public ClientesController(ApplicationDbContext context)
         {
-            _context = context;
+            db = context;
         }
 
         // GET: IndexTableData
@@ -28,7 +28,7 @@ namespace web.cvetbenavente.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                ClienteServices service = new ClienteServices(_context);
+                ClienteServices service = new ClienteServices(db);
 
                 field = field.ToLower();
                 order = order.ToLower();
@@ -99,7 +99,7 @@ namespace web.cvetbenavente.Controllers
         [HttpPost]
         public bool DisableCliente(string Id)
         {
-            ClienteServices service = new ClienteServices(_context);
+            ClienteServices service = new ClienteServices(db);
 
             bool validGuid = true;
             Guid Guid;
@@ -137,7 +137,7 @@ namespace web.cvetbenavente.Controllers
         [HttpPost]
         public bool EnableCliente(string Id)
         {
-            ClienteServices service = new ClienteServices(_context);
+            ClienteServices service = new ClienteServices(db);
 
             bool validGuid = true;
             Guid Guid;
@@ -174,7 +174,7 @@ namespace web.cvetbenavente.Controllers
         // GET: Clientes
         public IActionResult Index()
         {
-            ClienteServices service = new ClienteServices(_context);
+            ClienteServices service = new ClienteServices(db);
 
             return View(service.GetClientes(Enums.TipoAtivo.Ativo, Enums.OrderClientes.Nome, Enums.OrderDirection.Asc));
         }
@@ -182,7 +182,7 @@ namespace web.cvetbenavente.Controllers
         // GET: Clientes/Details/5
         public IActionResult Detalhes(Guid? id)
         {
-            ClienteServices service = new ClienteServices(_context);
+            ClienteServices service = new ClienteServices(db);
 
             if (id == null)
             {
@@ -213,7 +213,7 @@ namespace web.cvetbenavente.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Criar(CriarViewModel model)
         {
-            ClienteServices service = new ClienteServices(_context);
+            ClienteServices service = new ClienteServices(db);
 
             var clienteModel = model.Cliente;
             if (ModelState.IsValid)
@@ -254,7 +254,7 @@ namespace web.cvetbenavente.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes.SingleOrDefaultAsync(m => m.Id == id);
+            var cliente = await db.Clientes.SingleOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -269,7 +269,7 @@ namespace web.cvetbenavente.Controllers
         {
             if (ModelState.IsValid)
             {
-                ClienteServices service = new ClienteServices(_context);
+                ClienteServices service = new ClienteServices(db);
                 if (service.Exists(cliente.Id))
                 {
                     if (service.IsActive(cliente.Id))
@@ -291,9 +291,65 @@ namespace web.cvetbenavente.Controllers
             return View(cliente);
         }
 
-        private bool ClienteExists(Guid id)
+        public bool ClienteExists(Guid id)
         {
-            return _context.Clientes.Any(e => e.Id == id);
+            return db.Clientes.Any(e => e.Id == id);
+        }
+        public bool ClienteExists(string id) {
+            try
+            {
+                Guid parsedId = Guid.Parse(id);
+                return ClienteExists(parsedId);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+        public bool ClienteExistsByStringId(string IdCliente)
+        {
+            try
+            {
+                Guid xIdCliente = Guid.Parse(IdCliente);
+                return db.Clientes.Any(x => x.Id == xIdCliente);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public IActionResult GetClientes(int ativo = 1, string q = null /*query*/, int page = 1 /*paginação*/, int mr = 15)
+        {
+
+            var clientes = db.Clientes.AsQueryable();
+
+            switch (ativo)
+            {
+                case 0:
+                    clientes = clientes.Where(x => x.Active == false);
+                    break;
+                case 1:
+                    clientes = clientes.Where(x => x.Active == true);
+                    break;
+                default:
+                    break;
+            }
+
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                clientes = clientes.Where(x => x.Nome.Contains(q) || x.Contacto.Contains(q) || x.Morada.Contains(q) || x.CodPostal.Contains(q) || x.Localidade.Contains(q));
+            }
+
+            var totalClientes = clientes.Count();
+            var listClientes = clientes.Select(x => new { id = x.Id, text = x.Nome, x.Contacto, x.Morada, x.Localidade, x.CodPostal }).OrderBy(x => x.text).Skip(mr * (page - 1)).Take(mr).ToList();
+
+            return Json(new { total_items = totalClientes, items = listClientes });
+
         }
     }
 }

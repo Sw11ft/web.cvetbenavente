@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\css\no-js.scss" />
     <Content Include="wwwroot\css\site.scss" />
     <Content Include="wwwroot\js\helpers\modernizr.js" />
     <Content Include="wwwroot\js\helpers\smartresize.js" />

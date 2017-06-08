@@ -25,6 +25,7 @@
 
 .va-m {vertical-align: middle !important;}
 .va-tb {vertical-align: text-bottom !important;}
+.va-i {vertical-align: initial !important;}
 
 .w-100 {width: 100% !important;}
 /*#endregion*/
@@ -110,6 +111,9 @@ span.error {
 .icon-info {
     cursor: help;
 }
+#PageTitle {
+    word-wrap: break-word;
+}
 /************************/
 /*tables*/
 table {
@@ -147,8 +151,28 @@ table thead.disabled {
 .no-touch #VoltarLink .text {
     display: none;
 }
+/***********************/
+.colored.icon-symbol-male {
+    color: #60C1FF;
+}
+.colored.icon-symbol-female {
+    color: #F780D2;
+}
+/*#endregion */
+/*#region menu loaders */
+.menu-loader {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    display: inline-block;
+    float: right;
+}
+.menu-badge {
+    display: none;
+}
 /*#endregion */
 /*#region /Clientes/Index */
+#AnimaisIndexSearchFormGroup .clear,
 #ClientesIndexSearchFormGroup .clear {
     position: absolute;
     background: none;
@@ -160,10 +184,29 @@ table thead.disabled {
 
     display: none;
 }
+#AnimaisIndexSearchFormGroup .clear:focus,
 #ClientesIndexSearchFormGroup .clear:focus {
     outline: none;
 }
+#AnimaisIndexSearch,
 #ClientesIndexSearch {
     padding-right: 30px;
+}
+/*#endregion */
+/*#region select2 */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 34px;
+}
+.select2 .select2-container .select2-container--default .select2-container--below {
+    width: 100% !important;
+}
+.select2-dropdown span.sub {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 300;
+    color: #aaa;
+}
+.select2-dropdown span.morada {
+    font-size: 11px;
 }
 /*#endregion */
