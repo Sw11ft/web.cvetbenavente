@@ -33,11 +33,12 @@ namespace web.cvetbenavente.Controllers
 
             foreach (var item in Especies)
             {
-                IndexViewModel.Especie especie = new IndexViewModel.Especie();
-
-                especie.Id = item.Id;
-                especie.Nome = item.Nome;
-                especie.NrAnimais = db.Animais.Where(x => x.IdEspecie == item.Id && x.Cliente.Active == true).Count();
+                IndexViewModel.Especie especie = new IndexViewModel.Especie()
+                {
+                    Id = item.Id,
+                    Nome = item.Nome,
+                    NrAnimais = db.Animais.Where(x => x.IdEspecie == item.Id && x.Cliente.Active == true).Count()
+                };
 
                 model.Especies.Add(especie);
             }
@@ -62,14 +63,14 @@ namespace web.cvetbenavente.Controllers
                 return NotFound();
             }
 
-            DetalhesViewModel model = new DetalhesViewModel();
-
-            model.Id = especie.Id;
-            model.Nome = especie.Nome;
-            model.Imagem = especie.Imagem;
-            model.DataCriacao = especie.DataCriacao;
-            model.NrAnimais = db.Animais.Where(x => x.IdEspecie == especie.Id).Count();
-
+            DetalhesViewModel model = new DetalhesViewModel()
+            {
+                Id = especie.Id,
+                Nome = especie.Nome,
+                Imagem = especie.Imagem,
+                DataCriacao = especie.DataCriacao,
+                NrAnimais = db.Animais.Where(x => x.IdEspecie == especie.Id).Count()
+            };
             return View(model);
         }
 
@@ -120,9 +121,10 @@ namespace web.cvetbenavente.Controllers
             {
                 return NotFound();
             }
-            EditarViewModel model = new EditarViewModel();
-
-            model.Especie = especie;
+            EditarViewModel model = new EditarViewModel()
+            {
+                Especie = especie
+            };
             return View(model);
         }
 

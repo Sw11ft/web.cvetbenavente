@@ -432,7 +432,7 @@ $(function () {
                 var query = {
                     q: params.term, /*query*/
                     mr: 10 /*max results*/
-                }
+                };
                 return query;
             },
             processResults: function (data) {
@@ -450,7 +450,7 @@ $(function () {
         templateResult: function (data) {
             markup = "<span class='title'>" + data.text + "</span> ";
             markup += "<span class='sub'>";
-            if (typeof (data.nrAnimais) !== "undefined" && data.nrAnimais !== 0) {
+            if (typeof data.nrAnimais !== "undefined" && data.nrAnimais !== 0) {
                 markup += data.nrAnimais;
                 if (data.nrAnimais === 1) {
                     markup += " Animal";
@@ -487,7 +487,7 @@ $(function () {
                     q: params.term, /*query*/
                     mr: 15, /*max results*/
                     page: params.page /*página*/
-                }
+                };
                 return query;
             },
             processResults: function (data, params) {
@@ -500,7 +500,7 @@ $(function () {
                         }
                     })*/
                     pagination: {
-                        more: (params.page * 15) < data.total_items
+                        more: params.page * 15 < data.total_items
                     }
                 };
             },
@@ -517,7 +517,7 @@ $(function () {
                 markup += "<span class='morada'>" + data.morada + ", " + data.codPostal + " " + data.localidade + "</span>";
             }
             return $(markup);
-        },
+        }
     });
     if (getParameterByName("cl")) {
         $ClienteSelect.val(getParameterByName("cl")).trigger("change");
@@ -566,4 +566,25 @@ function removeParameterByName(name, url) {
         rtn = rtn + "?" + params_arr.join("&");
     }
     return rtn;
+}
+
+function insertParameter(key, value) {
+    key = encodeURI(key); value = encodeURI(value);
+
+    var kvp = document.location.search.substr(1).split('&');
+
+    var i = kvp.length; var x; while (i--) {
+        x = kvp[i].split('=');
+
+        if (x[0] === key) {
+            x[1] = value;
+            kvp[i] = x.join('=');
+            break;
+        }
+    }
+
+    if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
+
+    //this will reload the page, it's likely better to store this until finished
+    document.location.search = kvp.join('&');
 }

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using web.cvetbenavente.Data;
 using web.cvetbenavente.Models;
 using Microsoft.AspNetCore.Authorization;
+using OfficeOpenXml;
+using System.IO;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -39,10 +41,9 @@ namespace web.cvetbenavente.Controllers
             ViewData["q"] = (q ?? "").Trim();
             ViewData["cl"] = cl;
             ViewBag.SearchCliente = (!string.IsNullOrWhiteSpace(cl) ? db.Clientes.FirstOrDefault(x => x.Id.ToString() == cl) : null);
-            ViewBag.SearchEspecie = (!string.IsNullOrWhiteSpace(cl) ? db.Especies.FirstOrDefault(x => x.Id.ToString() == esp) : null);
+            ViewBag.SearchEspecie = (!string.IsNullOrWhiteSpace(esp) ? db.Especies.FirstOrDefault(x => x.Id.ToString() == esp) : null);
 
-            var applicationDbContext = db.Animais.Include(a => a.Cliente).Include(a => a.Especie);
-            var query = db.Animais.AsQueryable();
+            var query = db.Animais.Include(a => a.Cliente).Include(a => a.Especie).AsQueryable();
 
             /*Espécie*/
             if (!string.IsNullOrWhiteSpace(esp))
@@ -158,8 +159,14 @@ namespace web.cvetbenavente.Controllers
             p = (p <= 0) ? 1 : p;
 
             /*Paginação*/
-            ViewData["maxres"] = query.Count();
-            ViewData["maxpages"] = Math.Ceiling((decimal)((int)ViewData["maxres"] * r));
+            var maxres = query.Count();
+
+            var maxpages = Math.Ceiling((decimal)maxres / r);
+
+
+            ViewData["maxres"] = maxres;
+            ViewData["maxpages"] = maxpages;
+
             ViewData["page"] = p;
             ViewData["res"] = r;
 
@@ -167,12 +174,13 @@ namespace web.cvetbenavente.Controllers
 
             List<Animal> queryList = query.ToList();
 
+            /*
             foreach (var item in queryList)
             {
                 item.Cliente = db.Clientes.FirstOrDefault(x => x.Id == item.IdCliente);
                 item.Especie = db.Especies.FirstOrDefault(x => x.Id == item.IdEspecie);
             }
-
+            */
             return View(queryList);
         }
 
@@ -304,6 +312,41 @@ namespace web.cvetbenavente.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        public IActionResult ExportToExcel()
+        {
+           /* var data = db.Animais
+                           .Where(x => x.Cliente.Active)
+                           .Select(x => new {
+                               Nome = x.Nome,
+                               Genero = x.Genero,
+                               Especie = x.Especie.Nome,
+                               Observacoes = x.Observacoes,
+                               Cliente = x.Cliente.Nome,
+                               Contacto = x.Cliente.Contacto,
+                               Morada = x.Cliente.Morada + ", " + x.Cliente.CodPostal + " " + x.Cliente.Localidade,
+                               Observacoes_Cliente = x.Cliente.Observacoes
+                           }); */
+
+            var fileDownloadName = "Animais.xlsx";
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            ExcelPackage package = new ExcelPackage();
+
+            var worksheet = package.Workbook.Worksheets.Add("Página 1");
+            worksheet.Cells["A1"].Value = "Teste 1";
+            worksheet.Cells["A1"].Style.Font.Bold = true;
+
+            var fileStream = new MemoryStream();
+            package.SaveAs(fileStream);
+            fileStream.Position = 0;
+
+            var fileStreamResult = new FileStreamResult(fileStream, contentType);
+            fileStreamResult.FileDownloadName = fileDownloadName;
+
+            return fileStreamResult;
+        }
+
 
         private bool AnimalExists(Guid id)
         {

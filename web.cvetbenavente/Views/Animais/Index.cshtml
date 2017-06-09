@@ -16,9 +16,9 @@
         </a>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-6">
-        <a onclick="window.print()" class="btn btn-default btn-icon m-b w-100">
-            <i class="icon-printer mr5"></i>
-            <span>Imprimir</span>
+        <a asp-action="ExportToExcel" class="btn btn-default btn-icon m-b w-100">
+            <i class="fa fa-file-excel-o mr5"></i>
+            <span>Exportar para Excel</span>
         </a>
     </div>
 </div>
@@ -32,15 +32,15 @@
         <form method="get" asp-action="Index">
             <div class="row m-a-0">
                 <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                    <div class="form-group" id="AnimaisIndexEstadoFormGroup">
+                    <div class="form-group">
                         <div class="row">
                             <div class="col-xs-12">
-                                <label class="col-sm-2 control-label p-a-0">Pesquisa</label>
+                                <label for="IndexAnimaisSearch" class="col-sm-2 control-label p-a-0">Pesquisa</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <input type="text" name="q" class="form-control" placeholder="Introduza a pesquisa..." value="@ViewData["q"]" />
+                                <input type="text" name="q" id="IndexAnimaisSearch" class="form-control" placeholder="Introduza a pesquisa..." value="@ViewData["q"]" />
                             </div>
                         </div>
                     </div>
@@ -150,6 +150,8 @@
 
 
 <!--Tabela de Animais-->
+<span class="text-muted">Página @((int)ViewData["page"]) de @((int)ViewData["maxres"]) resultados</span>
+
 <div class="table-responsive">
     <table class="table table-bordered table-hover m-b-0" id="AnimaisIndexTable">
         <thead class="card-header b-a-0 m-a-0">
@@ -170,7 +172,7 @@
                             {
                                 <span class="label bg-red size-10 va-i">Inativo</span>
                             }
-                            <i class="colored @((item.Genero == Enums.Genero.M) ? "icon-symbol-male" : "icon-symbol-female")"></i>&nbsp;
+                            <i class="colored hidden-print @((item.Genero == Enums.Genero.M) ? "icon-symbol-male" : "icon-symbol-female")"></i>&nbsp;
                             <a asp-controller="Animais" asp-action="Detalhes" asp-route-id="@item.Id" class="hidden-print">@item.Nome</a>
                             <span class="visible-print">@item.Nome</span>
                         </td>
@@ -199,31 +201,73 @@
         </tbody>
     </table>
 </div>
-<!--
-<p class="text-muted">A mostrar resultados @((((int)ViewData["res"] * ((int)ViewData["page"] - 1)) + 1))-@((((int)ViewData["res"] * (int)ViewData["page"]) > (int)ViewData["maxres"] ? (int)ViewData["maxres"] : (int)ViewData["res"] * (int)ViewData["page"])) de @ViewData["maxres"]</p>
-    -->
+
+
 <ul class="pagination pagination-sm clearfix block">
     <li>
-        <a href="javascript:;">Primeiro</a>
+        <a onclick="insertParameter('p', 1)">Primeiro</a>
     </li>
     @{
-        var i = (int)ViewData["page"] - 2;
-        var pagesRendered = 0;
-        do
-        {
-            if (i > 0)
-            {
-                <li class="@((int)ViewData["page"] == i ? "active" : "")">
-                    <a href="javascript:;">@i</a>
-                </li>
-                pagesRendered++;
-            }
+        int page = (int)ViewData["page"];
+        int maxPages = Convert.ToInt32((decimal)ViewData["maxpages"]);
+        int pageMaxDiff = maxPages - page;
+        int pagesRendered = 0;
 
-            i++;
-        } while (pagesRendered < 5);
+        if (maxPages <= 5)
+        {
+            for (int i = 1; i <= maxPages; i++)
+            {
+                <li class="@((page == i) ? "active" : "")">
+                    <a onclick="insertParameter('p', @i)">@i</a>
+                </li>
+            }
+        }
+        else
+        {
+            if (page < 3)
+            {
+                for (int i = 1; i <= page; i++)
+                {
+                    <li class="@((page == i) ? "active" : "")">
+                        <a onclick="insertParameter('p', @i)">@i</a>
+                    </li>
+                    pagesRendered++;
+                }
+
+                var max = (5 - pagesRendered > maxPages) ? maxPages : (5 - pagesRendered);
+
+                for (int i = page + 1; i <= 5; i++)
+                {
+                    <li>
+                        <a onclick="insertParameter('p', @i)">@i</a>
+                    </li>
+                    pagesRendered++;
+                }
+            }
+            else if (pageMaxDiff < 3)
+            {
+                for (int i = maxPages - 4; i <= maxPages; i++)
+                {
+                    <li class="@((page == i) ? "active" : "")">
+                        <a onclick="insertParameter('p', @i)">@i</a>
+                    </li>
+                    pagesRendered++;
+                }
+            }
+            else
+            {
+                for (int i = page - 2; i <= page + 2; i++)
+                {
+                    <li class="@((page == i) ? "active" : "")">
+                        <a onclick="insertParameter('p', @i)">@i</a>
+                    </li>
+                    pagesRendered++;
+                }
+            }
+        }
     }
     <li>
-        <a href="javascript:;">Último</a>
+        <a onclick="insertParameter('p', @maxPages)">Último</a>
     </li>
 </ul>
 @section Scripts {
