@@ -15,8 +15,10 @@ namespace web.cvetbenavente.Models
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "O nome é obrigatório")]
-        [Remote("EspecieNameValid", "Especies", ErrorMessage = "Já existe uma espécie com este nome")]
+        [Remote("EspecieNameValid", "Especies", AdditionalFields = "Id", ErrorMessage = "Já existe uma espécie com este nome")]
         public string Nome { get; set; }
+
+        public string NomeF { get; set; }
 
         public bool Active { get; set; }
 

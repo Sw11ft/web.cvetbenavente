@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +35,16 @@ namespace web.cvetbenavente.Models
         {
             Asc,
             Desc
+        }
+
+        public enum Modelos
+        {
+            [Display(Name = "Lembrete de marcação")]
+            [Description("Lembrete de marcação")]
+            Lembrete,
+            [Display(Name = "Marcação efetuada")]
+            [Description("Marcação efetuada")]
+            MarcacaoEfetuada
         }
     }
 }

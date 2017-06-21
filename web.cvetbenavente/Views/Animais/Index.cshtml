@@ -4,10 +4,6 @@
     ViewData["Title"] = "Todos os Animais";
 }
 
-@section VendorStyles {
-    <link rel="stylesheet" href="~/lib/select2/dist/css/select2.min.css" />
-}
-
 <div class="row hidden-print">
     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <a asp-action="Criar" class="btn btn-primary btn-icon m-b w-100">
@@ -54,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <select id="ClientesIndexEstado" name="type" class="form-control block w-100">
+                                <select id="AnimaisIndexEstado" name="type" class="form-control block w-100">
                                     @if ((int)ViewData["type"] == 1)
                                     {
                                         <option value="1" selected="selected">Ativo</option>
@@ -195,14 +191,13 @@
                         Não existem animais a mostrar.
                     </td>
                 </tr>
-
             }
 
         </tbody>
     </table>
 </div>
 
-
+<!--Paginação-->
 <ul class="pagination pagination-sm clearfix block">
     <li>
         <a onclick="insertParameter('p', 1)">Primeiro</a>
@@ -270,8 +265,7 @@
         <a onclick="insertParameter('p', @maxPages)">Último</a>
     </li>
 </ul>
+
 @section Scripts {
-    <script type="text/javascript" src="~/lib/select2/dist/js/select2.min.js"></script>
-    <script type="text/javascript" src="~/lib/select2/dist/js/i18n/pt.js"></script>
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

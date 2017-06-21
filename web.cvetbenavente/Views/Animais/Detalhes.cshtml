@@ -1,51 +1,71 @@
-@model web.cvetbenavente.Models.Animal
+﻿@model web.cvetbenavente.Models.Animal
 
 @{
-    Layout = null;
+    ViewData["Title"] = Model.Nome;
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-
-<div>
-    <h4>Animal</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Genero)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Cliente)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Cliente.Nome)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Especie)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Especie.Nome)
-        </dd>
-    </dl>
+<div class="card bg-white">
+    <div class="card-header">
+        Dados
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Nome</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Género</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly="readonly" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Espécie</label>
+                        <div class="col-sm-8">
+                            <a asp-action="Detalhes" asp-controller="Especies" asp-route-id="@Model.Especie.Id">
+                                @Html.TextBoxFor(model => model.Especie.Nome, new { @class = "form-control", @readonly = "readonly" })
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Cliente</label>
+                        <div class="col-sm-8">
+                            <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@Model.Cliente.Id">
+                                @Html.TextBoxFor(model => model.Cliente.Nome, new { @class = "form-control", @readonly = "readonly" })
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Observações</label>
+                        <div class="col-sm-8">
+                            @Html.TextAreaFor(model => model.Observacoes, new { @class = "form-control", @readonly = "readonly", @rows = "3" })
+                        </div>
+                    </div>
+                    <div class="form-group m-t-md">
+                        <label class="col-sm-2 control-label">Criado a</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.DataCriacao, new { @class = "form-control", @readonly = "readonly", @rows = "3" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-</body>
-</html>
+
+<a asp-action="Index" id="VoltarLink" class="hidden-print">
+    <i class="icon-arrow-left"></i>
+    <span class="text">Voltar</span>
+</a>
+
+@section VendorStyles {
+    <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
+}
+@section Scripts {
+    <script type="text/javascript" src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+}

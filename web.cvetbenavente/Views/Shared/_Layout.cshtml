@@ -33,14 +33,15 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="~/lib/noty/lib/noty.min.css" />
+        <link rel="stylesheet" href="~/lib/select2/dist/css/select2.min.css" />
         @RenderSection("VendorStyles", required: false)
         <!----------------------/libs------------------------>
-        <!----------------scripts do template---------------->
+        <!----------------styles do template---------------->
         <link rel="stylesheet" href="~/css/card.min.css" />
         <link rel="stylesheet" href="~/css/sli.min.css" />
         <link rel="stylesheet" href="~/css/animate.min.css" />
         <link rel="stylesheet" href="~/css/app.min.css" />
-        <!---------------/scripts do template---------------->
+        <!---------------/styles do template---------------->
         <link rel="stylesheet" href="~/css/site.min.css" />
         <link rel="stylesheet" href="~/css/no-js.min.css" />
 
@@ -191,14 +192,31 @@
                             </ul>
                         </li>
                         <!-- /animais -->
-                        <!-- administração -->
-                        <li>
-                            <a href="@Url.Action("Index", "Definicoes")">
-                                <i class="icon-settings"></i>
-                                <span>Administração</span>
+                        <!-- eventos  -->
+                        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Eventos" ? "open" : "")">
+                            <a href="javascript:;">
+                                <i class="icon-calendar"></i>
+                                <span>Eventos</span>
                             </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="@Url.Action("Index", "Eventos")">
+                                        <span>Ver Todos</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Criar", "Eventos")">
+                                        <span>Novo</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Importar", "Eventos")">
+                                        <span>Importar</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <!-- /administração -->
+                        <!-- /eventos  -->
                     </ul>
                 </nav>
                 <!-- /main navigation -->
@@ -230,6 +248,66 @@
                                 <i class="icon-toggle-sidebar"></i>
                             </a>
                         </li>
+                        <!--
+                        <li class="searchbox">
+                            <a href="javascript:;" data-toggle="search">
+                                <i class="search-close-icon icon-close hide"></i>
+                                <i class="search-open-icon icon-magnifier"></i>
+                            </a>
+                        </li>
+                        <li class="navbar-form search-form hide">
+                            <input type="search" class="form-control search-input" placeholder="Start typing...">
+                            <div class="search-predict hide">
+                                <a href="#">Searching for 'purple rain'</a>
+                                <div class="heading">
+                                    <span class="title">People</span>
+                                </div>
+                                <ul class="predictive-list">
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/face1.jpg" class="img-circle" alt="">
+                                            <span>Tammy Carpenter</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/face2.jpg" class="img-circle" alt="">
+                                            <span>Catherine Moreno</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/face3.jpg" class="img-circle" alt="">
+                                            <span>Diana Robertson</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/face4.jpg" class="img-circle" alt="">
+                                            <span>Emma Sullivan</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="heading">
+                                    <span class="title">Page posts</span>
+                                </div>
+                                <ul class="predictive-list">
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/unsplash/img2.jpeg" class="img-rounded" alt="">
+                                            <span>The latest news for cloud-based developers </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="avatar" href="#">
+                                            <img src="images/unsplash/img2.jpeg" class="img-rounded" alt="">
+                                            <span>Trending Goods of the Week</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        -->
                     </ul>
                     <ul class="nav navbar-nav navbar-right hidden-xs">
                         <li>
@@ -367,6 +445,8 @@
         <script type="text/javascript" src="~/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js"></script>
         <script type="text/javascript" src="~/js/helpers/smartresize.min.js"></script>
         <script type="text/javascript" src="~/lib/noty/lib/noty.min.js"></script>
+        <script type="text/javascript" src="~/lib/select2/dist/js/select2.min.js"></script>
+        <script type="text/javascript" src="~/lib/select2/dist/js/i18n/pt.js"></script>
         <script type="text/javascript" src="~/js/constants.min.js"></script>
         <script type="text/javascript" src="~/js/main.min.js"></script>
         @RenderSection("Scripts", required: false)

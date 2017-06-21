@@ -10,6 +10,11 @@ using web.cvetbenavente.Models;
 using web.cvetbenavente.Models.EspeciesViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using System.Drawing;
+using System.IO;
+using web.cvetbenavente.Services;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -37,6 +42,8 @@ namespace web.cvetbenavente.Controllers
                 {
                     Id = item.Id,
                     Nome = item.Nome,
+                    NomeF = item.NomeF,
+                    Imagem = item.Imagem,
                     NrAnimais = db.Animais.Where(x => x.IdEspecie == item.Id && x.Cliente.Active == true).Count()
                 };
 
@@ -67,6 +74,7 @@ namespace web.cvetbenavente.Controllers
             {
                 Id = especie.Id,
                 Nome = especie.Nome,
+                NomeF = especie.NomeF,
                 Imagem = especie.Imagem,
                 DataCriacao = especie.DataCriacao,
                 NrAnimais = db.Animais.Where(x => x.IdEspecie == especie.Id).Count()
@@ -83,20 +91,41 @@ namespace web.cvetbenavente.Controllers
         // POST: Especies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Criar(CriarViewModel model)
+        public async Task<ActionResult> Criar(CriarViewModel model, IList<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
                 if (db.Especies.Any(x => x.Nome.ToLowerInvariant() == model.Especie.Nome.ToLowerInvariant()) == false)
                 {
-                    Especie especie = model.Especie;
 
+                    Especie especie = model.Especie;
+                    var a = model.Imagem;
                     especie.DataCriacao = DateTime.UtcNow;
                     especie.Id = Guid.NewGuid();
                     especie.Active = true;
 
+                    if (model.Imagem != null)
+                    {
+                        var img = model.Imagem;
+                        Image imgStream = Image.FromStream(img.OpenReadStream());
+
+                        Stream ms = new MemoryStream(imgStream.Resize(100, 100).ToByteArray());
+
+                        var uploads = Path.Combine(_env.WebRootPath, "upload\\img\\especies");
+
+                        var fileNameSplit = img.FileName.Split('.');
+                        var extension = fileNameSplit[fileNameSplit.Length - 1];
+                        var fileName = especie.Id.ToString() + "." + extension;
+
+                        using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            await ms.CopyToAsync(fileStream);
+                            especie.Imagem = fileName;
+                        }
+                    }
+
                     db.Especies.Add(especie);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
 
                     return RedirectToAction("Index", new { nid = 4, nt = "s" });
                 }
@@ -129,11 +158,9 @@ namespace web.cvetbenavente.Controllers
         }
 
         // POST: Especies/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Guid? id, EditarViewModel model)
+        public async Task<IActionResult> Editar(Guid? id, EditarViewModel model, IList<IFormFile> files)
         {
             if (id == null)
             {
@@ -162,10 +189,42 @@ namespace web.cvetbenavente.Controllers
                         especieAlterada.Active = true;
                         especieAlterada.Id = xid;
 
+                        if (model.Imagem != null)
+                        {
+                            var img = model.Imagem;
+                            Image imgStream = Image.FromStream(img.OpenReadStream());
+
+                            Stream ms = new MemoryStream(imgStream.Resize(100, 100).ToByteArray());
+
+                            var uploads = Path.Combine(_env.WebRootPath, "upload\\img\\especies");
+
+                            var fileNameSplit = img.FileName.Split('.');
+                            var extension = fileNameSplit[fileNameSplit.Length - 1];
+                            var fileName = especieAlterada.Id.ToString() + "." + extension;
+
+                            if (!string.IsNullOrWhiteSpace(especieOriginal.Imagem))
+                            {
+                                if (System.IO.File.Exists(Path.Combine(uploads, especieOriginal.Imagem))) {
+                                    System.IO.File.Delete(Path.Combine(uploads, especieOriginal.Imagem));
+                                }
+                            }
+
+                            using (var fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                            {
+                                await ms.CopyToAsync(fileStream);
+                                especieAlterada.Imagem = fileName;
+                            }
+                        }
+                        else
+                        {
+                            especieAlterada.Imagem = especieOriginal.Imagem;
+                        }
+
                         db.Entry(especieOriginal).CurrentValues.SetValues(especieAlterada);
 
-
                         await db.SaveChangesAsync();
+
+                        return RedirectToAction("Detalhes", new { id = especieOriginal.Id, nt = "s", nid = 40 });
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -178,7 +237,6 @@ namespace web.cvetbenavente.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction("Index");
                 }
                 return View(model);
             }
@@ -221,6 +279,22 @@ namespace web.cvetbenavente.Controllers
         {
             return db.Especies.Any(x => x.Nome.ToLowerInvariant() == nome.ToLowerInvariant());
         }
+        private bool EspecieExistsExcept(string nome, Guid id)
+        {
+            return db.Especies.Any(x => x.Nome.ToLowerInvariant() == nome.ToLowerInvariant() && x.Id != id);
+        }
+        private bool EspecieExistsExcept(string nome, string id)
+        {
+            try
+            {
+                Guid xid = Guid.Parse(id);
+                return db.Especies.Any(x => x.Nome.ToLowerInvariant() == nome.ToLowerInvariant() && x.Id != xid);
+            }
+            catch
+            {
+                return true;
+            }
+        }
         public bool EspecieExistsByStringId(string IdEspecie)
         {
             try
@@ -235,9 +309,10 @@ namespace web.cvetbenavente.Controllers
         }
 
         [HttpGet]
-        public ActionResult EspecieNameValid([Bind(Prefix = "Especie.Nome")] string Nome)
+        public ActionResult EspecieNameValid([Bind(Prefix = "Especie.Nome")] string Nome, [Bind(Prefix = "Especie.Id")] string Id = null)
         {
-                return EspecieExists(Nome) ? Json(false) : Json(true);
+                return (string.IsNullOrWhiteSpace(Id)) ? (EspecieExists(Nome) ? Json(false) : Json(true))
+                                                       : (EspecieExistsExcept(Nome, Id) ? Json(false) : Json(true));
         }
 
         [HttpPost]
@@ -286,7 +361,7 @@ namespace web.cvetbenavente.Controllers
                             from Especies in db.Especies
                             orderby (
                                 from Animais in db.Animais
-                                where Animais.IdEspecie == Especies.Id
+                                where Animais.IdEspecie == Especies.Id && Animais.Removido == false
                                 select new { Animais }
                             ).Count() descending, Especies.Nome
                             select new
@@ -295,7 +370,7 @@ namespace web.cvetbenavente.Controllers
                                 text = Especies.Nome,
                                 nrAnimais = (
                                     from Animais in db.Animais
-                                    where Animais.IdEspecie == Especies.Id
+                                    where Animais.IdEspecie == Especies.Id && Especies.Active == true
                                     select new { Animais }
                                 ).Count()
                             }
@@ -310,7 +385,7 @@ namespace web.cvetbenavente.Controllers
                             where Especies.Nome.Contains(q)
                             orderby (
                                 from Animais in db.Animais
-                                where Animais.IdEspecie == Especies.Id
+                                where Animais.IdEspecie == Especies.Id && Animais.Removido == false
                                 select new { Animais }
                             ).Count() descending, Especies.Nome
                             select new {
@@ -318,7 +393,7 @@ namespace web.cvetbenavente.Controllers
                                 text = Especies.Nome,
                                 nrAnimais = (
                                     from Animais in db.Animais
-                                    where Animais.IdEspecie == Especies.Id
+                                    where Animais.IdEspecie == Especies.Id && Especies.Active == true
                                     select new { Animais }
                                 ).Count()
                             }

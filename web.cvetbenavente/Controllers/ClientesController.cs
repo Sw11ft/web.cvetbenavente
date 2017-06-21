@@ -10,6 +10,8 @@ using web.cvetbenavente.Models;
 using Microsoft.AspNetCore.Authorization;
 using web.cvetbenavente.Models.ClientesViewModels;
 using web.cvetbenavente.Services;
+using OfficeOpenXml;
+using System.IO;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -172,11 +174,84 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: Clientes
-        public IActionResult Index()
+        public IActionResult Index(int type = 1         /*Tipo (Ambos, Ativo, Inativo)*/,
+                                   int col = 1          /*Coluna a Ordenar*/,
+                                   string ord = "asc"   /*Ordem (Ascendente, Descendente)*/,
+                                   string q = null      /*Pesquisa*/,
+                                   int r = 30           /*Resultados por Página*/,
+                                   int p = 1            /*Página*/
+                                  )
         {
-            ClienteServices service = new ClienteServices(db);
+            ViewData["type"] = type;
+            ViewData["col"] = col;
+            ViewData["ord"] = ord;
+            ViewData["q"] = (q ?? "").Trim();
 
-            return View(service.GetClientes(Enums.TipoAtivo.Ativo, Enums.OrderClientes.Nome, Enums.OrderDirection.Asc));
+            var query = db.Clientes.AsQueryable();
+
+            /*Tipo*/
+            switch (type)
+            {
+                case 0:
+                    break;
+                case 1:
+                    query = query.Where(x => x.Active == true);
+                    break;
+                case 2:
+                    query = query.Where(x => x.Active == false);
+                    break;
+                default:
+                    break;
+            }
+
+            /*Coluna a Ordenar*/
+            switch (col)
+            {
+                case 1: //Nome
+                    switch (ord)
+                    {
+                        case "asc":
+                            query = query.OrderBy(x => x.Nome);
+                            break;
+                        case "desc":
+                            query = query.OrderByDescending(x => x.Nome);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+            }
+
+            /*Pesquisa*/
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                q = q.Trim();
+                query = query.Where(x => x.Nome.Contains(q) || x.CodPostal.Contains(q) || x.Morada.Contains(q));
+            }
+
+            /*Resultados*/
+            r = (r <= 0) ? 1 : r;
+
+            /*Página*/
+            p = (p <= 0) ? 1 : p;
+
+            /*Paginação*/
+            var maxres = query.Count();
+
+            var maxpages = Math.Ceiling((decimal)maxres / r);
+
+
+            ViewData["maxres"] = maxres;
+            ViewData["maxpages"] = maxpages;
+
+            ViewData["page"] = p;
+            ViewData["res"] = r;
+
+            query = query.Skip((r * p) - r).Take(r);
+
+            List<Cliente> queryList = query.ToList();
+
+            return View(queryList);
         }
 
         // GET: Clientes/Details/5
@@ -291,9 +366,78 @@ namespace web.cvetbenavente.Controllers
             return View(cliente);
         }
 
-        public bool ClienteExists(Guid id)
+        public IActionResult ExportToExcel()
         {
-            return db.Clientes.Any(e => e.Id == id);
+            var fileDownloadName = "Clientes." + DateTime.UtcNow.ToString("dd-MM-yyyy.hhmm") + ".xlsx";
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            ExcelPackage package = new ExcelPackage();
+
+            var worksheet = package.Workbook.Worksheets.Add("Página 1");
+            worksheet.Cells["A2"].Value = "Nome";
+            worksheet.Cells["B2"].Value = "Contacto";
+            worksheet.Cells["C2"].Value = "Morada";
+            worksheet.Cells["D2"].Value = "Observações";
+            worksheet.Cells["E2"].Value = "Data de Criação";
+
+            worksheet.Cells["A1:E1"].Merge = true;
+            worksheet.Cells["A1:E1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
+            worksheet.Cells["A1:E1"].Value = "CVETBENAVENTE - Clientes";
+
+            worksheet.Row(2).Style.Font.Bold = true;
+
+            var data = db.Clientes.Where(x => x.Active).OrderBy(x => x.Nome).OrderBy(x => x.DataCriacao);
+
+            var i = 3;
+            foreach (var item in data)
+            {
+                worksheet.Cells["A" + i].Value = item.Nome;
+                worksheet.Cells["B" + i].Value = item.Contacto;
+                worksheet.Cells["C" + i].Value = item.Morada + ", " + item.CodPostal + " " + item.Localidade;
+                worksheet.Cells["D" + i].Value = item.Observacoes;
+                worksheet.Cells["E" + i].Value = item.DataCriacao.ToString("dd/MM/yyyy hh:mm");
+
+                i++;
+            }
+
+            worksheet.Cells["A" + (i + 2) + ":E" + (i + 2)].Merge = true;
+            worksheet.Cells["A" + (i + 2) + ":E" + (i + 2)].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.CenterContinuous;
+            worksheet.Cells["A" + (i + 2) + ":E" + (i + 2)].Value = DateTime.UtcNow + " UTC - Processado por computador";
+
+            worksheet.Column(1).Width = 25;
+            worksheet.Column(2).Width = 15;
+            worksheet.Column(3).Width = 70;
+            worksheet.Column(4).Width = 40;
+            worksheet.Column(5).Width = 25;
+
+
+            var fileStream = new MemoryStream();
+            package.SaveAs(fileStream);
+            fileStream.Position = 0;
+
+            var fileStreamResult = new FileStreamResult(fileStream, contentType);
+            fileStreamResult.FileDownloadName = fileDownloadName;
+
+            return fileStreamResult;
+        }
+
+        public bool ClienteExists(Guid id, int active = 1)
+        {
+            var cl = db.Clientes.AsQueryable();
+
+            switch (active)
+            {
+                case 0:
+                    cl = cl.Where(x => !x.Active);
+                    break;
+                case 1:
+                    cl = cl.Where(x => x.Active);
+                    break;
+                default:
+                    break;
+            }
+
+            return cl.Any();
         }
         public bool ClienteExists(string id) {
             try
@@ -310,12 +454,26 @@ namespace web.cvetbenavente.Controllers
                 return false;
             }
         }
-        public bool ClienteExistsByStringId(string IdCliente)
+        public bool ClienteExistsByStringId(string IdCliente, int active = 1)
         {
             try
             {
                 Guid xIdCliente = Guid.Parse(IdCliente);
-                return db.Clientes.Any(x => x.Id == xIdCliente);
+                var cl = db.Clientes.AsQueryable();
+
+                switch (active)
+                {
+                    case 0:
+                        cl = cl.Where(x => !x.Active);
+                        break;
+                    case 1:
+                        cl = cl.Where(x => x.Active);
+                        break;
+                    default:
+                        break;
+                }
+
+                return cl.Any();
             }
             catch
             {
@@ -325,7 +483,6 @@ namespace web.cvetbenavente.Controllers
 
         public IActionResult GetClientes(int ativo = 1, string q = null /*query*/, int page = 1 /*paginação*/, int mr = 15)
         {
-
             var clientes = db.Clientes.AsQueryable();
 
             switch (ativo)

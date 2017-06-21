@@ -28,5 +28,7 @@ namespace web.cvetbenavente.Data
 
         public DbSet<Especie> Especies { get; set; }
         public DbSet<Animal> Animais { get; set; }
+
+        public DbSet<Evento> Eventos { get; set; }
     }
 }

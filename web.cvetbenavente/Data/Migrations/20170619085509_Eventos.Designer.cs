@@ -9,9 +9,10 @@ using web.cvetbenavente.Models;
 namespace web.cvetbenavente.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170619085509_Eventos")]
+    partial class Eventos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -264,19 +265,12 @@ namespace web.cvetbenavente.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("Data");
-
-                    b.Property<string>("Desc")
-                        .IsRequired();
-
                     b.Property<Guid>("IdAnimal");
 
                     b.Property<Guid>("IdCliente");
 
                     b.Property<string>("IdEvento")
                         .IsRequired();
-
-                    b.Property<int>("Modelo");
 
                     b.Property<string>("Observacoes");
 

@@ -34,8 +34,12 @@
                 {
                     <tr>
                         <td class="lh-25">
-                            <img src="~/images/paw.jpg" id="teste" class="hidden-print" height="25"/>
-                            @item.Nome
+                            <div class="table-img-thumbnail" style="background-image: url(/@(string.IsNullOrWhiteSpace(item.Imagem) ? "images/paw.jpg" : "upload/img/especies/" + item.Imagem))">
+                            </div>
+                            <a asp-action="Detalhes" asp-route-id="@item.Id" class="hidden-print">
+                                @item.Nome @(string.IsNullOrWhiteSpace(item.NomeF) ? "" : "/ " + item.NomeF)
+                            </a>
+                            <span class="visible-print">@item.Nome / @item.NomeF</span>
                         </td>
                         <td class="lh-25">
                             @item.NrAnimais
@@ -45,7 +49,7 @@
                                 </span>
                             </a>
                             &nbsp;
-                            <a asp-action="Index" asp-controller="Animais" asp-route-especie="@item.Id" class="hidden-print">
+                            <a asp-action="Index" asp-controller="Animais" asp-route-esp="@item.Id" class="hidden-print">
                                 <span class="pull-right size-14 lh-25" style="margin-right: 5px" data-toggle="tooltip" data-placement="top" title="Animais desta espécie">
                                     <i class="fa fa-paw"></i>
                                 </span>

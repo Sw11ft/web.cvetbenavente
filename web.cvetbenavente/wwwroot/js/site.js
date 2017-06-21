@@ -77,7 +77,7 @@ $(function () {
                 msg = "Já existe um espécie com o nome introduzido";
                 break;
             //--
-            //ESPÉCIES
+            //ANIMAIS
             case "5":
                 msg = "Animal criado com sucesso.";
                 break;
@@ -131,7 +131,7 @@ $(function () {
     /*****************************************************************/
 
     //$DADOS DE TABELAS
-
+    /*
     //Clientes/Index Ordering
     $("#ClientesIndexTable .ClienteColumn").click(function () {
         if (!$(this).hasClass("disabled")) {
@@ -227,6 +227,7 @@ $(function () {
             }
         }, 400);
     };
+    */
     /*****************************************************************/
 
     //$ANIMAÇÕES
@@ -243,11 +244,12 @@ $(function () {
     //$LIMPEZA DE FORMS/INPUTS
 
     //Clientes/Index Procura
+    /*
     $("#ClientesIndexSearchFormGroup .clear").click(function (event) {
         $("#ClientesIndexSearch").val("").trigger("input");
         $(this).fadeOut(100);
     });
-
+    */
     /*****************************************************************/
 
     //$AJAX
@@ -504,7 +506,8 @@ $(function () {
                     }
                 };
             },
-            cache: true
+            cache: true,
+            initSelection: function (element, callback) {}
         },
         templateResult: function (data) {
             markup = "<span class='title'>" + data.text + "</span> ";
@@ -522,6 +525,83 @@ $(function () {
     if (getParameterByName("cl")) {
         $ClienteSelect.val(getParameterByName("cl")).trigger("change");
     }
+
+    $("#EventosCriarForm #ClienteSelect").change(function () {
+        $("#EventosCriarForm #AnimalSelect").val("").trigger("change");
+    });
+    $AnimalSelect = $("#AnimalSelect").select2({
+        placeholder: "Selecione um animal...",
+        ajax: {
+            language: "pt",
+            delay: 250,
+            url: "/Animais/GetAnimais",
+            dataType: "json",
+            type: "GET",
+            data: function (params) {
+                var query = {
+                    q: params.term, /*query*/
+                    cl: $("#ClienteSelect").val(), /*id do cliente*/
+                    showWithoutCl: false, /*mostrar dados mesmo que não haja cliente definido*/
+                    mr: 15, /*max results*/
+                    page: params.page /*página*/
+                };
+                return query;
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data.items, /*$.map(data, function (item) {
+                        return {
+                            text: item.nome,
+                            id: item.id,
+                        }
+                    })*/
+                    pagination: {
+                        more: params.page * 15 < data.total_items
+                    }
+                };
+            },
+            cache: true,
+            initSelection: function (element, callback) { }
+        },
+        templateResult: function (data) {
+            markup = "";
+
+            if (typeof data.espImg !== "undefined") {
+                if (data.espImg === null) {
+                    markup += "<div class='img-wrapper' style='background-image: url(/images/paw.jpg)'></div>";
+                } else {
+                    markup += "<div class='img-wrapper' style='background-image: url(/upload/img/especies/" + data.espImg + ")'></div>";
+                }
+            }
+
+            markup += "<div class='text'>";
+            markup += "<span class='title'>" + data.text + "</span> ";
+
+            if (typeof data.contacto !== "undefined") {
+                markup += "<span class='sub'>" + data.contacto + "</span>";
+            }
+            if (typeof data.espNome !== "undefined" && typeof data.genero !== "undefined") {
+                markup += "<br />";
+                markup += "<span class='morada'>";
+                if (data.genero === 0) {
+                    markup += "<i class='colored hidden-print icon-symbol-male'></i> ";
+                } else if (data.genero === 1) {
+                    markup += "<i class='colored hidden-print icon-symbol-female'></i> ";
+                }
+                if (data.genero === 0 || typeof data.espNomeF === "undefined" || data.espNomeF === null) {
+                    markup += data.espNome
+                } else {
+                    markup += data.espNomeF
+                }
+                markup += "</span>";
+            }
+            markup += "</div>";
+
+            return $(markup);
+        }
+    })
+
     /*****************************************************************/
 }); //document.ready
 
