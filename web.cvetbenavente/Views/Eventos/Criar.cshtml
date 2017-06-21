@@ -4,7 +4,7 @@
 }
 <div class="card bg-white">
     <div class="card-header">
-        Dados do Animal
+        Dados do Evento
     </div>
     <div class="card-block">
         <div class="row m-a-0">
@@ -14,19 +14,29 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(x => x.Desc)</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" asp-for="Desc" required>
+                            <input type="text" placeholder="Introduza uma descrição..." class="form-control" id="Desc" asp-for="Desc" required>
                             <span class="error" asp-validation-for="Desc"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">@Html.DisplayNameFor(x => x.Data)</label>
+                        <div class="col-sm-8">
+                            <input type="text" placeholder="Introduza a data do evento..." class="form-control datepicker" id="Data" asp-for="Data" data-date-start-date="+0d" style="padding: 6px 12px;" required>
+                            <span class="error" asp-validation-for="Data"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Modelo</label>
                         <div class="col-sm-8">
-                            <select asp-for="Modelo" asp-items="Html.GetEnumSelectList<Enums.Modelos>()" class="form-control w-100"></select>
+                            <select asp-for="Modelo" asp-items="Html.GetEnumSelectList<Enums.Modelos>()" id="Modelo" class="form-control w-100"></select>
                             <span class="error" asp-validation-for="IdCliente"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Cliente</label>
+                        <label class="col-sm-2 control-label">
+                            Cliente <i class="icon-info" data-toggle="tooltip" title="Cliente associado ao evento." data-placement="left"></i>
+                        </label>
+
                         <div class="col-sm-8">
                             <select asp-for="IdCliente" id="ClienteSelect" class="form-control" style="width: 100%" lang="pt-pt" required>
                                 @if (ViewBag.SearchCliente != null)
@@ -38,7 +48,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Animal</label>
+                        <label class="col-sm-2 control-label">
+                            Animal <i class="icon-info" data-toggle="tooltip" title="Animal associado ao evento. É necessário selecionar primeiro o cliente." data-placement="left"></i>
+                        </label>
+
                         <div class="col-sm-8">
                             <select asp-for="IdAnimal" id="AnimalSelect" class="form-control" style="width: 100%" lang="pt-pt" required>
                                 @if (ViewBag.SearchAnimal != null)
@@ -50,9 +63,28 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Observações</label>
+                        <label class="col-sm-2 control-label">
+                            Observações <i class="icon-info" data-toggle="tooltip" title="Informação adicional do evento. Campo não obrigatório." data-placement="left"></i>
+                        </label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="4" asp-for="Observacoes"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group m-t-md">
+                        <label class="col-sm-2 control-label">
+                            Exemplo de notificação <i class="icon-info" data-toggle="tooltip" title="Forma de como a notificação será enviada para o cliente." data-placement="left"></i>
+                        </label>
+                        <div class="col-sm-8">
+                            <div id="exemploOuter" style="padding: 6px 12px; border: 1px solid #e4e4e4;">
+                                <p class="m-a-0">
+
+                                    Caro(a) <span class="text-muted" id="exemploCliente">{CLIENTE}</span> não se esqueça
+                                    de efetuar a marcação de <span class="text-muted" id="exemploDesc">{DESCRIÇÃO}</span>
+                                    <span class="text-muted" id="exemploGenero">{ANIMAL:GÉNERO}</span> <span class="text-muted" id="exemploEspecie">{ANIMAL:ESPÉCIE}</span>
+                                    <span class="text-muted" id="exemploAnimal">{ANIMAL:NOME}</span> dentro de <span class="text-muted" id="exemploDias">{DIAS}</span> dias. CentroVetBenavente
+
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">

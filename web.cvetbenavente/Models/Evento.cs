@@ -34,6 +34,8 @@ namespace web.cvetbenavente.Models
         [Remote("AnimalBelongsToCliente", "Animais", AdditionalFields = "IdCliente", ErrorMessage = "O animal selecionado não pertence ao cliente especificado.")]
         public Guid IdAnimal { get; set; }
 
+        [Required(ErrorMessage = "A data do evento é obrigatória")]
+        [Display(Name = "Data")]
         public DateTime? Data { get; set; }
 
         public string Observacoes { get; set; }

@@ -8,6 +8,7 @@
         $LIMPEZA DE FORMS/INPUTS
         $AJAX
         $SELECT2
+        $FORMS
     $FUNCTIONS
         getParameterByName(name, url)
         removeParameterByName(name, url)
@@ -20,6 +21,9 @@ $(function () {
     $('[data-toggle="popover"]').popover();
     //BOOTSTRAP TOOLTIP
     $('[data-toggle="tooltip"]').tooltip();
+    //BOOTSTRAP DATEPICKER
+    $(".datepicker").datepicker({language: 'pt'});
+
 
     /*****************************************************************/
 
@@ -602,6 +606,40 @@ $(function () {
         }
     })
 
+    /*****************************************************************/
+
+    //$FORMS
+
+    //Eventos Criar
+    $("#EventosCriarForm #Desc").on("keyup keydown change", function () {
+        $("#EventosCriarForm #exemploDesc").html($(this).val());
+    });
+    $("#EventosCriarForm #ClienteSelect").on("change", function () {
+        $("#EventosCriarForm #exemploCliente").html($("#EventosCriarForm #ClienteSelect option:selected").text().trim());
+    });
+    $("#EventosCriarForm #AnimalSelect").on("change", function () {
+        let data = $("#AnimalSelect").select2("data");
+        if (Object.keys(data).length !== 0) {
+            if (data[0].genero === 0) {
+                $("#EventosCriarForm #exemploGenero").html("do seu");
+                $("#EventosCriarForm #exemploEspecie").html(data[0].espNome.toLowerCase());
+            } else {
+                $("#EventosCriarForm #exemploGenero").html("da sua");
+                $("#EventosCriarForm #exemploEspecie").html(data[0].espNomeF.toLowerCase());
+            }
+
+            $("#EventosCriarForm #exemploAnimal").html(data[0].text);
+        }
+    });
+    $("#EventosCriarForm #Data").change(function () {
+        let dataSplit = $(this).val().split("/");
+        let data = new Date(parseInt(dataSplit[2]), parseInt(dataSplit[1]) - 1, parseInt(dataSplit[0]));
+        let hoje = new Date();
+
+        let dias = Math.ceil((data - hoje) / (1000 * 60 * 60 * 24));
+
+        $("#EventosCriarForm #exemploDias").html(dias);
+    })
     /*****************************************************************/
 }); //document.ready
 
