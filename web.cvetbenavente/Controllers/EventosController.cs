@@ -20,11 +20,6 @@ namespace web.cvetbenavente.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //var modelosList = new List<SelectListItem>();
-            //modelosList.Add(new SelectListItem
-            //{
-            //    Text =
-            //})
             ViewBag.Modelos = new SelectList(Enum.GetNames(typeof(Enums.Modelos)));
             return View();
         }
@@ -38,6 +33,25 @@ namespace web.cvetbenavente.Controllers
         public IActionResult Criar()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Criar(Evento evento)
+        {
+            if (ModelState.IsValid)
+            {
+                evento.DataCriacao = DateTime.UtcNow;
+                evento.Id = Guid.NewGuid();
+
+                db.Eventos.Add(evento);
+                db.SaveChanges();
+
+                return RedirectToAction("Index", new { nt = "s", nid = "6" });
+            }
+            else
+            {
+                return View(evento);
+            }
         }
     }
 }

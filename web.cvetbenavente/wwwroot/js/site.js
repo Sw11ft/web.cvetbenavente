@@ -92,6 +92,17 @@ $(function () {
                 msg = "O animal não foi encontrado.";
                 break;
             //--
+            //EVENTOS
+            case "6":
+                msg = "Evento criado com sucesso.";
+                break;
+            case "60":
+                msg = "Evento editado com sucesso.";
+                break;
+            case "61":
+                msg = "O evento não foi encontrado.";
+                break;
+            //--
             //DEFAULT
             default:
                 msg = invalid;
@@ -594,9 +605,9 @@ $(function () {
                     markup += "<i class='colored hidden-print icon-symbol-female'></i> ";
                 }
                 if (data.genero === 0 || typeof data.espNomeF === "undefined" || data.espNomeF === null) {
-                    markup += data.espNome
+                    markup += data.espNome;
                 } else {
-                    markup += data.espNomeF
+                    markup += data.espNomeF;
                 }
                 markup += "</span>";
             }
@@ -604,7 +615,7 @@ $(function () {
 
             return $(markup);
         }
-    })
+    });
 
     /*****************************************************************/
 
@@ -639,7 +650,7 @@ $(function () {
         let dias = Math.ceil((data - hoje) / (1000 * 60 * 60 * 24));
 
         $("#EventosCriarForm #exemploDias").html(dias);
-    })
+    });
     /*****************************************************************/
 }); //document.ready
 

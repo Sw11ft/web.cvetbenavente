@@ -14,7 +14,6 @@ namespace web.cvetbenavente.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "O ID do evento é obrigatório")]
         [Display(Name = "ID do Evento")]
         public string IdEvento { get; set; }
 
@@ -39,5 +38,9 @@ namespace web.cvetbenavente.Models
         public DateTime? Data { get; set; }
 
         public string Observacoes { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+
+        public DateTime? DataEdicao { get; set; }
     }
 }

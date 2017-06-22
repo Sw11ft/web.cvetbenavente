@@ -366,9 +366,10 @@ namespace web.cvetbenavente.Controllers
             package.SaveAs(fileStream);
             fileStream.Position = 0;
 
-            var fileStreamResult = new FileStreamResult(fileStream, contentType);
-            fileStreamResult.FileDownloadName = fileDownloadName;
-
+            var fileStreamResult = new FileStreamResult(fileStream, contentType)
+            {
+                FileDownloadName = fileDownloadName
+            };
             return fileStreamResult;
         }
 
