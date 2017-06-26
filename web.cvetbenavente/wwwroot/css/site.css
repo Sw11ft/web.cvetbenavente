@@ -225,11 +225,42 @@ table {
   font-weight: 400;
   border: .0625rem solid #e4e4e4; }
 
+#EventosIndex .ano {
+  background-color: #6164C1;
+  color: white; }
+
 #EventosIndex .mes {
+  background-color: #ff7e55;
+  color: white;
   margin-left: 1.875rem; }
 
 #EventosIndex .evento {
   margin-left: 3.75rem; }
+  #EventosIndex .evento .dia {
+    display: inline-block;
+    height: auto;
+    min-width: 23px;
+    vertical-align: middle;
+    text-align: center;
+    margin-right: 5px; }
+    #EventosIndex .evento .dia span {
+      text-transform: uppercase;
+      font-size: 10px;
+      width: 100%; }
+    #EventosIndex .evento .dia h4 {
+      margin: 0; }
+  #EventosIndex .evento .img-wrapper {
+    background-size: cover;
+    background-position: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px; }
+  #EventosIndex .evento .text {
+    display: inline-block;
+    height: auto;
+    vertical-align: middle; }
 
 #EventosIndex .collapse {
   display: block;

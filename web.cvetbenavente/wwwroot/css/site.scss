@@ -227,12 +227,54 @@ table {
         border: .0625rem solid #e4e4e4;
     }
 
+    .ano {
+        background-color: #6164C1;
+        color: white;
+    }
+
     .mes {
+        background-color: #ff7e55;
+        color: white;
         margin-left: 1.875rem;
     }
 
     .evento {
         margin-left: 3.75rem;
+
+        .dia {
+            display: inline-block;
+            height: auto;
+            min-width: 23px;
+            vertical-align: middle;
+            text-align: center;
+            margin-right: 5px;
+
+            span {
+                text-transform: uppercase;
+                font-size: 10px;
+                width: 100%;
+            }
+
+            h4 {
+                margin: 0;
+            }
+        }
+
+        .img-wrapper {
+            background-size: cover;
+            background-position: 50%;
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .text {
+            display: inline-block;
+            height: auto;
+            vertical-align: middle;
+        }
     }
 
     .collapse {

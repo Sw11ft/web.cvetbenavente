@@ -20,11 +20,28 @@
                             @foreach (var evento in mes.Eventos)
                             {
                                 <div class="evento-outer">
-                                    <p class="evento">
-                                        <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@evento.Cliente.Id">
-                                            @evento.Cliente.Nome
+                                    <div class="evento">
+                                        <div class="dia">
+                                            <span class="text-muted">DIA</span>
+                                            <h4>@evento.Data.Value.Day</h4>
+                                        </div>
+                                        <a asp-action="Detalhes" asp-controller="Especies" asp-route-id="@evento.Animal.IdEspecie">
+                                            <div class="img-wrapper" style="background-image: url(/@(string.IsNullOrWhiteSpace(evento.Animal.Especie.Imagem) ? "images/paw.jpg" : "upload/img/especies/" + evento.Animal.Especie.Imagem))"></div>
                                         </a>
-                                    </p>
+                                        <div class="text">
+                                            <a asp-action="Detalhes" asp-controller="Animais" asp-route-id="@evento.IdAnimal">
+                                                <i class="colored hidden-print icon-symbol-@(evento.Animal.Genero == 0 ? "male" : "female")"></i>
+                                                
+                                                @evento.Animal.Nome
+                                            </a>
+                                            &middot;
+                                            <b>@evento.Desc</b>
+                                            <br/>
+                                            <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@evento.Cliente.Id">
+                                                @evento.Cliente.Nome <span class="text-muted">@evento.Cliente.Contacto</span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             }
                         </div>

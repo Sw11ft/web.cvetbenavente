@@ -26,12 +26,13 @@ namespace web.cvetbenavente.Controllers
                                    string esp = null,
                                    string animal = null)
         {
+            var culture = new CultureInfo("pt-PT");
+
             from = from ?? DateTime.UtcNow;
 
             Models.EventosViewModels.IndexViewModel model = new Models.EventosViewModels.IndexViewModel();
 
-            var eventos = db.Eventos.Where(x => x.Data != null).Include(x => x.Cliente).Include(x => x.Animal).AsQueryable();
-
+            var eventos = db.Eventos.Where(x => x.Data != null).Include(x => x.Cliente).Include(x => x.Animal).Include(x => x.Animal.Especie).AsQueryable();
             eventos = eventos.Where(x => x.Data > from);
 
             if (to != null)
@@ -73,7 +74,7 @@ namespace web.cvetbenavente.Controllers
                         .Meses.Add(new Models.EventosViewModels.IndexViewModel.Mes
                         {
                             Valor = item.Data.Value.Month,
-                            Nome = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Data.Value.Month)
+                            Nome = culture.DateTimeFormat.GetMonthName(item.Data.Value.Month)
                         });
                 }
 
