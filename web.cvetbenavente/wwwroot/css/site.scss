@@ -211,6 +211,59 @@ table {
     padding-right: 30px;
 }
 /*#endregion */
+/*#region /Eventos/Index */
+#EventosIndex {
+    .ano, .mes, .evento {
+        display: block;
+        position: relative;
+        min-height: 1.25rem;
+        line-height: 1.25rem;
+        margin: .3125rem 0;
+        padding: .625rem;
+        background: #fff;
+        border-radius: 0;
+        text-decoration: none;
+        font-weight: 400;
+        border: .0625rem solid #e4e4e4;
+    }
+
+    .mes {
+        margin-left: 1.875rem;
+    }
+
+    .evento {
+        margin-left: 3.75rem;
+    }
+
+    .collapse {
+        display: block;
+        position: relative;
+        float: left;
+        width: 2.188rem;
+        padding: 0;
+        border: 0;
+        background: 0 0;
+        line-height: 2.625rem;
+        text-align: center;
+        text-indent: 100%;
+        overflow: hidden;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .collapse:after {
+        height: .125rem;
+        width: .625rem;
+        margin-right: -.3125rem;
+        margin-top: -.0625rem;
+        content: '';
+        top: 50%;
+        right: 50%;
+        background: #59595A;
+        position: absolute;
+    }
+}
+/*#endregion */
 /*#region select2 */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 34px;

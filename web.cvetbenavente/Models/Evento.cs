@@ -42,5 +42,11 @@ namespace web.cvetbenavente.Models
         public DateTime DataCriacao { get; set; }
 
         public DateTime? DataEdicao { get; set; }
+
+        [ForeignKey("IdCliente")]
+        public Cliente Cliente { get; set; }
+
+        [ForeignKey("IdAnimal")]
+        public Animal Animal { get; set; }
     }
 }

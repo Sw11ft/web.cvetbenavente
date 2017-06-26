@@ -1,4 +1,36 @@
-﻿@model Evento
+﻿@model web.cvetbenavente.Models.EventosViewModels.IndexViewModel
 @{
     ViewData["Title"] = "Eventos";
 }
+
+<div id="EventosIndex">
+    @foreach (var ano in Model.Anos)
+    {
+        <div class="ano-outer">
+            <h4 class="ano">
+                <button data-action="collapse" type="button" class="collapse"></button>
+                @ano.Valor
+            </h4>
+            <div class="meses">
+                @foreach (var mes in ano.Meses)
+                {
+                    <div class="mes-outer">
+                        <h6 class="mes">@mes.Nome.ToUpper()</h6>
+                        <div class="eventos">
+                            @foreach (var evento in mes.Eventos)
+                            {
+                                <div class="evento-outer">
+                                    <p class="evento">
+                                        <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@evento.Cliente.Id">
+                                            @evento.Cliente.Nome
+                                        </a>
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
