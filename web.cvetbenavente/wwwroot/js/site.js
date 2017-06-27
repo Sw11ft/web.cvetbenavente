@@ -9,9 +9,11 @@
         $AJAX
         $SELECT2
         $FORMS
+		$COLLAPSE
     $FUNCTIONS
         getParameterByName(name, url)
-        removeParameterByName(name, url)
+        removeParameterByName(name, url
+		insertParameter(key, value))
 */
 
 //$DOCUMENT.READY
@@ -652,6 +654,19 @@ $(function () {
         $("#EventosCriarForm #exemploDias").html(dias);
     });
     /*****************************************************************/
+
+    //$FORMS
+
+	//Eventos Index
+	$("#EventosIndex .collapse").click(function () {
+		if ($(this).parent().parent().hasClass("collapsed")) {
+			$(this).parent().parent().removeClass("collapsed");
+		} else {
+			$(this).parent().parent().addClass("collapsed");
+		}
+	});
+
+	/*****************************************************************/
 }); //document.ready
 
 //$FUNCTIONS

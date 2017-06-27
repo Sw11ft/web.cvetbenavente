@@ -15,7 +15,10 @@
                 @foreach (var mes in ano.Meses)
                 {
                     <div class="mes-outer">
-                        <h6 class="mes">@mes.Nome.ToUpper()</h6>
+                        <h6 class="mes">
+                            <button data-action="collapse" type="button" class="collapse"></button>
+                            @mes.Nome.ToUpper()
+                        </h6>
                         <div class="eventos">
                             @foreach (var evento in mes.Eventos)
                             {

@@ -225,6 +225,10 @@ table {
   font-weight: 400;
   border: .0625rem solid #e4e4e4; }
 
+#EventosIndex .ano-outer.collapsed .meses,
+#EventosIndex .mes-outer.collapsed .eventos {
+  display: none; }
+
 #EventosIndex .ano {
   background-color: #6164C1;
   color: white; }
@@ -263,30 +267,20 @@ table {
     vertical-align: middle; }
 
 #EventosIndex .collapse {
-  display: block;
-  position: relative;
-  float: left;
-  width: 2.188rem;
-  padding: 0;
+  display: inline-block;
+  width: 25px;
+  height: 100%;
   border: 0;
-  background: 0 0;
-  line-height: 2.625rem;
-  text-align: center;
-  text-indent: 100%;
-  overflow: hidden;
-  cursor: pointer;
-  white-space: nowrap; }
+  background: 0;
+  text-align: center; }
 
-#EventosIndex .collapse:after {
-  height: .125rem;
-  width: .625rem;
-  margin-right: -.3125rem;
-  margin-top: -.0625rem;
-  content: '';
-  top: 50%;
-  right: 50%;
-  background: #59595A;
-  position: absolute; }
+#EventosIndex .ano-outer:not(.collapsed) > .ano > .collapse:after,
+#EventosIndex .mes-outer:not(.collapsed) > .mes > .collapse:after {
+  content: "−"; }
+
+#EventosIndex .ano-outer.collapsed > .ano > .collapse:after,
+#EventosIndex .mes-outer.collapsed > .mes > .collapse:after {
+  content: "+"; }
 
 /*#endregion */
 /*#region select2 */

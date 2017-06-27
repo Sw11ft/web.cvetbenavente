@@ -227,6 +227,11 @@ table {
         border: .0625rem solid #e4e4e4;
     }
 
+    .ano-outer.collapsed .meses,
+    .mes-outer.collapsed .eventos {
+        display: none;
+    }
+
     .ano {
         background-color: #6164C1;
         color: white;
@@ -278,31 +283,22 @@ table {
     }
 
     .collapse {
-        display: block;
-        position: relative;
-        float: left;
-        width: 2.188rem;
-        padding: 0;
+        display: inline-block;
+        width: 25px;
+        height: 100%;
         border: 0;
-        background: 0 0;
-        line-height: 2.625rem;
+        background: 0;
         text-align: center;
-        text-indent: 100%;
-        overflow: hidden;
-        cursor: pointer;
-        white-space: nowrap;
     }
 
-    .collapse:after {
-        height: .125rem;
-        width: .625rem;
-        margin-right: -.3125rem;
-        margin-top: -.0625rem;
-        content: '';
-        top: 50%;
-        right: 50%;
-        background: #59595A;
-        position: absolute;
+    .ano-outer:not(.collapsed) > .ano > .collapse:after,
+    .mes-outer:not(.collapsed) > .mes > .collapse:after {
+        content: "−";
+    }
+
+    .ano-outer.collapsed > .ano > .collapse:after,
+    .mes-outer.collapsed > .mes > .collapse:after {
+        content: "+";
     }
 }
 /*#endregion */
