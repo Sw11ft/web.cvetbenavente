@@ -35,9 +35,11 @@ table.va-m td {vertical-align:middle !important;}
 .m-b-sm {margin-bottom: 5px !important;}
 /*#endregion*/
 /*#region layout */
+a {
+    color: #337ab7;
+}
 /*footer fix*/
 footer.content-footer, footer.session-footer {
-
 }
 /*ajusta a imagem à sidebar*/
 .brand-logo img {

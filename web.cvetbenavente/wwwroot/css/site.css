@@ -60,6 +60,9 @@ table.va-m td {
 
 /*#endregion*/
 /*#region layout */
+a {
+  color: #337ab7; }
+
 /*footer fix*/
 /*ajusta a imagem à sidebar*/
 .brand-logo img {
