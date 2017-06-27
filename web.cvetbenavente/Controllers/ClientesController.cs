@@ -19,7 +19,6 @@ namespace web.cvetbenavente.Controllers
     public class ClientesController : Controller
     {
         private readonly ApplicationDbContext db;
-
         public ClientesController(ApplicationDbContext context)
         {
             db = context;

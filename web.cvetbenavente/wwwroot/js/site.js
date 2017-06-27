@@ -10,6 +10,7 @@
         $SELECT2
         $FORMS
 		$COLLAPSE
+		$GRAPHS
     $FUNCTIONS
         getParameterByName(name, url)
         removeParameterByName(name, url
@@ -663,6 +664,37 @@ $(function () {
 			$(this).parent().parent().removeClass("collapsed");
 		} else {
 			$(this).parent().parent().addClass("collapsed");
+		}
+	});
+
+	/*****************************************************************/
+
+	//$CHARTS
+
+	var $TopEspecies = new Chart($("#Home #TopEspecies")[0].getContext('2d'), {
+		type: "doughnut",
+		data: {
+			labels: ["Red", "Blue", "Yellow", "a", "b", "c", "d", "e"],
+			datasets: [{
+				label: "My First Dataset",
+				data: [300, 50, 100, 20, 10, 5, 120, 50],
+				backgroundColor: [
+					"rgb(255, 99, 132)",
+					"rgb(54, 162, 235)",
+					"rgb(255, 205, 86)",
+					"rgb(12, 111, 86)",
+					"rgb(55, 222, 86)",
+					"rgb(123, 5, 86)",
+					"rgb(77, 44, 86)",
+					"rgb(200, 123, 86)",
+				]
+			}],
+			options: {
+				animation: {
+					easing: "linear",
+					duration: 250
+				}
+			}
 		}
 	});
 
