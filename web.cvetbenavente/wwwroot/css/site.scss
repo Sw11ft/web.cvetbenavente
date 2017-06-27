@@ -33,6 +33,10 @@
 .m-b-sm {margin-bottom: 5px !important;}
 /*#endregion*/
 /*#region layout */
+/*footer fix*/
+footer.content-footer, footer.session-footer {
+    height: auto;
+}
 /*ajusta a imagem à sidebar*/
 .brand-logo img {
     width: 70%;
