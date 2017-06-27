@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace web.cvetbenavente.Services
@@ -56,6 +58,15 @@ namespace web.cvetbenavente.Services
                 current.Save(stream, current.RawFormat);
                 return stream.ToArray();
             }
+        }
+
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())
+                            .First()
+                            .GetCustomAttribute<DisplayAttribute>()
+                            .GetName();
         }
     }
 }

@@ -4,53 +4,162 @@
 }
 
 <div id="EventosIndex">
-    @foreach (var ano in Model.Anos)
-    {
-        <div class="ano-outer">
-            <h4 class="ano">
-                <button data-action="collapse" type="button" class="collapse"></button>
-                @ano.Valor
-            </h4>
-            <div class="meses">
-                @foreach (var mes in ano.Meses)
-                {
-                    <div class="mes-outer">
-                        <h6 class="mes">
-                            <button data-action="collapse" type="button" class="collapse"></button>
-                            @mes.Nome.ToUpper()
-                        </h6>
-                        <div class="eventos">
-                            @foreach (var evento in mes.Eventos)
-                            {
-                                <div class="evento-outer">
-                                    <div class="evento">
-                                        <div class="dia">
-                                            <span class="text-muted">DIA</span>
-                                            <h4>@evento.Data.Value.Day</h4>
-                                        </div>
-                                        <a asp-action="Detalhes" asp-controller="Especies" asp-route-id="@evento.Animal.IdEspecie">
-                                            <div class="img-wrapper" style="background-image: url(/@(string.IsNullOrWhiteSpace(evento.Animal.Especie.Imagem) ? "images/paw.jpg" : "upload/img/especies/" + evento.Animal.Especie.Imagem))"></div>
-                                        </a>
-                                        <div class="text">
-                                            <a asp-action="Detalhes" asp-controller="Animais" asp-route-id="@evento.IdAnimal">
-                                                <i class="colored hidden-print icon-symbol-@(evento.Animal.Genero == 0 ? "male" : "female")"></i>
-                                                
-                                                @evento.Animal.Nome
-                                            </a>
-                                            &middot;
-                                            <b>@evento.Desc</b>
-                                            <br/>
-                                            <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@evento.Cliente.Id">
-                                                @evento.Cliente.Nome <span class="text-muted">@evento.Cliente.Contacto</span>
-                                            </a>
-                                        </div>
+
+    <div class="row hidden-print">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <a asp-action="Criar" class="btn btn-primary btn-icon m-b w-100">
+                <i class="icon-plus mr5"></i>
+                <span>Novo Evento</span>
+            </a>
+        </div>
+    </div>
+
+    <!--Filtros-->
+    <div class="card bg-white hidden-print">
+        <div class="card-header">
+            Filtros
+        </div>
+        <div class="card-block">
+            <form method="get" asp-action="Index">
+                <div class="row m-a-0">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label for="IndexClientesSearch" class="col-sm-2 control-label p-a-0">Intervalo</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="input-group input-daterange">
+                                        <input type="text" class="form-control" name="from" value="@ViewData["from"]">
+                                        <div class="input-group-addon">a</div>
+                                        <input type="text" class="form-control" name="to" value="@ViewData["to"]">
                                     </div>
                                 </div>
-                            }
+                            </div>
                         </div>
                     </div>
-                }
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label class="col-sm-2 control-label p-a-0">Cliente</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <select name="cl" id="ClienteSelect" class="form-control" style="width: 100%" lang="pt-pt">
+                                        @if (ViewBag.SearchCliente != null)
+                                        {
+                                            <option value="@ViewBag.SearchCliente.Id" selected="selected">@ViewBag.SearchCliente.Nome</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label class="col-sm-2 control-label p-a-0">Espécie</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <select name="esp" id="EspeciesSelect" class="form-control" style="width: 100%" lang="pt-pt">
+                                        @if (ViewBag.SearchEspecie != null)
+                                        {
+                                            <option value="@ViewBag.SearchEspecie.Id" selected="selected">@ViewBag.SearchEspecie.Nome</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-2 col-lg-offset-1">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <label class="col-sm-2 control-label p-a-0">&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <button type="submit" class="btn btn-primary w-100 m-b-sm">
+                                        Pesquisar
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <a asp-action="Index" class="btn btn-danger w-100">
+                                        Limpar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Anos.Any())
+    {
+        @foreach (var ano in Model.Anos)
+        {
+            <div class="ano-outer">
+                <h4 class="ano">
+                    <button data-action="collapse" type="button" class="collapse"></button>
+                    @ano.Valor
+                </h4>
+                <div class="meses">
+                    @foreach (var mes in ano.Meses)
+                    {
+                        <div class="mes-outer">
+                            <h6 class="mes">
+                                <button data-action="collapse" type="button" class="collapse"></button>
+                                @mes.Nome.ToUpper()
+                            </h6>
+                            <div class="eventos">
+                                @foreach (var evento in mes.Eventos)
+                                {
+                                    <div class="evento-outer">
+                                        <div class="evento">
+                                            <div class="dia">
+                                                <span class="text-muted">DIA</span>
+                                                <h4>@evento.Data.Value.Day</h4>
+                                            </div>
+                                            <a asp-action="Detalhes" asp-controller="Especies" asp-route-id="@evento.Animal.IdEspecie">
+                                                <div class="img-wrapper" style="background-image: url(/@(string.IsNullOrWhiteSpace(evento.Animal.Especie.Imagem) ? "images/paw.jpg" : "upload/img/especies/" + evento.Animal.Especie.Imagem))"></div>
+                                            </a>
+                                            <div class="text">
+                                                <a asp-action="Detalhes" asp-controller="Animais" asp-route-id="@evento.IdAnimal">
+                                                    <i class="colored hidden-print icon-symbol-@(evento.Animal.Genero == 0 ? "male" : "female")"></i>
+
+                                                    @evento.Animal.Nome
+                                                </a>
+                                                &middot;
+                                                <b>@evento.Desc</b>
+                                                <br />
+                                                <a asp-action="Detalhes" asp-controller="Clientes" asp-route-id="@evento.Cliente.Id">
+                                                    @evento.Cliente.Nome <span class="text-muted">@evento.Cliente.Contacto</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
+        }
+    } else
+    {
+        <div class="alert alert-danger">
+            Não existem eventos disponíveis para os critérios definidos.
         </div>
     }
+
 </div>

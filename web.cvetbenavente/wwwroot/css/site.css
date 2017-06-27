@@ -49,6 +49,9 @@
 .va-i {
   vertical-align: initial !important; }
 
+table.va-m td {
+  vertical-align: middle !important; }
+
 .w-100 {
   width: 100% !important; }
 
@@ -58,9 +61,6 @@
 /*#endregion*/
 /*#region layout */
 /*footer fix*/
-footer.content-footer, footer.session-footer {
-  height: auto; }
-
 /*ajusta a imagem à sidebar*/
 .brand-logo img {
   width: 70%;

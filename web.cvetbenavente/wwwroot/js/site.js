@@ -24,8 +24,8 @@ $(function () {
     //BOOTSTRAP TOOLTIP
     $('[data-toggle="tooltip"]').tooltip();
     //BOOTSTRAP DATEPICKER
-    $(".datepicker").datepicker({language: 'pt'});
-
+    $(".datepicker, .input-daterange").datepicker({ language: 'pt' });
+	
 
     /*****************************************************************/
 

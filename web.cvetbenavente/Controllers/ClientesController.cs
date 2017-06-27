@@ -255,25 +255,36 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: Clientes/Details/5
-        public IActionResult Detalhes(Guid? id)
+        public IActionResult Detalhes(string id)
         {
-            ClienteServices service = new ClienteServices(db);
+            DetalhesViewModel model = new DetalhesViewModel();
 
             if (id == null)
             {
                 return NotFound();
             }
 
-            Guid xId = id ?? default(Guid);
-
-            Cliente cliente = service.GetClienteById(xId);
+            Cliente cliente = db.Clientes.Where(x => x.Id.ToString() == id).FirstOrDefault();
 
             if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            model.Cliente = cliente;
+            model.Animais = db.Animais
+                                .Include(x => x.Especie)
+                                .Where(x => !x.Removido && x.IdCliente == cliente.Id)
+                                .OrderBy(x => x.Nome)
+                            .ToList();
+            model.Eventos = db.Eventos
+                                .Include(x => x.Animal)
+                                .Include(x => x.Animal.Especie)
+                                .Where(x => x.Data != null && x.Data > DateTime.UtcNow && x.IdCliente == cliente.Id)
+                                .OrderBy(x => x.Data)
+                            .ToList();
+
+            return View(model);
         }
 
         // GET: Clientes/Create

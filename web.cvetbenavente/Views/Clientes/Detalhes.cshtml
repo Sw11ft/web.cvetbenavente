@@ -1,9 +1,9 @@
-﻿@model web.cvetbenavente.Models.Cliente
-
+﻿@model web.cvetbenavente.Models.ClientesViewModels.DetalhesViewModel
+@using web.cvetbenavente.Services
 @{
-    ViewData["Title"] = Model.Nome;
+    ViewData["Title"] = Model.Cliente.Nome;
 }
-@if (!Model.Active)
+@if (!Model.Cliente.Active)
 {
     @section TitleAfter {
         <a class="size-14" data-toggle="popover" data-placement="bottom"
@@ -20,22 +20,22 @@
     }
 }
 <div class="row hidden-print">
-    @if (Model.Active)
+    @if (Model.Cliente.Active)
     {
         <div class="col-sm-4 col-md-3">
-            <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary btn-icon m-b block">
+            <a asp-action="Editar" asp-route-id="@Model.Cliente.Id" class="btn btn-primary btn-icon m-b block">
                 <i class="icon-pencil mr5"></i>
                 <span>Editar</span>
             </a>
         </div>
         <div class="col-sm-4 col-md-3">
-            <a asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Id" class="btn btn-success btn-icon m-b block">
+            <a asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Cliente.Id" class="btn btn-success btn-icon m-b block">
                 <i class="fa fa-paw mr5"></i>
                 <span>Adicionar Animal</span>
             </a>
         </div>
         <div class="col-sm-4 col-md-3 col-md-offset-3">
-            <a href="javascript:;" data-id="@Model.Id" class="btn btn-danger btn-icon m-b block disable-user">
+            <a href="javascript:;" data-id="@Model.Cliente.Id" class="btn btn-danger btn-icon m-b block disable-user">
                 <i class="icon-user-unfollow mr5"></i>
                 <span>Desativar</span>
             </a>
@@ -44,7 +44,7 @@
     else
     {
         <div class="col-sm-4 col-md-3">
-            <a href="javascript:;" class="btn btn-warning btn-icon m-b block enable-user" data-id="@Model.Id">
+            <a href="javascript:;" class="btn btn-warning btn-icon m-b block enable-user" data-id="@Model.Cliente.Id">
                 <i class="icon-user-following mr5"></i>
                 <span>Ativar</span>
             </a>
@@ -52,20 +52,6 @@
     }
 
 </div> @{/*--row*/}
-<div class="block">
-    <span class="text-muted">
-        Criado a <b>@Model.DataCriacao.ToString("d/MM/yyyy")</b><!--
-        -->@if (Model.DataEdicao != null)
-        {<!--
-            --><span>,</span> <span>Editado a <b>@Model.DataEdicao.Value.ToString("d/MM/yyyy")</b>.</span>
-        }<!--
-        -->@if (Model.DataDesativacao != null)
-        {<!--
-            --><span> Inativo desde <b>@Model.DataDesativacao.Value.ToString("d/MM/yyyy")</b></span>
-        }
-
-    </span>
-</div>
 <div class="card bg-white">
     <div class="card-header">
         Dados Pessoais
@@ -77,36 +63,161 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Nome</label>
                         <div class="col-sm-8">
-                            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Cliente.Nome, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Contacto</label>
                         <div class="col-sm-8">
-                            @Html.TextBoxFor(model => model.Contacto, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Cliente.Contacto, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Morada</label>
                         <div class="col-sm-8">
-                            @Html.TextBoxFor(model => model.Morada, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Cliente.Morada, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-2">
-                            @Html.TextBoxFor(model => model.CodPostal, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Cliente.CodPostal, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                         <div class="col-sm-6">
-                            @Html.TextBoxFor(model => model.Localidade, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.TextBoxFor(model => model.Cliente.Localidade, new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Observações</label>
                         <div class="col-sm-8">
-                            @Html.TextAreaFor(model => model.Observacoes, new { @class = "form-control", @readonly = "readonly", @rows = "3" })
+                            @Html.TextAreaFor(model => model.Cliente.Observacoes, new { @class = "form-control", @readonly = "readonly", @rows = "3" })
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Animais-->
+<div class="card bg-white">
+    <div class="card-header">
+        Animais
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-xs-8 col-xs-offset-2">
+                        @if (Model.Animais.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover responsive m-a-0 va-m">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nome</th>
+                                            <th>Espécie</th>
+                                            <th>Adiciondo a</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var animal in Model.Animais)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div title="@animal.Especie.Nome" class="table-img-thumbnail" style="background-image: url(@(string.IsNullOrWhiteSpace(animal.Especie.Imagem) ? "/images/paw.jpg" : "/upload/img/especies/" + animal.Especie.Imagem)"></div>
+                                                </td>
+                                                <td>
+                                                    <i title="@(animal.Genero == Enums.Genero.M ? "Macho" : "Fêmea")" class="colored hidden-print icon-symbol-@(animal.Genero == Enums.Genero.M ? "male" : "female")"></i>
+                                                    <a asp-action="Detalhes" asp-controller="Animais" asp-route-id="@animal.Id" title="Ir para os detalhes do animal">
+                                                        @animal.Nome
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a asp-action="Detalhes" asp-controller="Especies" asp-route-id="@animal.IdEspecie" title="Ir para os detalhes da espécie">
+                                                        @(animal.Genero == Enums.Genero.M ? animal.Especie.Nome : animal.Especie.NomeF)
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @animal.DataCriacao.ToString("dd/MM/yyyy")
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>
+                                Este cliente ainda não tem nenhum animal associado. Pode adicionar animais ao cliente 
+                                <a title="Criar novo animal" asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Cliente.Id">aqui</a>.
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Eventos-->
+<div class="card bg-white">
+    <div class="card-header">
+        Próximos Eventos
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-xs-8 col-xs-offset-2">
+                        @if (Model.Eventos.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover responsive m-a-0 va-m">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Animal</th>
+                                            <th>Descrição</th>
+                                            <th>Modelo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var evento in Model.Eventos)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @evento.Data.Value.ToString("dd/MM/yyyy")
+                                                </td>
+                                                <td>
+                                                    <div title="@evento.Animal.Especie.Nome" class="table-img-thumbnail" style="background-image: url(@(string.IsNullOrWhiteSpace(evento.Animal.Especie.Imagem) ? "/images/paw.jpg" : "/upload/img/especies/" + evento.Animal.Especie.Imagem)"></div>
+                                                    <i title="@(evento.Animal.Genero == Enums.Genero.M ? "Macho" : "Fêmea")" class="colored hidden-print icon-symbol-@(evento.Animal.Genero == Enums.Genero.M ? "male" : "female")"></i>
+                                                    <a asp-action="Detalhes" asp-controller="Animais" asp-route-id="@evento.Animal.Id" title="Ir para os detalhes do animal">
+                                                        @evento.Animal.Nome
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a title="Ir para os detalhes do evento" asp-action="Detalhes" asp-controller="Eventos" asp-route-id="@evento.Id">
+                                                        @evento.Desc
+                                                    </a>
+                                                </td>
+                                                <td>@evento.Modelo.GetDisplayName()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>
+                                Este cliente ainda não tem nenhum animal associado. Pode adicionar animais ao cliente
+                                <a title="Criar novo animal" asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Cliente.Id">aqui</a>.
+                            </p>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>

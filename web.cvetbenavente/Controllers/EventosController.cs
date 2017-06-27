@@ -20,25 +20,38 @@ namespace web.cvetbenavente.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(DateTime? from = null,
-                                   DateTime? to = null,
+        public IActionResult Index(string from = null,
+                                   string to = null,
                                    string cl = null,
                                    string esp = null,
                                    string animal = null)
         {
             var culture = new CultureInfo("pt-PT");
 
-            from = from ?? DateTime.UtcNow;
+            DateTime fromDate;
+            DateTime toDate;
+
+            if (!DateTime.TryParseExact(from, "d/M/yyyy", culture, DateTimeStyles.None, out fromDate))
+            {
+                fromDate = DateTime.UtcNow;
+            }
+
+            if (!DateTime.TryParseExact(to, "d/M/yyyy", culture, DateTimeStyles.None, out toDate))
+            {
+                toDate = DateTime.UtcNow.AddYears(1);
+            }
 
             Models.EventosViewModels.IndexViewModel model = new Models.EventosViewModels.IndexViewModel();
 
-            var eventos = db.Eventos.Where(x => x.Data != null).Include(x => x.Cliente).Include(x => x.Animal).Include(x => x.Animal.Especie).AsQueryable();
-            eventos = eventos.Where(x => x.Data > from);
-
-            if (to != null)
-            {
-                eventos = eventos.Where(x => x.Data <= to);
-            }
+            var eventos = db.Eventos
+                .Where(x => x.Data != null)
+                .Where(x => x.Data > fromDate)
+                .Where(x => x.Data <= toDate)
+                .Where(x => x.Cliente.Active)
+                .Where(x => !x.Animal.Removido)
+                .Include(x => x.Cliente).Include(x => x.Animal)
+                .Include(x => x.Animal.Especie)
+            .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(cl))
             {
@@ -57,7 +70,9 @@ namespace web.cvetbenavente.Controllers
 
             eventos = eventos.OrderBy(x => x.Data);
 
-            foreach (var item in eventos.ToList())
+            List<Evento> eventosList = eventos.ToList();
+
+            foreach (var item in eventosList)
             {
                 if (!model.Anos.Where(x => x.Valor == item.Data.Value.Year).Any())
                 {
@@ -82,6 +97,12 @@ namespace web.cvetbenavente.Controllers
                     .Meses.Where(x => x.Valor == item.Data.Value.Month).First()
                     .Eventos.Add(item);
             }
+
+            ViewData["from"] = fromDate.ToString("dd/MM/yyyy");
+            ViewData["to"] = toDate.ToString("dd/MM/yyyy");
+
+            ViewBag.SearchCliente = (!string.IsNullOrWhiteSpace(cl) ? db.Clientes.FirstOrDefault(x => x.Id.ToString() == cl) : null);
+            ViewBag.SearchEspecie = (!string.IsNullOrWhiteSpace(esp) ? db.Especies.FirstOrDefault(x => x.Id.ToString() == esp) : null);
 
             return View(model);
         }
