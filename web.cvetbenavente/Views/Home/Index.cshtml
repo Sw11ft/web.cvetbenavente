@@ -9,8 +9,135 @@
 }
 
 <div id="Home">
+    <div class="m-x-n-g m-t-n-g m-b-sm overflow-hidden">
+        <div class="card p-t-md p-l-md p-r-md m-a-0 bg-primary-dark text-white no-border">
+            <h4 class="m-a-0">
+                <span class="pull-right">Últimos 6 Meses</span>
+                <span>Atividade</span>
+            </h4>
+        </div>
+        <div class="card m-b-0 bg-primary-dark text-white no-border" style="height: 20vw; min-height: 250px; padding: 10px 20px">
+            <canvas id="MainGraph"></canvas>
+            <script>
+                new Chart(document.getElementById("MainGraph").getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            @foreach (var item in Model.MainGraph.Meses)
+                            {
+                                @Html.Raw("'" + item.Nome.ToUpper() + "',");
+                            }
+                        ],
+                        datasets: [
+                            {
+                                label: "Novos Clientes",
+                                backgroundColor: "#CDDC39",
+                                data: [
+                                    @foreach (var item in Model.MainGraph.Meses)
+                                    {
+                                        @Html.Raw(item.NovosClientes + ",");
+                                    }
+                                ]
+                            },
+                            {
+                                label: "Novos Animais",
+                                backgroundColor: "#f77066",
+                                data: [
+                                    @foreach (var item in Model.MainGraph.Meses)
+                                    {
+                                        @Html.Raw(item.NovosAnimais + ",");
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        legend: {
+                            labels: {
+                                fontColor: "white"
+                            }
+
+                        },
+                        barValueSpacing: 20,
+                        scales: {
+                            yAxes: [{
+                                display: true,
+                                ticks: {
+                                    beginAtZero: true,
+                                    fontColor: "white"
+                                },
+                                gridLines: {
+                                    display: true,
+                                    color: "#AAAAAA"
+                                }
+                            }],
+                            xAxes: [{
+                                display: true,
+                                ticks: {
+                                    fontColor: "white"
+                                },
+                                gridLines: {
+                                    display: false
+                                }
+                            }]
+                        },
+                        gridLines: {
+                            color: "#FFFFFF"
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <div class="card bg-white no-border">
+            <div class="row text-center">
+                <div class="col-sm-3 col-xs-6 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">$ 89.34</h4>
+                    <small class="text-muted bold">Daily Sales</small>
+                </div>
+                <div class="col-sm-3 col-xs-6 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">$ 498.00</h4>
+                    <small class="text-muted bold">Weekly Sales</small>
+                </div>
+                <div class="col-sm-3 col-xs-6 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">$ 34,903</h4>
+                    <small class="text-muted bold">Monthly Sales</small>
+                </div>
+                <div class="col-sm-3 col-xs-6 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">$ 98,343.49</h4>
+                    <small class="text-muted bold">Yearly Sales</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-b m-t">
+        <div class="col-lg-3 col-md-6">
+            <a class="btn btn-lg btn-dark btn-icon m-b-sm w-100" asp-action="Criar" asp-controller="Eventos">
+                <i class="icon-calendar mr5"></i>
+                <span>Novo Evento</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a class="btn btn-lg btn-primary btn-icon m-b-sm w-100" asp-action="Criar" asp-controller="Clientes">
+                <i class="icon-user-follow mr5"></i>
+                <span>Novo Cliente</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a class="btn btn-lg btn-success btn-icon m-b-sm w-100" asp-action="Criar" asp-controller="Animais">
+                <i class="fa fa-paw mr5"></i>
+                <span>Novo Animal</span>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a class="btn btn-lg btn-info btn-icon m-b-sm w-100" asp-action="Criar" asp-controller="Especies">
+                <i class="icon-plus mr5"></i>
+                <span>Nova Espécie</span>
+            </a>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="card card-block bg-white p-b-0 no-border">
                 <div class="text-center">
                     <h5 class="m-a-0 text-uppercase">Distribuição de Animais por Espécie</h5>

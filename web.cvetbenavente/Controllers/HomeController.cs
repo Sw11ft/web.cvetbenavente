@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using web.cvetbenavente.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -23,7 +24,34 @@ namespace web.cvetbenavente.Controllers
         {
             Models.HomeViewModels.IndexViewModel model = new Models.HomeViewModels.IndexViewModel();
 
-            var data = (from Especies in db.Especies
+            CultureInfo ptCulture = new CultureInfo("pt-PT");
+
+            #region mainGraph
+            for (int i = 5; i >= 0; i--)
+            {
+                var startOfMonth = new DateTime(DateTime.UtcNow.AddMonths(-i).Year, DateTime.UtcNow.AddMonths(-i).Month, 1);
+                var endOfMonth = new DateTime(startOfMonth.Year, startOfMonth.Month, DateTime.DaysInMonth(startOfMonth.Year, startOfMonth.Month), 23, 59, 59);
+
+
+                var cl = db.Clientes.Where(x => x.Active)
+                                      .Where(x => x.DataCriacao >= startOfMonth)
+                                      .Where(x => x.DataCriacao <= endOfMonth).Count();
+
+                var animais = db.Animais.Where(x => x.Cliente.Active && !x.Removido)
+                                      .Where(x => x.DataCriacao >= startOfMonth)
+                                      .Where(x => x.DataCriacao <= endOfMonth).Count();
+
+                model.MainGraph.Meses.Add(new Models.HomeViewModels.IndexViewModel.MainGraphData.Mes
+                {
+                    Nome = ptCulture.DateTimeFormat.GetMonthName(startOfMonth.Month),
+                    NovosAnimais = animais,
+                    NovosClientes = cl
+                });
+            }
+            #endregion
+
+            #region pieData
+            var pieData = (from Especies in db.Especies
                         select new
                         {
                             id = Especies.Id,
@@ -38,7 +66,7 @@ namespace web.cvetbenavente.Controllers
                             ).Count()
                         }).OrderByDescending(x => x.value).ThenBy(x => x.label);
 
-            foreach (var item in data)
+            foreach (var item in pieData)
             {
                 Random rnd = new Random();
 
@@ -48,6 +76,8 @@ namespace web.cvetbenavente.Controllers
 
                 model.NrAnimais += item.value;
             }
+            #endregion
+
             return View(model);
         }
 

@@ -14,7 +14,21 @@ namespace web.cvetbenavente.Models.HomeViewModels
             public List<Tuple<int, int, int>> RGB { get; set; } = new List<Tuple<int, int, int>>();
         }
 
+        public class MainGraphData
+        {
+            public class Mes
+            {
+                public int NovosAnimais { get; set; } = 0;
+                public int NovosClientes { get; set; } = 0;
+                public string Nome { get; set; }
+            }
+
+            public List<Mes> Meses { get; set; } = new List<Mes>();
+        }
+
         public PieData TopEspecies { get; set; } = new PieData();
+
+        public MainGraphData MainGraph { get; set; } = new MainGraphData();
 
         public int NrAnimais { get; set; } = 0;
     }
