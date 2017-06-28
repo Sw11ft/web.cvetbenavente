@@ -47,6 +47,8 @@
         <link rel="stylesheet" href="~/css/no-js.min.css" />
 
         @RenderSection("Styles", required: false)
+
+        @RenderSection("TopScripts", required: false)
     </head>
 
     <body class="page-loading">
@@ -434,11 +436,13 @@
             <!-- /bottom footer -->
         </div>
         <!-- no-js -->
-        <div class="no-js-container">
-            <img src="~/images/logo_circles_md.png" class="logo" />
-            <img src="~/images/js-outline.png" class="js-outline" />
-            <h4>Esta plataforma requer JavaScript. Para continuar, ative a utilização de scripts.</h4>
-        </div>
+        <noscript>
+            <div class="no-js-container">
+                <img src="~/images/logo_circles_md.png" class="logo" />
+                <img src="~/images/js-outline.png" class="js-outline" />
+                <h4>Esta plataforma requer JavaScript. Para continuar, ative a utilização de scripts.</h4>
+            </div>
+        </noscript>
         <script type="text/javascript" src="~/js/helpers/modernizr.js"></script>
         <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>

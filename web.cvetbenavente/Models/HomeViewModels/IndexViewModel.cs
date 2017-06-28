@@ -9,11 +9,13 @@ namespace web.cvetbenavente.Models.HomeViewModels
     {
         public class PieData
         {
-            public List<float> Valores { get; set; } 
-            public List<string> Labels { get; set; }
-            public List<Tuple<int, int, int>> RGB { get; set; }
+            public List<float> Valores { get; set; } = new List<float>();
+            public List<string> Labels { get; set; } = new List<string>();
+            public List<Tuple<int, int, int>> RGB { get; set; } = new List<Tuple<int, int, int>>();
         }
 
-        public PieData TopEspecies { get; set; }
+        public PieData TopEspecies { get; set; } = new PieData();
+
+        public int NrAnimais { get; set; } = 0;
     }
 }

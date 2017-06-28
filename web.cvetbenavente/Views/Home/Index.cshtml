@@ -4,14 +4,72 @@
     ViewData["ShowTitle"] = "false";
 }
 
-@section Scripts {
+@section TopScripts {
     <script type="text/javascript" src="~/lib/chart.js/dist/Chart.min.js"></script>
 }
+
 <div id="Home">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card card-block bg-white p-b-0 no-border">
-                <canvas id="TopEspecies"></canvas>
+                <div class="text-center">
+                    <h5 class="m-a-0 text-uppercase">Distribuição de Animais por Espécie</h5>
+                </div>
+                <div class="pie-chart m-t-md m-b-md m-l-lg m-r-lg">
+                    <canvas id="TopEspecies"></canvas>
+                    <script>
+                    new Chart(document.getElementById("TopEspecies").getContext('2d'), {
+                        type: "doughnut",
+                        data: {
+                            labels: [
+                                @foreach (var item in Model.TopEspecies.Labels)
+                                {
+                                    @Html.Raw("'" + item.ToString() + "', ")
+                                }
+                            ],
+                            datasets: [{
+                                label: "My First Dataset",
+                                data: [
+                                    @foreach (var item in Model.TopEspecies.Valores)
+                                    {
+                                        @(item.ToString() + ", ")
+                                    }
+                                ],
+                                backgroundColor: [
+                                    @foreach (var item in Model.TopEspecies.RGB)
+                                    {
+                                        @Html.Raw("'rgb(" + item.Item1 + ", " + item.Item2 + ", " + item.Item3 + ")', ")
+                                    }
+                                ]
+                            }]
+                        },
+                        options: {
+                            animation: {
+                                easing: "linear",
+                                duration: 1250
+                            },
+                            legend: {
+                                display: false
+                            },
+                            cutoutPercentage: 50,
+                        }
+                    });
+                    </script>
+                </div>
+                <div class="text-center m-b-md m">
+                    <div class="text-muted text-uppercase">Total</div>
+                    <h5 class="m-a-0">@Model.NrAnimais Animais</h5>
+                </div>
+                <ul class="list-unstyled m-x-n m-b-0">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <li class="b-t p-a-md">
+                            <span class="pull-right">@Model.TopEspecies.Valores[i]</span>
+                            <i class="fa fa-circle m-r" style="color: rgb(@Model.TopEspecies.RGB[i].Item1,@Model.TopEspecies.RGB[i].Item2,@Model.TopEspecies.RGB[i].Item3)"></i>
+                            @Model.TopEspecies.Labels[i]
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>

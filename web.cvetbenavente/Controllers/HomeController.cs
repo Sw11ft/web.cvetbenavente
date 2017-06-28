@@ -30,7 +30,10 @@ namespace web.cvetbenavente.Controllers
                             label = Especies.Nome,
                             value = (
                                 from Animais in db.Animais
-                                where Animais.IdEspecie == Especies.Id && Especies.Active == true
+                                where Animais.IdEspecie == Especies.Id
+                                    && Especies.Active == true
+                                    && Animais.Cliente.Active == true
+                                    && Animais.Removido == false
                                 select new { Animais }
                             ).Count()
                         }).OrderByDescending(x => x.value).ThenBy(x => x.label);
@@ -42,6 +45,8 @@ namespace web.cvetbenavente.Controllers
                 model.TopEspecies.Labels.Add(item.label);
                 model.TopEspecies.Valores.Add(item.value);
                 model.TopEspecies.RGB.Add(new Tuple<int, int, int>(rnd.Next(1, 256), rnd.Next(1, 256), rnd.Next(1, 256)));
+
+                model.NrAnimais += item.value;
             }
             return View(model);
         }
