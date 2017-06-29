@@ -20,7 +20,7 @@
             <canvas id="MainGraph"></canvas>
             <script>
                 new Chart(document.getElementById("MainGraph").getContext('2d'), {
-                    type: 'bar',
+                    type: 'line',
                     data: {
                         labels: [
                             @foreach (var item in Model.MainGraph.Meses)
@@ -32,22 +32,26 @@
                             {
                                 label: "Novos Clientes",
                                 backgroundColor: "#CDDC39",
+                                borderColor: "#CDDC39",
                                 data: [
                                     @foreach (var item in Model.MainGraph.Meses)
                                     {
                                         @Html.Raw(item.NovosClientes + ",");
                                     }
-                                ]
+                                ],
+                                fill: false
                             },
                             {
                                 label: "Novos Animais",
                                 backgroundColor: "#f77066",
+                                borderColor: "#f77066",
                                 data: [
                                     @foreach (var item in Model.MainGraph.Meses)
                                     {
                                         @Html.Raw(item.NovosAnimais + ",");
                                     }
-                                ]
+                                ],
+                                fill: false
                             }
                         ]
                     },
@@ -69,7 +73,7 @@
                                 },
                                 gridLines: {
                                     display: true,
-                                    color: "#AAAAAA"
+                                    color: "rgba(211, 211, 211, 0.1)"
                                 }
                             }],
                             xAxes: [{
@@ -78,34 +82,31 @@
                                     fontColor: "white"
                                 },
                                 gridLines: {
-                                    display: false
+                                    display: false,
+                                    color: "rgba(211, 211, 211, 0.1)"
                                 }
                             }]
                         },
                         gridLines: {
-                            color: "#FFFFFF"
+                            color: "rgba(211, 211, 211, 0.1)"
                         }
                     }
                 });
             </script>
         </div>
-        <div class="card bg-white no-border">
+        <div class="card bg-white no-border m-b-0">
             <div class="row text-center">
-                <div class="col-sm-3 col-xs-6 p-t p-b">
-                    <h4 class="m-t-0 m-b-0">$ 89.34</h4>
-                    <small class="text-muted bold">Daily Sales</small>
+                <div class="col-xs-4 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">@Model.NrClientes</h4>
+                    <small class="text-muted bold">Total de Clientes</small>
                 </div>
-                <div class="col-sm-3 col-xs-6 p-t p-b">
-                    <h4 class="m-t-0 m-b-0">$ 498.00</h4>
-                    <small class="text-muted bold">Weekly Sales</small>
+                <div class="col-xs-4 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">@Model.NrAnimais</h4>
+                    <small class="text-muted bold">Total de Animais</small>
                 </div>
-                <div class="col-sm-3 col-xs-6 p-t p-b">
-                    <h4 class="m-t-0 m-b-0">$ 34,903</h4>
-                    <small class="text-muted bold">Monthly Sales</small>
-                </div>
-                <div class="col-sm-3 col-xs-6 p-t p-b">
-                    <h4 class="m-t-0 m-b-0">$ 98,343.49</h4>
-                    <small class="text-muted bold">Yearly Sales</small>
+                <div class="col-xs-4 p-t p-b">
+                    <h4 class="m-t-0 m-b-0">@Model.AnimaisPorCliente.ToString("0.##")</h4>
+                    <small class="text-muted bold">Animais p/ Cliente</small>
                 </div>
             </div>
         </div>
@@ -137,7 +138,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-md-5 col-sm-4 col-xs-12">
             <div class="card card-block bg-white p-b-0 no-border">
                 <div class="text-center">
                     <h5 class="m-a-0 text-uppercase">Distribuição de Animais por Espécie</h5>
@@ -197,6 +198,73 @@
                         </li>
                     }
                 </ul>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-7 col-sm-8 col-xs-12">
+            <div class="card card-block no-border bg-white">
+                <div class="card-title text-center">
+                    <h5 class="m-a-0 text-uppercase">Distribuição Anual de Eventos</h5>
+                </div>
+                <div class="canvas-holder" style="height: 25vh; min-height: 250px;">
+                    <canvas id="DistribuicaoAnual"></canvas>
+                    <script>
+                        new Chart(document.getElementById("DistribuicaoAnual").getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: [
+                                    "JAN",
+                                    "FEV",
+                                    "MAR",
+                                    "ABR",
+                                    "MAI",
+                                    "JUN",
+                                    "JUL",
+                                    "AGO",
+                                    "SET",
+                                    "OUT",
+                                    "NOV",
+                                    "DEZ"
+                                ],
+                                datasets: [{
+                                    label: 'Nº de Eventos',
+                                    data: [2, 5, 3, 5, 2, 3, 6, 2, 4, 6, 3, 1],
+                                    backgroundColor: '#6164C1',
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        gridLines: {
+                                            color: "rgba(211, 211, 211, 0.3)"
+                                        },
+                                        ticks: {
+                                            beginAtZero: true,
+                                            fontColor: "#59595a"
+                                        }
+                                    }],
+                                    xAxes: [{
+                                        barPercentage: 0.2,
+                                        gridLines: {
+                                            display: false,
+                                            color: "rgba(211, 211, 211, 0.3)"
+                                        },
+                                        ticks: {
+                                            fontColor: "#59595a"
+                                        }
+                                    }]
+                                },
+                                legend: {
+                                    display: false,
+                                    labels: {
+                                        fontColor: "#59595a"
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
             </div>
         </div>
     </div>

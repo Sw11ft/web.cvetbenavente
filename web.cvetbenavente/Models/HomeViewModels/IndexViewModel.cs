@@ -31,5 +31,9 @@ namespace web.cvetbenavente.Models.HomeViewModels
         public MainGraphData MainGraph { get; set; } = new MainGraphData();
 
         public int NrAnimais { get; set; } = 0;
+
+        public int NrClientes { get; set; } = 0;
+
+        public double AnimaisPorCliente { get; set; } = 0;
     }
 }

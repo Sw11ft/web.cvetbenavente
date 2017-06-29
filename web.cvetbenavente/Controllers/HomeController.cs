@@ -64,19 +64,36 @@ namespace web.cvetbenavente.Controllers
                                     && Animais.Removido == false
                                 select new { Animais }
                             ).Count()
-                        }).OrderByDescending(x => x.value).ThenBy(x => x.label);
+                        }).OrderByDescending(x => x.value).ThenBy(x => x.label).Take(8);
 
+            List<Tuple<int, int, int>> rgb = new List<Tuple<int, int, int>>();
+
+            rgb.Add(new Tuple<int, int, int>(244, 67, 54)); //
+            rgb.Add(new Tuple<int, int, int>(255, 106, 60)); //
+            rgb.Add(new Tuple<int, int, int>(255, 162, 26)); //
+            rgb.Add(new Tuple<int, int, int>(255, 199, 33)); //
+            rgb.Add(new Tuple<int, int, int>(76, 175, 80)); //
+            rgb.Add(new Tuple<int, int, int>(0, 150, 136)); //
+            rgb.Add(new Tuple<int, int, int>(0, 188, 212)); //
+            rgb.Add(new Tuple<int, int, int>(3, 169, 244)); //
+
+            var index = 0;
             foreach (var item in pieData)
             {
-                Random rnd = new Random();
 
                 model.TopEspecies.Labels.Add(item.label);
                 model.TopEspecies.Valores.Add(item.value);
-                model.TopEspecies.RGB.Add(new Tuple<int, int, int>(rnd.Next(1, 256), rnd.Next(1, 256), rnd.Next(1, 256)));
+                model.TopEspecies.RGB.Add(new Tuple<int, int, int>(rgb[index].Item1, rgb[index].Item2, rgb[index].Item3));
 
                 model.NrAnimais += item.value;
+
+                index++;
             }
             #endregion
+
+            model.NrClientes = db.Clientes.Where(x => x.Active).Count();
+
+            model.AnimaisPorCliente = (float)model.NrAnimais / (float)model.NrClientes;
 
             return View(model);
         }
