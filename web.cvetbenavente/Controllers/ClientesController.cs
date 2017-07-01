@@ -12,6 +12,7 @@ using web.cvetbenavente.Models.ClientesViewModels;
 using web.cvetbenavente.Services;
 using OfficeOpenXml;
 using System.IO;
+using System.Data.SqlClient;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -170,6 +171,29 @@ namespace web.cvetbenavente.Controllers
             {
                 return false;
             }
+        }
+
+        // POST: Apagar Cliente
+        [HttpPost]
+        public bool DeleteCliente(string Id)
+        {
+            var cliente = db.Clientes.Where(x => x.Id.ToString() == Id).FirstOrDefault();
+
+            if (cliente == null)
+            {
+                return false;
+            }
+
+            //Apaga todos os eventos com este cliente
+            db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
+            //Apaga todos os animais pertencentes a este cliente
+            db.Database.ExecuteSqlCommand(@"DELETE FROM Animais WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
+            //Apaga o cliente
+            db.Clientes.Remove(cliente);
+
+            db.SaveChanges();
+
+            return true;
         }
 
         // GET: Clientes
@@ -425,8 +449,10 @@ namespace web.cvetbenavente.Controllers
             package.SaveAs(fileStream);
             fileStream.Position = 0;
 
-            var fileStreamResult = new FileStreamResult(fileStream, contentType);
-            fileStreamResult.FileDownloadName = fileDownloadName;
+            var fileStreamResult = new FileStreamResult(fileStream, contentType)
+            {
+                FileDownloadName = fileDownloadName
+            };
 
             return fileStreamResult;
         }

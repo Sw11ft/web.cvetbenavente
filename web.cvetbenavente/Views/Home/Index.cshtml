@@ -9,6 +9,7 @@
 }
 
 <div id="Home">
+    <!--MAINGRAPH OUTERMOST-->
     <div class="m-x-n-g m-t-n-g m-b-sm overflow-hidden">
         <div class="card p-t-md p-l-md p-r-md m-a-0 bg-primary-dark text-white no-border">
             <h4 class="m-a-0">
@@ -16,6 +17,7 @@
                 <span>Atividade</span>
             </h4>
         </div>
+        <!--MainGraph Outer-->
         <div class="card m-b-0 bg-primary-dark text-white no-border" style="height: 20vw; min-height: 250px; padding: 10px 20px">
             <canvas id="MainGraph"></canvas>
             <script>
@@ -94,6 +96,7 @@
                 });
             </script>
         </div>
+        <!--/MainGraph Outer-->
         <div class="card bg-white no-border m-b-0">
             <div class="row text-center">
                 <div class="col-xs-4 p-t p-b">
@@ -111,6 +114,9 @@
             </div>
         </div>
     </div>
+    <!--/MAINGRAPH OUTERMOST-->
+
+    <!--QUICK ACTIONS-->
     <div class="row m-b m-t">
         <div class="col-lg-3 col-md-6">
             <a class="btn btn-lg btn-dark btn-icon m-b-sm w-100" asp-action="Criar" asp-controller="Eventos">
@@ -137,74 +143,106 @@
             </a>
         </div>
     </div>
+    <!--/QUICK ACTIONS-->
+
     <div class="row">
-        <div class="col-lg-3 col-md-5 col-sm-4 col-xs-12">
+        <!--TOPESPECIES OUTERMOST-->
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card card-block bg-white p-b-0 no-border">
                 <div class="text-center">
                     <h5 class="m-a-0 text-uppercase">Distribuição de Animais por Espécie</h5>
                 </div>
-                <div class="pie-chart m-t-md m-b-md m-l-lg m-r-lg">
-                    <canvas id="TopEspecies"></canvas>
-                    <script>
-                    new Chart(document.getElementById("TopEspecies").getContext('2d'), {
-                        type: "doughnut",
-                        data: {
-                            labels: [
-                                @foreach (var item in Model.TopEspecies.Labels)
-                                {
-                                    @Html.Raw("'" + item.ToString() + "', ")
-                                }
-                            ],
-                            datasets: [{
-                                label: "My First Dataset",
-                                data: [
-                                    @foreach (var item in Model.TopEspecies.Valores)
+                <!--TOPESPECIES OUTER-->
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <div class="pie-chart m-a-md">
+                            <canvas id="TopEspecies" height="175"></canvas>
+                            <script>
+                        new Chart(document.getElementById("TopEspecies").getContext('2d'), {
+                            type: "doughnut",
+                            data: {
+                                labels: [
+                                    @foreach (var item in Model.TopEspecies.Labels)
                                     {
-                                        @(item.ToString() + ", ")
+                                        @Html.Raw("'" + item.ToString() + "', ")
                                     }
                                 ],
-                                backgroundColor: [
-                                    @foreach (var item in Model.TopEspecies.RGB)
+                                datasets: [{
+                                    label: "My First Dataset",
+                                    data: [
+                                        @foreach (var item in Model.TopEspecies.Valores)
+                                        {
+                                            @(item.ToString() + ", ")
+                                        }
+                                    ],
+                                    backgroundColor: [
+                                        @foreach (var item in Model.TopEspecies.RGB)
+                                        {
+                                            @Html.Raw("'rgb(" + item.Item1 + ", " + item.Item2 + ", " + item.Item3 + ")', ")
+                                        }
+                                    ]
+                                }]
+                            },
+                            options: {
+                                animation: {
+                                    easing: "linear",
+                                    duration: 1250
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                cutoutPercentage: 50,
+                            }
+                        });
+                            </script>
+                        </div>
+                        <div class="text-center m-b-md m">
+                            <div class="text-muted text-uppercase">Total</div>
+                            <h5 class="m-a-0">@Model.NrAnimais Animais</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-xs-12">
+                        <ul class="list-unstyled m-x-n m-b-0">
+                            @{
+                                int i = 0;
+                                foreach (var item in Model.TopEspecies.Labels)
+                                {
+                                    if (i <= 3)
                                     {
-                                        @Html.Raw("'rgb(" + item.Item1 + ", " + item.Item2 + ", " + item.Item3 + ")', ")
+                                        <li class="p-a-md">
+                                            <span class="pull-right">@Model.TopEspecies.Valores[i]</span>
+                                            <i class="fa fa-circle m-r" style="color: rgb(@Model.TopEspecies.RGB[i].Item1,@Model.TopEspecies.RGB[i].Item2,@Model.TopEspecies.RGB[i].Item3)"></i>
+                                            @item
+                                        </li>
                                     }
-                                ]
-                            }]
-                        },
-                        options: {
-                            animation: {
-                                easing: "linear",
-                                duration: 1250
-                            },
-                            legend: {
-                                display: false
-                            },
-                            cutoutPercentage: 50,
-                        }
-                    });
-                    </script>
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                    i++;
+                                }
+                            }
+                        </ul>
+                    </div>
                 </div>
-                <div class="text-center m-b-md m">
-                    <div class="text-muted text-uppercase">Total</div>
-                    <h5 class="m-a-0">@Model.NrAnimais Animais</h5>
-                </div>
-                <ul class="list-unstyled m-x-n m-b-0">
-                    @for (int i = 0; i < 3; i++)
-                    {
-                        <li class="b-t p-a-md">
-                            <span class="pull-right">@Model.TopEspecies.Valores[i]</span>
-                            <i class="fa fa-circle m-r" style="color: rgb(@Model.TopEspecies.RGB[i].Item1,@Model.TopEspecies.RGB[i].Item2,@Model.TopEspecies.RGB[i].Item3)"></i>
-                            @Model.TopEspecies.Labels[i]
-                        </li>
-                    }
-                </ul>
+                
+                <!--/TOPESPECIES OUTER-->
+                    
+                
+                
             </div>
         </div>
-        <div class="col-lg-9 col-md-7 col-sm-8 col-xs-12">
+        <!--/TOPESPECIES OUTERMOST-->
+
+        <!--EVENTOS POR ANO OUTERMOST-->
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card card-block no-border bg-white">
                 <div class="card-title text-center">
                     <h5 class="m-a-0 text-uppercase">Distribuição Anual de Eventos</h5>
                 </div>
+                <!--EVENTOS POR ANO OUTER-->
                 <div class="canvas-holder" style="height: 25vh; min-height: 250px;">
                     <canvas id="DistribuicaoAnual"></canvas>
                     <script>
@@ -212,22 +250,19 @@
                             type: 'bar',
                             data: {
                                 labels: [
-                                    "JAN",
-                                    "FEV",
-                                    "MAR",
-                                    "ABR",
-                                    "MAI",
-                                    "JUN",
-                                    "JUL",
-                                    "AGO",
-                                    "SET",
-                                    "OUT",
-                                    "NOV",
-                                    "DEZ"
+                                    @foreach (var mes in Model.EventosMes.Meses)
+                                    {
+                                        @Html.Raw("'" + mes.Nome.ToUpper() + "',");
+                                    }
                                 ],
                                 datasets: [{
                                     label: 'Nº de Eventos',
-                                    data: [2, 5, 3, 5, 2, 3, 6, 2, 4, 6, 3, 1],
+                                    data: [
+                                        @foreach (var mes in Model.EventosMes.Meses)
+                                        {
+                                            @Html.Raw(mes.Count + ", ");
+                                        }
+                                    ],
                                     backgroundColor: '#6164C1',
                                     borderWidth: 0
                                 }]
@@ -241,6 +276,7 @@
                                         },
                                         ticks: {
                                             beginAtZero: true,
+                                            stepSize: 1,
                                             fontColor: "#59595a"
                                         }
                                     }],
@@ -265,7 +301,9 @@
                         });
                     </script>
                 </div>
+                <!--/EVENTOS POR ANO OUTER-->
             </div>
         </div>
+        <!--/EVENTOS POR ANO OUTERMOST-->
     </div>
 </div>

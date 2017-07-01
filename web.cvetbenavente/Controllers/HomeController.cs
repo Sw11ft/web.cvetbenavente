@@ -66,16 +66,17 @@ namespace web.cvetbenavente.Controllers
                             ).Count()
                         }).OrderByDescending(x => x.value).ThenBy(x => x.label).Take(8);
 
-            List<Tuple<int, int, int>> rgb = new List<Tuple<int, int, int>>();
-
-            rgb.Add(new Tuple<int, int, int>(244, 67, 54)); //
-            rgb.Add(new Tuple<int, int, int>(255, 106, 60)); //
-            rgb.Add(new Tuple<int, int, int>(255, 162, 26)); //
-            rgb.Add(new Tuple<int, int, int>(255, 199, 33)); //
-            rgb.Add(new Tuple<int, int, int>(76, 175, 80)); //
-            rgb.Add(new Tuple<int, int, int>(0, 150, 136)); //
-            rgb.Add(new Tuple<int, int, int>(0, 188, 212)); //
-            rgb.Add(new Tuple<int, int, int>(3, 169, 244)); //
+            List<Tuple<int, int, int>> rgb = new List<Tuple<int, int, int>>
+            {
+                new Tuple<int, int, int>(244, 67, 54), //
+                new Tuple<int, int, int>(255, 106, 60), //
+                new Tuple<int, int, int>(255, 162, 26), //
+                new Tuple<int, int, int>(255, 199, 33), //
+                new Tuple<int, int, int>(76, 175, 80), //
+                new Tuple<int, int, int>(0, 150, 136), //
+                new Tuple<int, int, int>(0, 188, 212), //
+                new Tuple<int, int, int>(3, 169, 244) //
+            };
 
             var index = 0;
             foreach (var item in pieData)
@@ -88,6 +89,37 @@ namespace web.cvetbenavente.Controllers
                 model.NrAnimais += item.value;
 
                 index++;
+            }
+            #endregion
+
+            #region eventos p/ mes
+            var eventos = (from Eventos in db.Eventos
+                           group Eventos by new
+                           {
+                               Column1 = Eventos.Data.Value.Month
+                           } into g
+                           select new
+                           {
+                               month = g.Key.Column1,
+                               count = g.Count(p => p.Id != null)
+                           }).ToList();
+
+
+            for (int i = 1; i <= 12; i++)
+            {
+                if (!eventos.Any(x => x.month == i))
+                {
+                    eventos.Add(new { month = i, count = 0 });
+                }
+            }
+
+            foreach (var item in eventos.OrderBy(x => x.month).ToList())
+            {
+                model.EventosMes.Meses.Add(new Models.HomeViewModels.IndexViewModel.EventosMesData.Mes
+                {
+                    Count = item.count,
+                    Nome = ptCulture.DateTimeFormat.GetAbbreviatedMonthName(item.month)
+                });
             }
             #endregion
 

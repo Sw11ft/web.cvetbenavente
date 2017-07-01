@@ -26,9 +26,22 @@ namespace web.cvetbenavente.Models.HomeViewModels
             public List<Mes> Meses { get; set; } = new List<Mes>();
         }
 
+        public class EventosMesData
+        {
+            public class Mes
+            {
+                public int Count { get; set; } = 0;
+                public string Nome { get; set; }
+            }
+
+            public List<Mes> Meses { get; set; } = new List<Mes>();
+        }
+
         public PieData TopEspecies { get; set; } = new PieData();
 
         public MainGraphData MainGraph { get; set; } = new MainGraphData();
+
+        public EventosMesData EventosMes { get; set; } = new EventosMesData();
 
         public int NrAnimais { get; set; } = 0;
 

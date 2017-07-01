@@ -3,6 +3,7 @@
     TOC:
     $DOCUMENT.READY
         $NOTY
+		$HEADER SEARCH
         $DADOS DE TABELAS
         $ANIMAÇÕES
         $LIMPEZA DE FORMS/INPUTS
@@ -15,6 +16,7 @@
         getParameterByName(name, url)
         removeParameterByName(name, url
 		insertParameter(key, value))
+		debounce(func, wait, immediate)
 */
 
 //$DOCUMENT.READY
@@ -147,6 +149,122 @@ $(function () {
     }
 
     /*****************************************************************/
+
+	//$HEADER SEARCH
+
+	let isSearchOpen = false;
+
+	function searchPredictToggle() {
+		var val = $('.search-input').val();
+		if (val.length > 0) {
+			$('#TopSearchDisplay').html(val);
+			$.ajax({
+				url: "/xhr/Search",
+				method: "GET",
+				data: { q: val },
+				beforeSend: function () {
+					$(".search-form .loader").removeClass("hidden");
+					$('.search-predict').removeClass('hide');
+				},
+				success: function (data) {
+					$(".search-form .predictive-list").children().not(".loader").not(".no-data").remove();
+					$(".search-form .predictive-list .no-data").addClass("hidden");
+
+					console.log(data);
+					console.log("length clientes: " + data.clientes.length)
+
+					//clientes
+					if (data.clientes.length > 0) {
+						$("#ClientesList .loader").addClass("hidden");
+						for (i = 0; i < data.clientes.length; i++) {
+							var toAdd;
+							toAdd =  '<li class="p-a-0 lh-1">';
+							toAdd += '	<a class="p-a-0" href="/Clientes/Detalhes/' + data.clientes[i].id + '">';
+							toAdd += '		<span>' + data.clientes[i].nome + '</span> ';
+							toAdd += '		<span class="text-muted">' + data.clientes[i].contacto + '</span>';
+							toAdd += '	</a>';	
+							toAdd += '</li>';
+							
+							$("#ClientesList").append(toAdd);
+						}
+					}
+					else {
+						$("#ClientesList .loader").addClass("hidden");
+						$("#ClientesList .no-data").removeClass("hidden");
+					}
+					//-clientes
+
+					//animais
+					if (data.animais.length > 0) {
+						$("#AnimaisList .loader").addClass("hidden");
+						for (i = 0; i < data.animais.length; i++) {
+
+							var imgPath;
+
+							if (typeof data.animais[i].imagem === "string" && data.animais[i].imagem.trim() != "") {
+								imgPath = "/upload/img/especies/" + data.animais[i].imagem;
+							}
+							else {
+								imgPath = "/images/paw.jpg";
+							}
+
+							var toAdd;
+							toAdd = '<li class="p-a-0 lh-1">';
+							toAdd += '	<a class="avatar p-a-0" href="/Animais/Detalhes/' + data.animais[i].id + '">';
+							toAdd += '		<div class="search-top-img" style="background-image: url(' + imgPath + ')"></div>';
+							toAdd += '		<span>' + data.animais[i].nome + '</span> ';
+							toAdd += '		<span class="text-muted">' + data.animais[i].cliente + '</span>';
+							toAdd += '	</a>';
+							toAdd += '</li>';
+
+							$("#AnimaisList").append(toAdd);
+						}
+					}
+					else {
+						$("#AnimaisList .loader").addClass("hidden");
+						$("#AnimaisList .no-data").removeClass("hidden");
+					}
+					//-animais
+				}
+			});
+		} else {
+			$('.search-predict').addClass('hide');
+		}
+	}
+
+	$('.search-input').focus(debounce(function () {
+		searchPredictToggle();
+	}, 750));
+	$('.search-input').keyup(debounce(function () {
+		searchPredictToggle();
+	}, 750));
+	$(document).mouseup(function (e) {
+		var container = $('.search-predict');
+
+		// if the target of the click isn't the container nor a descendant of the container
+		if (!container.is(e.target) && container.has(e.target).length === 0) {
+			container.addClass("hide");
+		}
+	});
+
+	$('[data-toggle=search]').on('click', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		if (isSearchOpen) {
+			$('.main-panel > .header').removeClass('search-open');
+			$('.search-form').addClass('hide');
+			$('.search-close-icon').addClass('hide');
+			$('.search-open-icon').removeClass('hide');
+		} else {
+			$('.main-panel > .header').addClass('search-open');
+			$('.search-form').removeClass('hide').find('.search-input')[0].focus();
+			$('.search-close-icon').removeClass('hide');
+			$('.search-open-icon').addClass('hide');
+		}
+		isSearchOpen = !isSearchOpen;
+	});
+
+	/*****************************************************************/
 
     //$DADOS DE TABELAS
     /*
@@ -733,3 +851,24 @@ function insertParameter(key, value) {
     //this will reload the page, it's likely better to store this until finished
     document.location.search = kvp.join('&');
 }
+
+
+function debounce(func, wait, immediate) {
+	// Returns a function, that, as long as it continues to be invoked, will not
+	// be triggered. The function will be called after it stops being called for
+	// N milliseconds. If `immediate` is passed, trigger the function on the
+	// leading edge, instead of the trailing.
+
+	var timeout;
+	return function () {
+		var context = this, args = arguments;
+		var later = function () {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};

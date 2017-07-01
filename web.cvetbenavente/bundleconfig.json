@@ -28,12 +28,6 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/helpers/smartresize.min.js",
-    "inputFiles": [
-      "wwwroot/js/helpers/smartresize.js"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/css/app.min.css",
     "inputFiles": [
       "wwwroot/css/app.css"

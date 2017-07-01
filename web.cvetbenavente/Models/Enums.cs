@@ -11,7 +11,9 @@ namespace web.cvetbenavente.Models
     {
         public enum Genero
         {
+            [Display(Name = "Macho")]
             M,
+            [Display(Name = "Fêmea")]
             F
         }
 

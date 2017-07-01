@@ -41,6 +41,20 @@ a {
 /*footer fix*/
 footer.content-footer, footer.session-footer {
 }
+/*search bar image*/
+.search-top-img {
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    vertical-align: middle;
+
+    background-size: cover;
+    background-position: 50%;
+    
+    border: 0;
+
+    border-radius: .125rem;
+}
 /*ajusta a imagem à sidebar*/
 .brand-logo img {
     width: 70%;
