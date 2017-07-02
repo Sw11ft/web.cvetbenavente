@@ -265,6 +265,11 @@ namespace web.cvetbenavente.Controllers
             {
                 try
                 {
+                    var oldAnimal = db.Animais.Where(x => x.Id == id).FirstOrDefault();
+
+                    animal.DataCriacao = oldAnimal.DataCriacao;
+                    animal.DataEdicao = DateTime.UtcNow;
+
                     db.Update(animal);
                     await db.SaveChangesAsync();
                 }
