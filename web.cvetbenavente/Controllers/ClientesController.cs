@@ -101,37 +101,28 @@ namespace web.cvetbenavente.Controllers
         [HttpPost]
         public bool DisableCliente(string Id)
         {
-            ClienteServices service = new ClienteServices(db);
+            Cliente cliente = db.Clientes.Where(x => x.Id.ToString() == Id).SingleOrDefault();
 
-            bool validGuid = true;
-            Guid Guid;
-
-            try
+            if (cliente == null)
             {
-                Guid = new Guid(Id);
-            }
-            catch
-            {
-                validGuid = false;
-            }
-
-            if (validGuid)
-            {
-                Cliente cliente = service.GetClienteById(Guid);
-
-                if (cliente == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    service.DisableCliente(Guid);
-                    return true;
-                }
+                return false;
             }
             else
             {
-                return false;
+                try
+                {
+                    cliente.Active = false;
+                    db.Clientes.Update(cliente);
+
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+                
             }
         }
 
@@ -355,7 +346,7 @@ namespace web.cvetbenavente.Controllers
 
                 service.CreateCliente(cliente);
 
-                return RedirectToAction("Index", "Clientes", new { nid = 1, nt = "s"});
+                return RedirectToAction("Detalhes", "Clientes", new { id = cliente.Id, nid = 1, nt = "s"});
             }
             else
             {

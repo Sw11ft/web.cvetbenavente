@@ -21,7 +21,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">@Html.DisplayNameFor(x => x.Data)</label>
                         <div class="col-sm-8">
-                            <input type="text" placeholder="Introduza a data do evento..." class="form-control datepicker" id="Data" asp-for="Data" data-date-start-date="+0d" style="padding: 6px 12px;" required>
+                            <input type="text" placeholder="Introduza a data do evento..." class="form-control datepicker" id="strDate" name="strDate" data-date-start-date="+0d" style="padding: 6px 12px;" required>
                             <span class="error" asp-validation-for="Data"></span>
                         </div>
                     </div>

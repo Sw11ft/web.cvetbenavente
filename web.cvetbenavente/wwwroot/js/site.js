@@ -5,7 +5,6 @@
         $NOTY
 		$HEADER SEARCH
         $ANIMAÇÕES
-        $LIMPEZA DE FORMS/INPUTS
         $AJAX
         $SELECT2
         $FORMS
@@ -273,20 +272,9 @@ $(function () {
 
     /*****************************************************************/
 
-    //$LIMPEZA DE FORMS/INPUTS
-
-    //Clientes/Index Procura
-    /*
-    $("#ClientesIndexSearchFormGroup .clear").click(function (event) {
-        $("#ClientesIndexSearch").val("").trigger("input");
-        $(this).fadeOut(100);
-    });
-    */
-    /*****************************************************************/
-
     //$AJAX
 
-    //Desativar utilizador
+    //Desativar cliente
     $(".disable-user").click(function () {
         let id = $(this).data("id");
 
@@ -332,7 +320,7 @@ $(function () {
         }
     });
 
-    //Ativar utilizador
+    //Ativar cliente
     $(".enable-user").click(function () {
         let id = $(this).data("id");
 
@@ -377,7 +365,52 @@ $(function () {
         }
     });
 
-    //Ativar utilizador
+	//Apagar cliente
+	$(".delete-user").click(function () {
+		let id = $(this).data("id");
+
+		if (id !== null && id !== "") {
+			swal({
+				title: "Apagar Cliente",
+				text: "Está prestes a apagar este cliente. <br/>" +
+				"Ao ser apagado, todos os eventos e animais associados a este cliente serão também apagados. <br/>" +
+				"Esta ação é irreversível.",
+				type: "warning",
+				html: true,
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: "Apagar",
+				confirmButtonColor: "#dd6777",
+				cancelButtonText: "Cancelar",
+				cancelButtonColor: "#e2e2e2"
+			}, function () { //on confirm
+				$.ajax({
+					url: "/Clientes/DeleteCliente",
+					type: "post",
+					data: { Id: id },
+					success: function (data) {
+						if (data === true) {
+							swal({
+								title: "Cliente apagado com sucesso.",
+								type: "success"
+							}, function () {
+								window.location.href = "/Clientes";
+							});
+						}
+						else {
+							swal({
+								title: "Ocorreu um erro. Se isto persistir, contacte a administração.",
+								type: "error"
+							});
+						}
+					}
+				});
+			});
+		}
+	});
+
+    //Apagar espécie
     $(".delete-especie").click(function () {
         let id = $(this).data("id");
 
@@ -385,7 +418,8 @@ $(function () {
             swal({
                 title: "Apagar Espécie",
                 text: "Está prestes a apagar esta espécie. <br/>" +
-                "Ao apagar a espécie, não lhe poderá associar nenhum animal. <br/>" +
+				"Ao apagar a espécie, não lhe poderá associar nenhum animal " +
+				"mas os animais existentes permanecerão. <br/>" +
                 "Esta ação não pode ser revertida.",
                 type: "warning",
                 html: true,
@@ -421,6 +455,52 @@ $(function () {
             });
         }
     });
+
+	//Apagar animal
+	$(".delete-animal").click(function () {
+		let id = $(this).data("id");
+
+		if (id !== null && id !== "") {
+			swal({
+				title: "Apagar Animal",
+				text: "Está prestes a apagar este animal. <br/>" +
+				"Ao apagar o animal, todos os eventos que lhe estão associados " +
+				" serão desativados. <br />" +
+				"Esta ação não pode ser revertida.",
+				type: "warning",
+				html: true,
+				showCancelButton: true,
+				closeOnConfirm: false,
+				showLoaderOnConfirm: true,
+				confirmButtonText: "Apagar",
+				confirmButtonColor: "#dd6777",
+				cancelButtonText: "Cancelar",
+				cancelButtonColor: "#e2e2e2"
+			}, function () { //on confirm
+				$.ajax({
+					url: "/Animais/DeleteAnimal",
+					type: "post",
+					data: { Id: id },
+					success: function (data) {
+						if (data === true) {
+							swal({
+								title: "Animal apagado com sucesso.",
+								type: "success"
+							}, function () {
+								window.location.href = "/Animais";
+							});
+						}
+						else {
+							swal({
+								title: "Ocorreu um erro. Se isto persistir, contacte a administração.",
+								type: "error"
+							});
+						}
+					}
+				});
+			});
+		}
+	});
 
     //MENU NÚMERO DE REGISTOS
     $.ajax({

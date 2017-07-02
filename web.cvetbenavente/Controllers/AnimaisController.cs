@@ -285,8 +285,9 @@ namespace web.cvetbenavente.Controllers
             return RedirectToAction("Detalhes", new { id = id, nt = "s", nid = 50 });
         }
 
-        // GET: Animais/Delete/5
-        public bool DeleteAnimal(string id, bool deleteEvents = false)
+        // POST: Animais/Delete/5
+        [HttpPost]
+        public bool DeleteAnimal(string id, bool removeEvents = false)
         {
             if (id == null)
             {
@@ -300,14 +301,13 @@ namespace web.cvetbenavente.Controllers
                 return false;
             }
 
-            if (deleteEvents)
+            if (!db.Eventos.Where(x => x.IdAnimal == animal.Id).Any())
             {
                 try
                 {
-                    db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdAnimal = @IdAnimal;", new SqlParameter("@IdAnimal", animal.Id));
                     db.Animais.Remove(animal);
                 }
-                
+
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
@@ -316,10 +316,23 @@ namespace web.cvetbenavente.Controllers
             }
             else
             {
-                animal.Removido = true;
                 try
                 {
+                    animal.Removido = true;
                     db.Animais.Update(animal);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+            }
+
+            if (removeEvents)
+            { 
+                try
+                {
+                    db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdAnimal = @IdAnimal;", new SqlParameter("@IdAnimal", animal.Id));
                 }
                 catch (Exception e)
                 {

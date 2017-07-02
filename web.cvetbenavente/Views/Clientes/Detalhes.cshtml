@@ -35,10 +35,22 @@
             </a>
         </div>
         <div class="col-sm-4 col-md-3 col-md-offset-3">
-            <a href="javascript:;" data-id="@Model.Cliente.Id" class="btn btn-danger btn-icon m-b block disable-user">
-                <i class="icon-user-unfollow mr5"></i>
-                <span>Desativar</span>
-            </a>
+            <div class="btn-group mr15 m-b w-100">
+                <button type="button" class="btn btn-danger w-100" data-toggle="dropdown" aria-expanded="false">
+                    Apagar
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a class="disable-user" data-id="@Model.Cliente.Id" href="javascript:;">Desativar</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a class="delete-user" data-id="@Model.Cliente.Id" href="javascript:;">Apagar</a>
+                    </li>
+                </ul>
+            </div>
+            
         </div>
     }
     else
@@ -149,10 +161,19 @@
                         }
                         else
                         {
-                            <p>
-                                Este cliente ainda não tem nenhum animal associado. Pode adicionar animais ao cliente 
-                                <a title="Criar novo animal" asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Cliente.Id">aqui</a>.
-                            </p>
+                            @if (Model.Cliente.Active)
+                            {
+                                <p>
+                                    Este cliente ainda não tem nenhum animal associado. Pode adicionar animais ao cliente
+                                    <a title="Criar novo animal" asp-action="Criar" asp-controller="Animais" asp-route-cl="@Model.Cliente.Id">aqui</a>.
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    Este cliente não tem nenhum animal associado. Terá de ativar o cliente para adicionar um animal.
+                                </p>
+                            }
                         }
                     </div>
                 </div>
@@ -211,10 +232,20 @@
                         }
                         else
                         {
-                            <p>
-                                Não existe nenhum evento futuro para este cliente. Pode criar um novo evento 
-                                <a title="Criar novo evento" asp-action="Criar" asp-controller="Eventos" asp-route-cl="@Model.Cliente.Id">aqui</a>.
-                            </p>
+                            @if (Model.Cliente.Active)
+                            {
+                                <p>
+                                    Não existe nenhum evento futuro para este cliente. Pode criar um novo evento
+                                    <a title="Criar novo evento" asp-action="Criar" asp-controller="Eventos" asp-route-cl="@Model.Cliente.Id">aqui</a>.
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    Não existe nenhum evento futuro para este cliente. Para criar um novo evento para este cliente, terá de o reativar.
+                                </p>
+                            }
+
                         }
                     </div>
                 </div>

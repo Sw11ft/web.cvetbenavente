@@ -318,36 +318,50 @@ namespace web.cvetbenavente.Controllers
         [HttpPost]
         public bool ApagarEspecie (string Id)
         {
-            bool validGuid = true;
-            Guid Guid;
+            Especie especie = db.Especies.Where(x => x.Id.ToString() == Id).SingleOrDefault();
 
-            try
+            if (especie == null)
             {
-                Guid = new Guid(Id);
-    }
-            catch
-            {
-                validGuid = false;
-            }
-
-            if (validGuid)
-            {
-                Especie especie = db.Especies.Find(Guid);
-
-                if (especie == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    db.Especies.Remove(especie);
-                    db.SaveChanges();
-                    return true;
-                }
+                return false;
             }
             else
             {
-                return false;
+                if (db.Animais.Where(x => x.IdEspecie == especie.Id).Any())
+                {
+                    try
+                    {
+                        especie.Active = false;
+                        db.Especies.Update(especie);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return false;
+                    }
+                }
+                else
+                { 
+                    try
+                    {
+                        db.Especies.Remove(especie);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return false;
+                    }
+                }
+
+                try
+                {
+                    db.SaveChanges();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
             }
         }
 

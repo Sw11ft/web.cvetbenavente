@@ -118,8 +118,18 @@ namespace web.cvetbenavente.Controllers
         }
 
         [HttpPost]
-        public IActionResult Criar(Evento evento)
+        public IActionResult Criar(Evento evento, [Bind("strDate")]string strDate)
         {
+            try
+            {
+                evento.Data = DateTime.ParseExact(strDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return View(evento);
+            }
+
             if (ModelState.IsValid)
             {
                 evento.DataCriacao = DateTime.UtcNow;
