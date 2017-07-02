@@ -10,6 +10,7 @@ using web.cvetbenavente.Models;
 using Microsoft.AspNetCore.Authorization;
 using OfficeOpenXml;
 using System.IO;
+using System.Data.SqlClient;
 
 namespace web.cvetbenavente.Controllers
 {
@@ -286,23 +287,59 @@ namespace web.cvetbenavente.Controllers
         }
 
         // GET: Animais/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public bool DeleteAnimal(string id, bool deleteEvents = false)
         {
             if (id == null)
             {
-                return NotFound();
+                return false;
             }
 
-            var animal = await db.Animais
-                .Include(a => a.Cliente)
-                .Include(a => a.Especie)
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var animal = db.Animais.SingleOrDefault(m => m.Id.ToString() == id);
+
             if (animal == null)
             {
-                return NotFound();
+                return false;
             }
 
-            return View(animal);
+            if (deleteEvents)
+            {
+                try
+                {
+                    db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdAnimal = @IdAnimal;", new SqlParameter("@IdAnimal", animal.Id));
+                    db.Animais.Remove(animal);
+                }
+                
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+            }
+            else
+            {
+                animal.Removido = true;
+                try
+                {
+                    db.Animais.Update(animal);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+
+            return true;
         }
 
         // POST: Animais/Delete/5

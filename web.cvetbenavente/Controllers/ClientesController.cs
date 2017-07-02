@@ -184,14 +184,22 @@ namespace web.cvetbenavente.Controllers
                 return false;
             }
 
-            //Apaga todos os eventos com este cliente
-            db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
-            //Apaga todos os animais pertencentes a este cliente
-            db.Database.ExecuteSqlCommand(@"DELETE FROM Animais WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
-            //Apaga o cliente
-            db.Clientes.Remove(cliente);
+            try
+            {
+                //Apaga todos os eventos com este cliente
+                db.Database.ExecuteSqlCommand(@"DELETE FROM Eventos WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
+                //Apaga todos os animais pertencentes a este cliente
+                db.Database.ExecuteSqlCommand(@"DELETE FROM Animais WHERE IdCliente = @IdCliente;", new SqlParameter("@IdCliente", cliente.Id));
+                //Apaga o cliente
+                db.Clientes.Remove(cliente);
 
-            db.SaveChanges();
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+                return false;
+            }
 
             return true;
         }
