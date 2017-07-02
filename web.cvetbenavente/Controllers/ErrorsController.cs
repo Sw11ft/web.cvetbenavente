@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace web.cvetbenavente.Controllers
 {
+    [Authorize]
     public class ErrorsController : Controller
     {
-        [Authorize]
         public IActionResult Index(string StatusCode)
         {
             string message;

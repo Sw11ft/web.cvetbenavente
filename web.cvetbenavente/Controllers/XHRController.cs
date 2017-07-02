@@ -49,70 +49,77 @@ namespace web.cvetbenavente.Controllers
 
         public IActionResult Search(string q)
         {
-            if (!string.IsNullOrWhiteSpace(q))
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                q = q.Trim();
+                if (!string.IsNullOrWhiteSpace(q))
+                {
+                    q = q.Trim();
 
-                var cl = db.Clientes
-                        .Where(x => x.Nome.Contains(q) ||
-                                    x.Morada.Contains(q) ||
-                                    x.Localidade.Contains(q) ||
-                                    x.CodPostal.Contains(q) ||
-                                    x.Contacto.Contains(q) ||
-                                    x.Observacoes.Contains(q))
-                        .Where(x => x.Active)
-                        .Select(x => new
-                        {
-                            id = x.Id,
-                            nome = x.Nome,
-                            contacto = x.Contacto,
-                            morada = x.Morada,
-                            codpostal = x.CodPostal,
-                            localidade = x.Localidade
-                        })
-                        .OrderBy(x => x.nome)
-                        .ToList();
-
-                var an = db.Animais
-                            .Include(x => x.Cliente)
-                            .Include(x => x.Especie)
+                    var cl = db.Clientes
                             .Where(x => x.Nome.Contains(q) ||
-                                        x.Especie.Nome.Contains(q) ||
-                                        x.Observacoes.Contains(q) ||
-                                        x.Cliente.Nome.Contains(q) ||
-                                        x.Cliente.Observacoes.Contains(q) ||
-                                        x.Cliente.CodPostal.Contains(q))
-                            .Where(x => !x.Removido && x.Cliente.Active)
+                                        x.Morada.Contains(q) ||
+                                        x.Localidade.Contains(q) ||
+                                        x.CodPostal.Contains(q) ||
+                                        x.Contacto.Contains(q) ||
+                                        x.Observacoes.Contains(q))
+                            .Where(x => x.Active)
                             .Select(x => new
                             {
                                 id = x.Id,
                                 nome = x.Nome,
-                                especie = x.Genero == Genero.M ? x.Especie.Nome : x.Especie.NomeF,
-                                genero = x.Genero,
-                                imagem = x.Especie.Imagem,
-                                cliente = x.Cliente.Nome,
-                                contacto = x.Cliente.Contacto,
-                                idCliente = x.Cliente.Id
+                                contacto = x.Contacto,
+                                morada = x.Morada,
+                                codpostal = x.CodPostal,
+                                localidade = x.Localidade
                             })
-                            .OrderBy(x => x.cliente).ThenBy(x => x.nome)
+                            .OrderBy(x => x.nome)
                             .ToList();
 
-                var esp = db.Especies
+                    var an = db.Animais
+                                .Include(x => x.Cliente)
+                                .Include(x => x.Especie)
                                 .Where(x => x.Nome.Contains(q) ||
-                                            x.NomeF.Contains(q))
-                                .Where(x => x.Active)
+                                            x.Especie.Nome.Contains(q) ||
+                                            x.Observacoes.Contains(q) ||
+                                            x.Cliente.Nome.Contains(q) ||
+                                            x.Cliente.Observacoes.Contains(q) ||
+                                            x.Cliente.CodPostal.Contains(q))
+                                .Where(x => !x.Removido && x.Cliente.Active)
                                 .Select(x => new
                                 {
                                     id = x.Id,
                                     nome = x.Nome,
-                                    nomeF = x.NomeF,
-                                    imagem = x.Imagem
-                                }).ToList();
+                                    especie = x.Genero == Genero.M ? x.Especie.Nome : x.Especie.NomeF,
+                                    genero = x.Genero,
+                                    imagem = x.Especie.Imagem,
+                                    cliente = x.Cliente.Nome,
+                                    contacto = x.Cliente.Contacto,
+                                    idCliente = x.Cliente.Id
+                                })
+                                .OrderBy(x => x.cliente).ThenBy(x => x.nome)
+                                .ToList();
 
-                return Json(new { clientes = cl, animais = an, especies = esp });
+                    var esp = db.Especies
+                                    .Where(x => x.Nome.Contains(q) ||
+                                                x.NomeF.Contains(q))
+                                    .Where(x => x.Active)
+                                    .Select(x => new
+                                    {
+                                        id = x.Id,
+                                        nome = x.Nome,
+                                        nomeF = x.NomeF,
+                                        imagem = x.Imagem
+                                    }).ToList();
+
+                    return Json(new { clientes = cl, animais = an, especies = esp });
+                }
+
+                return null;
             }
-
-            return null;
+            else
+            {
+                return Json(new { error = true, message = "O pedido não foi efetuado através de XHR." });
+            }
         }
     }
 }

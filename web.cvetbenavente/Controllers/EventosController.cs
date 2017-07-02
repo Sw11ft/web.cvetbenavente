@@ -8,9 +8,11 @@ using web.cvetbenavente.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace web.cvetbenavente.Controllers
 {
+    [Authorize]
     public class EventosController : Controller
     {
         private readonly ApplicationDbContext db;
