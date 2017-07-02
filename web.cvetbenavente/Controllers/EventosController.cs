@@ -30,15 +30,12 @@ namespace web.cvetbenavente.Controllers
         {
             var culture = new CultureInfo("pt-PT");
 
-            DateTime fromDate;
-            DateTime toDate;
-
-            if (!DateTime.TryParseExact(from, "d/M/yyyy", culture, DateTimeStyles.None, out fromDate))
+            if (!DateTime.TryParseExact(from, "d/M/yyyy", culture, DateTimeStyles.None, out DateTime fromDate))
             {
                 fromDate = DateTime.UtcNow;
             }
 
-            if (!DateTime.TryParseExact(to, "d/M/yyyy", culture, DateTimeStyles.None, out toDate))
+            if (!DateTime.TryParseExact(to, "d/M/yyyy", culture, DateTimeStyles.None, out DateTime toDate))
             {
                 toDate = DateTime.UtcNow.AddYears(1);
             }

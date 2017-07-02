@@ -170,14 +170,14 @@ $(function () {
 					$(".search-form .predictive-list").children().not(".loader").not(".no-data").remove();
 					$(".search-form .predictive-list .no-data").addClass("hidden");
 
-					console.log(data);
-					console.log("length clientes: " + data.clientes.length)
+					var toAdd;
+					var imgPath;
 
 					//clientes
 					if (data.clientes.length > 0) {
 						$("#ClientesList .loader").addClass("hidden");
 						for (i = 0; i < data.clientes.length; i++) {
-							var toAdd;
+
 							toAdd =  '<li class="p-a-0 lh-1">';
 							toAdd += '	<a class="p-a-0" href="/Clientes/Detalhes/' + data.clientes[i].id + '">';
 							toAdd += '		<span>' + data.clientes[i].nome + '</span> ';
@@ -199,16 +199,13 @@ $(function () {
 						$("#AnimaisList .loader").addClass("hidden");
 						for (i = 0; i < data.animais.length; i++) {
 
-							var imgPath;
-
-							if (typeof data.animais[i].imagem === "string" && data.animais[i].imagem.trim() != "") {
+							if (typeof data.animais[i].imagem === "string" && data.animais[i].imagem.trim() !== "") {
 								imgPath = "/upload/img/especies/" + data.animais[i].imagem;
 							}
 							else {
 								imgPath = "/images/paw.jpg";
 							}
 
-							var toAdd;
 							toAdd = '<li class="p-a-0 lh-1">';
 							toAdd += '	<a class="avatar p-a-0" href="/Animais/Detalhes/' + data.animais[i].id + '">';
 							toAdd += '		<div class="search-top-img" style="background-image: url(' + imgPath + ')"></div>';
@@ -871,4 +868,4 @@ function debounce(func, wait, immediate) {
 		timeout = setTimeout(later, wait);
 		if (callNow) func.apply(context, args);
 	};
-};
+}
