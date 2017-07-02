@@ -6,18 +6,45 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace web.cvetbenavente.Services
 {
     public static class Helpers
     {
-        public static string NormalizeString(string str)
+        public static string NormalizeString(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return "";
+            }
+
             byte[] tempBytes;
 
-            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(str);
-            return System.Text.Encoding.UTF8.GetString(tempBytes);
+            tempBytes = Encoding.GetEncoding("ISO-8859-8").GetBytes(input);
+            return Encoding.UTF8.GetString(tempBytes);
+        }
+
+        public static string RemoveDiacritics(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return "";
+            }
+
+            string stFormD = input.Normalize(NormalizationForm.FormD);
+            int len = stFormD.Length;
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < len; i++)
+            {
+                System.Globalization.UnicodeCategory uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(stFormD[i]);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(stFormD[i]);
+                }
+            }
+            return (sb.ToString().Normalize(NormalizationForm.FormC));
         }
 
         public static Image Resize(this Image current, int maxWidth, int maxHeight)

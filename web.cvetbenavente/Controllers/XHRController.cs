@@ -7,6 +7,8 @@ using web.cvetbenavente.Data;
 using Microsoft.AspNetCore.Authorization;
 using static web.cvetbenavente.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using static web.cvetbenavente.Services.Helpers;
+using System.Globalization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,15 +55,18 @@ namespace web.cvetbenavente.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(q))
                 {
-                    q = q.Trim();
+                    q = (q.Trim());
+
+                    var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+                    var options = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace;
 
                     var cl = db.Clientes
-                            .Where(x => x.Nome.Contains(q) ||
-                                        x.Morada.Contains(q) ||
-                                        x.Localidade.Contains(q) ||
-                                        x.CodPostal.Contains(q) ||
-                                        x.Contacto.Contains(q) ||
-                                        x.Observacoes.Contains(q))
+                            .Where(x => compareInfo.IndexOf(x.Nome ?? "", q, options) > -1 ||
+                                        compareInfo.IndexOf(x.Morada ?? "", q, options) > -1 ||
+                                        compareInfo.IndexOf(x.Localidade ?? "", q, options) > -1 ||
+                                        compareInfo.IndexOf(x.CodPostal ?? "", q, options) > -1 ||
+                                        compareInfo.IndexOf(x.Contacto ?? "", q, options) > -1 ||
+                                        compareInfo.IndexOf(x.Observacoes ?? "", q, options) > -1)
                             .Where(x => x.Active)
                             .Select(x => new
                             {
@@ -78,12 +83,12 @@ namespace web.cvetbenavente.Controllers
                     var an = db.Animais
                                 .Include(x => x.Cliente)
                                 .Include(x => x.Especie)
-                                .Where(x => x.Nome.Contains(q) ||
-                                            x.Especie.Nome.Contains(q) ||
-                                            x.Observacoes.Contains(q) ||
-                                            x.Cliente.Nome.Contains(q) ||
-                                            x.Cliente.Observacoes.Contains(q) ||
-                                            x.Cliente.CodPostal.Contains(q))
+                                .Where(x => compareInfo.IndexOf(x.Nome ?? "", q, options) > -1 ||
+                                            compareInfo.IndexOf(x.Especie.Nome ?? "", q, options) > -1 ||
+                                            compareInfo.IndexOf(x.Especie.NomeF ?? "", q, options) > -1 ||
+                                            compareInfo.IndexOf(x.Observacoes ?? "", q, options) > -1 ||
+                                            compareInfo.IndexOf(x.Cliente.Nome ?? "", q, options) > -1 ||
+                                            compareInfo.IndexOf(x.Cliente.Observacoes ?? "", q, options) > -1)
                                 .Where(x => !x.Removido && x.Cliente.Active)
                                 .Select(x => new
                                 {
@@ -100,8 +105,8 @@ namespace web.cvetbenavente.Controllers
                                 .ToList();
 
                     var esp = db.Especies
-                                    .Where(x => x.Nome.Contains(q) ||
-                                                x.NomeF.Contains(q))
+                                    .Where(x => (x.Nome).Contains(q) ||
+                                                (x.NomeF).Contains(q))
                                     .Where(x => x.Active)
                                     .Select(x => new
                                     {
