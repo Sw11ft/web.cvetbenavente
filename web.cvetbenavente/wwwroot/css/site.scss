@@ -55,6 +55,15 @@ footer.content-footer, footer.session-footer {
 
     border-radius: .125rem;
 }
+/*search bar height*/
+#ClientesList.predictive-list {
+    max-height: 40vh;
+    overflow-y: auto;
+}
+#AnimaisList.predictive-list {
+    max-height: 30vh;
+    overflow-y: auto;
+}
 /*ajusta a imagem à sidebar*/
 .brand-logo img {
     width: 70%;
