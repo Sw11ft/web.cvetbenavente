@@ -243,6 +243,10 @@ namespace web.cvetbenavente.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.SearchCliente = db.Clientes.Where(x => x.Id == animal.IdCliente).FirstOrDefault();
+            ViewBag.SearchEspecie = db.Especies.Where(x => x.Id == animal.IdEspecie).FirstOrDefault();
+
             return View(animal);
         }
 

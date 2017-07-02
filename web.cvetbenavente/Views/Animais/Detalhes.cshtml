@@ -4,6 +4,15 @@
     ViewData["Title"] = Model.Nome;
 }
 
+<div class="row hidden-print">
+    <div class="col-sm-4 col-md-3">
+        <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-primary btn-icon m-b block">
+            <i class="icon-pencil mr5"></i>
+            <span>Editar</span>
+        </a>
+    </div>
+</div>
+
 <div class="card bg-white">
     <div class="card-header">
         Dados
