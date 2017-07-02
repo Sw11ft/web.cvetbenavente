@@ -254,41 +254,35 @@ namespace web.cvetbenavente.Controllers
         // POST: Animais/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Guid id, [Bind("Id,IdCliente,Nome,Genero,IdEspecie")] Animal animal)
+        public IActionResult Editar(Guid id, Animal animal)
         {
-            if (id != animal.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var oldAnimal = db.Animais.Where(x => x.Id == id).FirstOrDefault();
+                    Animal animalOriginal = db.Animais.Find(id);
 
-                    animal.DataCriacao = oldAnimal.DataCriacao;
-                    animal.DataEdicao = DateTime.UtcNow;
-
-                    db.Update(animal);
-                    await db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AnimalExists(animal.Id))
+                    if (animal == null)
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    animal.DataEdicao = DateTime.UtcNow;
+                    animal.DataCriacao = animalOriginal.DataCriacao;
+                    animal.Id = animalOriginal.Id;
+
+                    db.Entry(animalOriginal).CurrentValues.SetValues(animal);
+
+                    db.SaveChanges();
                 }
-                return RedirectToAction("Index");
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return new StatusCodeResult(500);
+                }
             }
-            ViewData["IdCliente"] = new SelectList(db.Clientes, "Id", "Nome", animal.IdCliente);
-            ViewData["IdEspecie"] = new SelectList(db.Especies, "Id", "Nome", animal.IdEspecie);
-            return View(animal);
+
+            return RedirectToAction("Detalhes", new { id = id, nt = "s", nid = 50 });
         }
 
         // GET: Animais/Delete/5

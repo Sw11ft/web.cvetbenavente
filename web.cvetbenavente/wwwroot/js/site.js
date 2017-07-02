@@ -4,7 +4,6 @@
     $DOCUMENT.READY
         $NOTY
 		$HEADER SEARCH
-        $DADOS DE TABELAS
         $ANIMAÇÕES
         $LIMPEZA DE FORMS/INPUTS
         $AJAX
@@ -262,106 +261,6 @@ $(function () {
 	});
 
 	/*****************************************************************/
-
-    //$DADOS DE TABELAS
-    /*
-    //Clientes/Index Ordering
-    $("#ClientesIndexTable .ClienteColumn").click(function () {
-        if (!$(this).hasClass("disabled")) {
-            let order = $(this).attr("data-order");
-            let text = $("#ClientesIndexSearch").val().trim();
-
-            let queryOrder;
-            if (order !== "asc") {
-                queryOrder = "asc";
-            } else {
-                queryOrder = "desc";
-            }
-
-            $.ajax({
-                url: "/Clientes/IndexTableData?field=nome&order=" + queryOrder + "&query=" + text,
-                type: "get",
-                beforeSend: function () {
-                    $("#ClientesIndexTable tbody").addClass("loading");
-                    $("#ClientesIndexTable .ClienteColumn").addClass("disabled");
-                },
-                success: function (data) {
-                    $("#ClientesIndexTable tbody").html(data);
-
-                    if (order === "asc") {
-                        $("#ClientesIndexTable .ClienteColumn").attr("data-order", "desc");
-                    } else {
-                        $("#ClientesIndexTable .ClienteColumn").attr("data-order", "asc");
-                    }
-
-                    $("#ClientesIndexTable tbody").removeClass("loading");
-                    $("#ClientesIndexTable .ClienteColumn").removeClass("disabled");
-
-                    if ($("#ClientesIndexTable .ClienteColumn i").hasClass("fa-caret-up")) {
-                        $("#ClientesIndexTable .ClienteColumn i").removeClass("fa-caret-up");
-                        $("#ClientesIndexTable .ClienteColumn i").addClass("fa-caret-down");
-                    } else {
-                        $("#ClientesIndexTable .ClienteColumn i").removeClass("fa-caret-down");
-                        $("#ClientesIndexTable .ClienteColumn i").addClass("fa-caret-up");
-                    }
-                }
-            });
-        }
-    });
-
-    //Clientes/Index Procura
-    let searchTimeout;
-    let pageTitle = $("#PageTitle").html();
-    if (typeof pageTitle !== "undefined") {
-        pageTitle = pageTitle.trim();
-    }
-    $("#ClientesIndexSearch").on("input", function () {
-        //mostra o botão para limpar
-        if ($("#ClientesIndexSearch").val().trim() !== "") {
-            $("#ClientesIndexSearchFormGroup .clear").fadeIn(100);
-        } else {
-            $("#ClientesIndexSearchFormGroup .clear").fadeOut(100);
-        }
-
-        IndexSearch();
-    });
-
-    $("#ClientesIndexEstado").change(function () {
-        IndexSearch();
-    });
-
-    var IndexSearch = function () {
-        window.clearTimeout(searchTimeout);
-        searchTimeout = window.setTimeout(function () {
-            let text = $("#ClientesIndexSearch").val().trim();
-
-            let order = $("#ClientesIndexTable .ClienteColumn").attr("data-order");
-            let estado = $("#ClientesIndexEstado").val();
-
-            $.ajax({
-                url: "/Clientes/IndexTableData",
-                type: "get",
-                data: { field: "nome", order: order, query: text, estado: estado },
-                beforeSend: function () {
-                    $("#ClientesIndexTable tbody").addClass("loading");
-                    $("#ClientesIndexTable .ClienteColumn").addClass("disabled");
-                },
-                success: function (data) {
-                    $("#ClientesIndexTable tbody").html(data);
-
-                    $("#ClientesIndexTable tbody").removeClass("loading");
-                    $("#ClientesIndexTable .ClienteColumn").removeClass("disabled");
-                }
-            });
-            if (text === "") {
-                $("#PageTitle").html(pageTitle);
-            } else {
-                $("#PageTitle").html(pageTitle + " - Pesquisa por \x22" + "<i>" + text + "</i>" + "\x22");
-            }
-        }, 400);
-    };
-    */
-    /*****************************************************************/
 
     //$ANIMAÇÕES
 
