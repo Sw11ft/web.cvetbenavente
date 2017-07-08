@@ -106,6 +106,11 @@ namespace web.cvetbenavente
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "ajuda",
+                    template: "Ajuda",
+                    defaults: new { controller = "Home", action = "Ajuda" });
+
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 

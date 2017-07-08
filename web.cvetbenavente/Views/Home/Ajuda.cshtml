@@ -1,0 +1,160 @@
+﻿@{
+    ViewData["Title"] = "Ajuda";
+}
+@section PageTitleAfter {
+    <div class="sub-title">Operações disponíveis na plataforma</div>
+}
+
+<!--CLIENTES-->
+<div class="card bg-white">
+    <div class="card-header">
+        Clientes
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <!--Criar Cliente-->
+                <a href="#CriarCliente"><h5 class="m-t-0" id="CriarCliente">Como criar um cliente?</h5></a>
+                <p class="m-b-lg">
+                    Para criar um cliente, pode aceder à <a asp-action="Criar" asp-controller="Clientes">página específica para o fazer</a>.
+                    O link para esta página está disponível nas ações rápidas na página inicial, assim como na barra de navegação lateral em
+                    Clientes > <a asp-action="Criar" asp-controller="Clientes">Novo</a>.
+                    <br/>
+                    Todos os campos são de preenchimento obrigatório, à exceção das observações.
+                </p>
+
+                <!--Procurar Cliente-->
+                <a href="#ProcurarCliente"><h5 class="m-t-0" id="ProcurarCliente">Como procurar por um cliente?</h5></a>
+                <p class="m-b-lg">
+                    Existem duas formas de procurar um cliente.
+                    <br/>
+                    A forma mais rápida para procurar um cliente em específico é através da 
+                    <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>
+                    presente no topo de todas as páginas.
+                    <br />
+                    Adicionalmente, pode procurar por clientes mais flexivelmente na <a asp-action="Index" asp-controller="Clientes">página de clientes</a>, 
+                    utilizando os filtros que mais lhe parecem adequados.
+                </p>
+
+                <!--Ver Detalhes Cliente-->
+                <a href="#DetalhesCliente"><h5 class="m-t-0" id="DetalhesCliente">Como ver os detalhes de um cliente?</h5></a>
+                <p class="m-b-lg">
+                    É possível ver os detalhes de um cliente ao clicar sobre o seu nome na <a asp-action="Index" asp-controller="Clientes">página de clientes</a>
+                    ou quando pesquisa pelo seu nome na <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>.
+                </p>
+
+                <!--Apagar Cliente-->
+                <a href="#ApagarCliente"><h5 class="m-t-0" id="ApagarCliente">Como apagar um cliente?</h5></a>
+                <p class="m-b-0">
+                    É possível apagar um cliente na sua página de detalhes, ao pressionar o botão no canto superior direito.
+                    <br />
+                    Ao apagar um cliente, todos os seus dados, incluindo animais e eventos, serão removidos.
+                    <br />
+                    Se optar por desativar um cliente, este será apenas escondido da plataforma.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ANIMAIS-->
+<div class="card bg-white">
+    <div class="card-header">
+        Animais
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <!--Criar Animal-->
+                <a href="#CriarAnimal"><h5 class="m-t-0" id="CriarAnimal">Como criar um animal?</h5></a>
+                <p class="m-b-lg">
+                    Para criar um animal, pode aceder à <a asp-action="Criar" asp-controller="Animais">página específica para o fazer</a>.
+                    O link para esta página está disponível nas ações rápidas na página inicial, assim como na barra de navegação lateral em
+                    Animais > <a asp-action="Criar" asp-controller="Animais">Novo</a>.
+                    <br />
+                    Todos os campos são de preenchimento obrigatório, à exceção das observações.
+                </p>
+
+                <!--Procurar Animal-->
+                <a href="#ProcurarAnimal"><h5 class="m-t-0" id="ProcurarAnimal">Como procurar por um animal?</h5></a>
+                <p class="m-b-lg">
+                    Existem duas formas de procurar um animal.
+                    <br />
+                    A forma mais rápida para procurar um animal em específico é através da
+                    <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>
+                    presente no topo de todas as páginas.
+                    <br />
+                    Adicionalmente, pode procurar por animais mais flexivelmente na <a asp-action="Index" asp-controller="Animais">página de animais</a>,
+                    utilizando os filtros que mais lhe parecem adequados.
+                </p>
+
+                <!--Ver Detalhes Animal-->
+                <a href="#DetalhesAnimal"><h5 class="m-t-0" id="DetalhesAnimal">Como ver os detalhes de um animal?</h5></a>
+                <p class="m-b-lg">
+                    É possível ver os detalhes de um animal ao clicar sobre o seu nome na <a asp-action="Index" asp-controller="Animais">página de animais</a>
+                    ou quando pesquisa pelo seu nome na <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>.
+                </p>
+
+                <!--Apagar Animal-->
+                <a href="#ApagarAnimal"><h5 class="m-t-0" id="ApagarAnimal">Como apagar um animal?</h5></a>
+                <p class="m-b-0">
+                    É possível apagar um animal na sua página de detalhes, ao pressionar o botão no canto superior direito.
+                    <br />
+                    Ao apagar um animal, os seus dados serão removidos. O registo de eventos passados pertencentes ao animal é mantido.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--ESPÉCIES-->
+<div class="card bg-white">
+    <div class="card-header">
+        Espécies
+    </div>
+    <div class="card-block">
+        <div class="row m-a-0">
+            <div class="col-lg-12">
+                <!--Criar Animal-->
+                <a href="#CriarAnimal"><h5 class="m-t-0" id="CriarAnimal">Como criar um animal?</h5></a>
+                <p class="m-b-lg">
+                    Para criar um animal, pode aceder à <a asp-action="Criar" asp-controller="Especies">página específica para o fazer</a>.
+                    O link para esta página está disponível nas ações rápidas na página inicial, assim como na barra de navegação lateral em
+                    espécies > <a asp-action="Criar" asp-controller="Especies">Novo</a>.
+                    <br />
+                    Todos os campos são de preenchimento obrigatório, à exceção das observações.
+                </p>
+
+                <!--Procurar Animal-->
+                <a href="#ProcurarAnimal"><h5 class="m-t-0" id="ProcurarAnimal">Como procurar por um animal?</h5></a>
+                <p class="m-b-lg">
+                    Existem duas formas de procurar um animal.
+                    <br />
+                    A forma mais rápida para procurar um animal em específico é através da
+                    <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>
+                    presente no topo de todas as páginas.
+                    <br />
+                    Adicionalmente, pode procurar por espécies mais flexivelmente na <a asp-action="Index" asp-controller="Especies">página de espécies</a>,
+                    utilizando os filtros que mais lhe parecem adequados.
+                </p>
+
+                <!--Ver Detalhes Animal-->
+                <a href="#DetalhesAnimal"><h5 class="m-t-0" id="DetalhesAnimal">Como ver os detalhes de um animal?</h5></a>
+                <p class="m-b-lg">
+                    É possível ver os detalhes de um animal ao clicar sobre o seu nome na <a asp-action="Index" asp-controller="Especies">página de espécies</a>
+                    ou quando pesquisa pelo seu nome na <a onclick="document.getElementById('ToggleSearch').click()">barra de pesquisa</a>.
+                </p>
+
+                <!--Apagar Animal-->
+                <a href="#ApagarAnimal"><h5 class="m-t-0" id="ApagarAnimal">Como apagar um animal?</h5></a>
+                <p class="m-b-0">
+                    É possível apagar um animal na sua página de detalhes, ao pressionar o botão no canto superior direito.
+                    <br />
+                    Ao apagar um animal, todos os seus dados, incluindo espécies e eventos, serão removidos.
+                    <br />
+                    Se optar por desativar um animal, este será apenas escondido da plataforma.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

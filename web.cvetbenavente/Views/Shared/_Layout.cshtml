@@ -252,7 +252,7 @@
                             </a>
                         </li>
                         <li class="searchbox">
-                            <a href="javascript:;" data-toggle="search">
+                            <a href="javascript:;" data-toggle="search" id="ToggleSearch">
                                 <i class="search-close-icon icon-close hide"></i>
                                 <i class="search-open-icon icon-magnifier"></i>
                             </a>
@@ -374,6 +374,7 @@
 
                                 @RenderSection("TitleAfter", required: false)
                             </div>
+                            @RenderSection("PageTitleAfter", required: false)
                         </div>
                     }
 

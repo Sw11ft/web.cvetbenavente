@@ -64,6 +64,9 @@ a {
   color: #337ab7; }
 
 /*footer fix*/
+footer.content-footer, footer.session-footer {
+  height: initial !important; }
+
 /*search bar image*/
 .search-top-img {
   width: 2rem;
