@@ -29,7 +29,7 @@ namespace web.cvetbenavente.Controllers
         {
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest") {
                 int? nrClientes = (clientes) ? db.Clientes.Where(x => x.Active).Count() : (int?)null;
-                int? nrAnimais = (animais) ? db.Animais.Where(x => x.Cliente.Active).Count() : (int?)null;
+                int? nrAnimais = (animais) ? db.Animais.Where(x => x.Cliente.Active && !x.Removido).Count() : (int?)null;
                 int? nrEspecies = (especies) ? db.Especies.Where(x => x.Active).Count() : (int?)null;
 
                 return Json(new { clientes = nrClientes, animais = nrAnimais, especies = nrEspecies });
